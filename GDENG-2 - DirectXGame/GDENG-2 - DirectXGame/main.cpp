@@ -1,5 +1,7 @@
 #include "AppWindow.h"
 
+#pragma comment(lib, "d3d11.lib")
+
 int main()
 {
 	AppWindow app;

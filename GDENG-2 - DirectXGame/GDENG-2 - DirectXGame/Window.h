@@ -13,11 +13,14 @@ public:
 	bool release();
 	bool isRun();
 
+	RECT getClientWindowRect();
+	void setHWND(HWND hwnd);
+
 	virtual void onCreate() = 0;
 	virtual void onUpdate() = 0;
 	virtual void onDestroy();
 
-private:
+protected:
 	HWND m_HWND;
 	bool m_isRun;
 };

@@ -1,5 +1,5 @@
 #include "GraphicsEngine.h"
-
+#include "SwapChain.h"
 
 GraphicsEngine::GraphicsEngine()
 {
@@ -11,7 +11,7 @@ GraphicsEngine::~GraphicsEngine()
 
 bool GraphicsEngine::init()
 {
-	D3D_DRIVER_TYPE driver_types[]
+	D3D_DRIVER_TYPE driver_types[] = 
 	{
 		D3D_DRIVER_TYPE_HARDWARE,
 		D3D_DRIVER_TYPE_WARP,
@@ -19,7 +19,8 @@ bool GraphicsEngine::init()
 	};
 	UINT num_driver_types = ARRAYSIZE(driver_types);
 
-	D3D_FEATURE_LEVEL feature_levels[]{
+	D3D_FEATURE_LEVEL feature_levels[] = 
+	{
 		D3D_FEATURE_LEVEL_11_0
 	};
 	UINT num_feature_levels = ARRAYSIZE(feature_levels);
@@ -37,11 +38,19 @@ bool GraphicsEngine::init()
 
 	if (FAILED(res)) return false;
 
+	m_d3d_device->QueryInterface(__uuidof(IDXGIDevice), (void**)&m_dxgi_device);
+	m_dxgi_device->GetParent(__uuidof(IDXGIAdapter), (void**)&m_dxgi_adapter);
+	m_dxgi_adapter->GetParent(__uuidof(IDXGIFactory), (void**)&m_dxgi_factory);
+
 	return true;
 }
 
 bool GraphicsEngine::release()
 {
+	m_dxgi_device->Release();
+	m_dxgi_adapter->Release();
+	m_dxgi_factory->Release();
+
 	m_imm_context->Release();
 	m_d3d_device->Release();
 	return true;
@@ -52,4 +61,9 @@ GraphicsEngine* GraphicsEngine::get()
 	static GraphicsEngine engine;
 
 	return &engine;
+}
+
+SwapChain* GraphicsEngine::createSwapChain()
+{
+	return new SwapChain();
 }
