@@ -1,5 +1,5 @@
 #include "Window.h"
-
+#include <iostream>
 Window::Window()
 {
 }
@@ -10,21 +10,21 @@ Window::~Window()
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	Window* window;
-
 	switch (msg)
 	{
-		case WM_CREATE:
-			window = (Window*)((LPCREATESTRUCT)lparam)->lpCreateParams;
+		case WM_CREATE: {
+			Window* window = (Window*)((LPCREATESTRUCT)lparam)->lpCreateParams;
 			SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)window);
 			window->setHWND(hwnd);
 			window->onCreate();
 			break; // Event fired when the window is created
-		case WM_DESTROY:
-			window = (Window*)GetWindowLong(hwnd, GWLP_USERDATA);
+		}
+		case WM_DESTROY: {
+			Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 			window->onDestroy();
 			::PostQuitMessage(0);
 			break; // Event fired when the window is destroyed
+		}
 		default: return ::DefWindowProc(hwnd, msg, wparam, lparam);
 	}
 
