@@ -36,7 +36,7 @@ void DeviceContext::drawTriangleList(UINT vertex_count, UINT start_vertex_index)
 
 void DeviceContext::setViewportSize(UINT width, UINT height)
 {
-	D3D11_VIEWPORT vp;
+	D3D11_VIEWPORT vp = {};
 	vp.Width = (FLOAT)width;
 	vp.Height = (FLOAT)height;
 	vp.MinDepth = 0.0f;
