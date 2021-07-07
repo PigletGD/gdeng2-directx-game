@@ -24,8 +24,9 @@ void AppWindow::onCreate()
 	vertex list[] = {
 		//x - y - z
 		{-0.5f,-0.5f, 0.0f}, // POS1
-		{ 0.0f, 0.5f, 0.0f}, // POS2
+		{-0.5f, 0.5f, 0.0f}, // POS2
 		{ 0.5f,-0.5f, 0.0f}, // POS3
+		{ 0.5f, 0.5f, 0.0f}, // POS4
 	};
 
 	m_vb = GraphicsEngine::get()->createVertexBuffer();
@@ -52,7 +53,7 @@ void AppWindow::onUpdate()
 
 	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
 
-	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleList(m_vb->getSizeVertexList(), 0);
+	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleStrip(m_vb->getSizeVertexList(), 0);
 
 	m_swap_chain->present(true);
 }
