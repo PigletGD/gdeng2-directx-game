@@ -5,10 +5,11 @@
 
 class InputSystem
 {
-public:
+private:
 	InputSystem();
 	~InputSystem();
 
+public:
 	void update();
 
 	void addListener(InputListener* listener);
@@ -18,8 +19,12 @@ public:
 	void showCursor(bool show);
 
 	static InputSystem* get();
+	static void create();
+	static void release();
 
 private:
+	static InputSystem* m_system;
+
 	std::unordered_set<InputListener*> m_set_listeners;
 
 	unsigned char m_old_keys_state[256] = {};

@@ -1,47 +1,38 @@
 #include "Window.h"
-#include <iostream>
-Window::Window()
-{
-}
 
-Window::~Window()
-{
-}
+#include <iostream>
+#include <exception>
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	switch (msg)
 	{
-		case WM_CREATE: {
-			Window* window = (Window*)((LPCREATESTRUCT)lparam)->lpCreateParams;
-			SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)window);
-			window->setHWND(hwnd);
-			window->onCreate();
-			break; // Event fired when the window is created
-		}
-		case WM_SETFOCUS: {
-			Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-			window->onFocus();
-			break; // Event fired when the window gets focused
-		}
-		case WM_KILLFOCUS: {
-			Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-			window->onKillFocus();
-			break; // Event fired when the window gets out of focused
-		}
-		case WM_DESTROY: {
-			Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-			window->onDestroy();
-			::PostQuitMessage(0);
-			break; // Event fired when the window is destroyed
-		}
-		default: return ::DefWindowProc(hwnd, msg, wparam, lparam);
+	case WM_CREATE: {
+		break; // Event fired when the window is created
+	}
+	case WM_SETFOCUS: {
+		Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+		if (window) window->onFocus();
+		break; // Event fired when the window gets focused
+	}
+	case WM_KILLFOCUS: {
+		Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+		window->onKillFocus();
+		break; // Event fired when the window gets out of focused
+	}
+	case WM_DESTROY: {
+		Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+		window->onDestroy();
+		::PostQuitMessage(0);
+		break; // Event fired when the window is destroyed
+	}
+	default: return ::DefWindowProc(hwnd, msg, wparam, lparam);
 	}
 
 	return NULL;
 }
 
-bool Window::init()
+Window::Window()
 {
 	WNDCLASSEX wc;
 	wc.cbClsExtra = NULL;
@@ -57,25 +48,35 @@ bool Window::init()
 	wc.style = NULL;
 	wc.lpfnWndProc = &WndProc;
 
-	if(!::RegisterClassEx(&wc)) return false;
+	if (!::RegisterClassEx(&wc)) throw std::exception("Window not created successfully");
 
 	m_HWND = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"MyClassWindow",
 		L"DirectX Application", WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768, NULL, NULL, NULL, this);
+		CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768, NULL, NULL, NULL, NULL);
 
-	if (!m_HWND) return false;
+	if (!m_HWND) throw std::exception("Window not created successfully");
 
 	::ShowWindow(m_HWND, SW_SHOW);
 	::UpdateWindow(m_HWND);
 
 	m_isRun = true;
+}
 
-	return true;
+Window::~Window()
+{
+	
 }
 
 bool Window::broadcast()
 {
 	MSG msg;
+
+	if (!this->m_is_init)
+	{
+		SetWindowLongPtr(m_HWND, GWLP_USERDATA, (LONG_PTR)this);
+		this->onCreate();
+		this->m_is_init = true;
+	}
 
 	this->onUpdate();
 
@@ -90,15 +91,10 @@ bool Window::broadcast()
 	return true;
 }
 
-bool Window::release()
-{
-	if (!::DestroyWindow(m_HWND)) return false;
-	
-	return true;
-}
-
 bool Window::isRun()
 {
+	if (m_isRun) broadcast();
+
 	return m_isRun;
 }
 
@@ -107,11 +103,6 @@ RECT Window::getClientWindowRect()
 	RECT rc;
 	::GetClientRect(this->m_HWND, &rc);
 	return rc;
-}
-
-void Window::setHWND(HWND hwnd)
-{
-	this->m_HWND = hwnd;
 }
 
 void Window::onCreate()

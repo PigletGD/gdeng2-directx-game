@@ -1,14 +1,35 @@
 #include "AppWindow.h"
+#include "InputSystem.h"
 
 #pragma comment(lib, "d3d11.lib")
 
 int main()
 {
-	AppWindow app;
+	try {
+		GraphicsEngine::create();
+		InputSystem::create();
+	}
+	catch (...) { return -1; }
 
-	if (app.init())
-		while (app.isRun())
-			app.broadcast();
+	
+	{
+		try {
+			AppWindow app;
+
+			while (app.isRun());
+		}
+		catch (...)
+		{
+			InputSystem::release();
+			GraphicsEngine::release();
+
+			return -1;
+		}
+	}
+		
+
+	InputSystem::release();
+	GraphicsEngine::release();
 
 	return 0;
 }
