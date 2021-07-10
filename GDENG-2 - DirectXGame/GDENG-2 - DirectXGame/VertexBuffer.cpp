@@ -1,20 +1,11 @@
 #include "VertexBuffer.h"
-#include "GraphicsEngine.h"
+#include "RenderSystem.h"
 
-VertexBuffer::VertexBuffer() :
-	m_layout(0), m_buffer(0)
+#include <exception>
+
+VertexBuffer::VertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader, RenderSystem* system) :
+	m_system(system), m_layout(0), m_buffer(0)
 {
-}
-
-VertexBuffer::~VertexBuffer()
-{
-}
-
-bool VertexBuffer::load(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader)
-{
-	if (m_buffer) m_buffer->Release();
-	if (m_layout) m_layout->Release();
-
 	D3D11_BUFFER_DESC buff_desc = {};
 	buff_desc.Usage = D3D11_USAGE_DEFAULT;
 	buff_desc.ByteWidth = size_vertex * size_list;
@@ -29,9 +20,9 @@ bool VertexBuffer::load(void* list_vertices, UINT size_vertex, UINT size_list, v
 	m_size_list = size_list;
 
 	HRESULT res;
-	res = GraphicsEngine::get()->m_d3d_device->CreateBuffer(&buff_desc, &init_data, &m_buffer);
-	
-	if (FAILED(res)) return false;
+	res = m_system->m_d3d_device->CreateBuffer(&buff_desc, &init_data, &m_buffer);
+
+	if (FAILED(res)) throw std::exception("VertexBuffer not created successfully");
 
 	D3D11_INPUT_ELEMENT_DESC layout[] = {
 		//SEMANTIC NAME - SEMANTIC INDEX - FORMAT - INPUT SLOT - ALIGNED BYTE OFFSET - INPUT SLOT CLASS - INSTANCE DATA STEP RATE
@@ -41,21 +32,15 @@ bool VertexBuffer::load(void* list_vertices, UINT size_vertex, UINT size_list, v
 	};
 	UINT size_layout = ARRAYSIZE(layout);
 
-	res = GraphicsEngine::get()->m_d3d_device->CreateInputLayout(layout, size_layout, shader_byte_code, size_byte_shader, &m_layout);
+	res = m_system->m_d3d_device->CreateInputLayout(layout, size_layout, shader_byte_code, size_byte_shader, &m_layout);
 
-	if (FAILED(res)) return false;
-
-	return true;
+	if (FAILED(res)) throw std::exception("VertexBuffer not created successfully");
 }
 
-bool VertexBuffer::release()
+VertexBuffer::~VertexBuffer()
 {
 	m_layout->Release();
 	m_buffer->Release();
-
-	delete this;
-
-	return true;
 }
 
 UINT VertexBuffer::getSizeVertexList()

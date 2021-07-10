@@ -6,13 +6,16 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 
-DeviceContext::DeviceContext(ID3D11DeviceContext* device_context) :
-	m_device_context(device_context)
+#include <exception>
+
+DeviceContext::DeviceContext(ID3D11DeviceContext* device_context, RenderSystem* system) :
+	m_device_context(device_context), m_system(system)
 {
 }
 
 DeviceContext::~DeviceContext()
 {
+	m_device_context->Release();
 }
 
 void DeviceContext::clearRenderTargetColor(SwapChain* swap_chain, float red, float green, float blue, float alpha)
@@ -86,13 +89,4 @@ void DeviceContext::setConstantBuffer(VertexShader* vertex_shader, ConstantBuffe
 void DeviceContext::setConstantBuffer(PixelShader* pixel_shader, ConstantBuffer* buffer)
 {
 	m_device_context->PSSetConstantBuffers(0, 1, &buffer->m_buffer);
-}
-
-bool DeviceContext::release()
-{
-	m_device_context->Release();
-
-	delete this;
-	
-	return true;
 }
