@@ -12,6 +12,9 @@ class GraphicsEngine
 public:
 	GraphicsEngine();
 	~GraphicsEngine();
+	GraphicsEngine(GraphicsEngine const&) {};
+	GraphicsEngine& operator=(GraphicsEngine const&) {};
+	static GraphicsEngine* sharedInstance;
 
 	bool init();
 	bool release();
@@ -29,6 +32,8 @@ public:
 	void releaseCompiledShader();
 
 	static GraphicsEngine* get();
+	static void initialize();
+	static void destroy();
 
 private:
 	ID3D11Device* m_d3d_device;
@@ -42,7 +47,6 @@ private:
 	DeviceContext* m_imm_device_context;
 
 	ID3DBlob* m_blob = nullptr;
-
 
 	ID3DBlob* m_vsblob = nullptr;
 	ID3DBlob* m_psblob = nullptr;

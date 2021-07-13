@@ -7,6 +7,8 @@
 
 #include <d3dcompiler.h>
 
+GraphicsEngine* GraphicsEngine::sharedInstance = nullptr;
+
 GraphicsEngine::GraphicsEngine()
 {
 }
@@ -74,9 +76,19 @@ bool GraphicsEngine::release()
 
 GraphicsEngine* GraphicsEngine::get()
 {
-	static GraphicsEngine engine;
+	return sharedInstance;
+}
 
-	return &engine;
+void GraphicsEngine::initialize()
+{
+	sharedInstance = new GraphicsEngine();
+	sharedInstance->init();
+}
+
+void GraphicsEngine::destroy()
+{
+	if (sharedInstance != NULL)
+		sharedInstance->release();
 }
 
 SwapChain* GraphicsEngine::createSwapChain()

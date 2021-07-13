@@ -2,13 +2,16 @@
 
 #pragma comment(lib, "d3d11.lib")
 
+#include <iostream>
+
 int main()
 {
-	AppWindow app;
+	AppWindow::initialize();
+	AppWindow* runningApp = (AppWindow*) AppWindow::get();
+	runningApp->initializeEngine();
 
-	if (app.init())
-		while (app.isRun())
-			app.broadcast();
+	while (runningApp->isRun())
+		runningApp->broadcast();
 
 	return 0;
 }

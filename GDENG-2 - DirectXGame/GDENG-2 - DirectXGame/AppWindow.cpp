@@ -1,8 +1,11 @@
 #include "AppWindow.h"
 
+#include <iostream>
+
 struct vec3 { float x, y, z; };
 struct vertex { vec3 position, color; };
 
+AppWindow* AppWindow::sharedInstance = nullptr;
 
 AppWindow::AppWindow()
 {
@@ -12,11 +15,71 @@ AppWindow::~AppWindow()
 {
 }
 
+AppWindow* AppWindow::get()
+{
+	return sharedInstance;
+}
+
+void AppWindow::initialize()
+{
+	sharedInstance = new AppWindow();
+	sharedInstance->init();
+}
+
+void AppWindow::destroy()
+{
+	sharedInstance->release();
+	delete sharedInstance;
+}
+
 void AppWindow::onCreate()
 {
 	Window::onCreate();
 
-	GraphicsEngine::get()->init();
+	std::cout << "Created window" << std::endl;
+}
+
+void AppWindow::onUpdate()
+{
+	Window::onUpdate();
+	GraphicsEngine::get()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain, 1, 0, 0, 1);
+
+	RECT rc = this->getClientWindowRect();
+	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
+
+	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexShader(m_vs);
+	GraphicsEngine::get()->getImmediateDeviceContext()->setPixelShader(m_ps);
+
+	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
+	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleStrip(m_vb->getSizeVertexList(), 0);
+
+	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_vb2);
+	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleStrip(m_vb2->getSizeVertexList(), 0);
+
+	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_vb3);
+	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleStrip(m_vb3->getSizeVertexList(), 0);
+
+	m_swap_chain->present(true);
+}
+
+void AppWindow::onDestroy()
+{
+	Window::onDestroy();
+
+	m_vb->release();
+	m_vb2->release();
+	m_vb3->release();
+	m_swap_chain->release();
+	m_vs->release();
+	m_ps->release();
+
+	GraphicsEngine::get()->release();
+}
+
+void AppWindow::initializeEngine()
+{
+	GraphicsEngine::initialize();
+	//GraphicsEngine::get()->init();
 	m_swap_chain = GraphicsEngine::get()->createSwapChain();
 
 	RECT rc = this->getClientWindowRect();
@@ -79,41 +142,4 @@ void AppWindow::onCreate()
 	GraphicsEngine::get()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
 	m_ps = GraphicsEngine::get()->createPixelShader(shader_byte_code, size_shader);
 	GraphicsEngine::get()->releaseCompiledShader();
-}
-
-void AppWindow::onUpdate()
-{
-	Window::onUpdate();
-	GraphicsEngine::get()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain, 1, 0, 0, 1);
-
-	RECT rc = this->getClientWindowRect();
-	GraphicsEngine::get()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
-
-	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexShader(m_vs);
-	GraphicsEngine::get()->getImmediateDeviceContext()->setPixelShader(m_ps);
-
-	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
-	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleStrip(m_vb->getSizeVertexList(), 0);
-
-	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_vb2);
-	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleStrip(m_vb2->getSizeVertexList(), 0);
-
-	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_vb3);
-	GraphicsEngine::get()->getImmediateDeviceContext()->drawTriangleStrip(m_vb3->getSizeVertexList(), 0);
-
-	m_swap_chain->present(true);
-}
-
-void AppWindow::onDestroy()
-{
-	Window::onDestroy();
-
-	m_vb->release();
-	m_vb2->release();
-	m_vb3->release();
-	m_swap_chain->release();
-	m_vs->release();
-	m_ps->release();
-
-	GraphicsEngine::get()->release();
 }

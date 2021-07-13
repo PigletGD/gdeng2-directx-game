@@ -12,10 +12,19 @@ class AppWindow : public Window
 public:
 	AppWindow();
 	~AppWindow();
+	AppWindow(AppWindow const&) {};
+	AppWindow& operator=(AppWindow const&) {};
+	static AppWindow* sharedInstance;
+
+	static AppWindow* get();
+	static void initialize();
+	static void destroy();
 
 	virtual void onCreate() override;
 	virtual void onUpdate() override;
 	virtual void onDestroy() override;
+
+	void initializeEngine();
 
 private:
 	SwapChain* m_swap_chain;
