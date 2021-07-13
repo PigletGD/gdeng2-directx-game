@@ -9,7 +9,8 @@ class GraphicsEngine
 private:
 	GraphicsEngine();
 	~GraphicsEngine();
-
+	GraphicsEngine(GraphicsEngine const&) {};
+	GraphicsEngine& operator=(GraphicsEngine const&) {};
 public:
 	RenderSystem* getRenderSystem();
 

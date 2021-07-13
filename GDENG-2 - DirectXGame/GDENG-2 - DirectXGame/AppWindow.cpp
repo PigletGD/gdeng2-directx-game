@@ -237,8 +237,8 @@ void AppWindow::onMouseMove(const Point& mouse_pos)
 	int width = (this->getClientWindowRect().right - this->getClientWindowRect().left);
 	int height = (this->getClientWindowRect().bottom - this->getClientWindowRect().top);
 
-	m_rot_x += (mouse_pos.m_y - (height * 0.5f)) * m_delta_time * 0.1f;
-	m_rot_y += (mouse_pos.m_x - (width * 0.5f))* m_delta_time * 0.1f;
+	m_rot_x += (mouse_pos.m_y - (height * 0.5f)) * m_delta_time * 0.2f;
+	m_rot_y += (mouse_pos.m_x - (width * 0.5f))* m_delta_time * 0.2f;
 
 	InputSystem::get()->setCursorPosition(Point((int)(width * 0.5f), (int)(height * 0.5f)));
 }
