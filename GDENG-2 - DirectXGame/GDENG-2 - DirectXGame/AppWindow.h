@@ -49,6 +49,8 @@ public:
 	virtual void onRightMouseDown(const Point& mouse_pos) override;
 	virtual void onRightMouseUp(const Point& mouse_pos) override;
 
+	TexturePtr m_wood_tex;
+
 private:
 	SwapChainPtr m_swap_chain;
 

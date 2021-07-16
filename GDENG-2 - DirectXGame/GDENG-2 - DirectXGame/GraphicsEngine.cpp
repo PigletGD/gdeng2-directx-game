@@ -1,5 +1,6 @@
 #include "GraphicsEngine.h"
 #include "RenderSystem.h"
+#include "TextureManager.h"
 
 #include <exception>
 
@@ -10,19 +11,30 @@ GraphicsEngine::GraphicsEngine()
 	try {
 		m_render_system = new RenderSystem();
 	}
-	catch (...) { throw std::exception("GraphicsEngine not created successfully"); }
+	catch (...) { throw std::exception("Render System not created successfully"); }
+
+	try {
+		m_tex_manager = new TextureManager();
+	}
+	catch (...) { throw std::exception("Texture Manager not created successfully"); }
 }
 
 GraphicsEngine::~GraphicsEngine()
 {
 	GraphicsEngine::m_engine = nullptr;
 
+	delete m_tex_manager;
 	delete m_render_system;
 }
 
 RenderSystem* GraphicsEngine::getRenderSystem()
 {
 	return m_render_system;
+}
+
+TextureManager* GraphicsEngine::getTextureManager()
+{
+	return m_tex_manager;
 }
 
 GraphicsEngine* GraphicsEngine::get()

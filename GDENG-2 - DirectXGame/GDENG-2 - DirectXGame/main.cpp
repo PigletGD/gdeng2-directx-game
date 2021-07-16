@@ -21,7 +21,6 @@ int main()
 			return -1;
 		}
 	}
-		
 
 	InputSystem::release();
 	GraphicsEngine::release();
