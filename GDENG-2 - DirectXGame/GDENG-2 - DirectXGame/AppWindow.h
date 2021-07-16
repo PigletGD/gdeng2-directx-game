@@ -50,7 +50,7 @@ public:
 	virtual void onRightMouseUp(const Point& mouse_pos) override;
 
 	TexturePtr m_wood_tex;
-
+	MeshPtr m_mesh;
 private:
 	SwapChainPtr m_swap_chain;
 
