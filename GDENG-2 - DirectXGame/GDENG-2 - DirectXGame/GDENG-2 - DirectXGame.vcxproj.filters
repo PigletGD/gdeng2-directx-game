@@ -43,6 +43,12 @@
     <Filter Include="GameEngine\GraphicsEngine\RenderSystem\DeviceContext">
       <UniqueIdentifier>{bd779c70-5544-44d0-b749-f696f86b3504}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\Primitives">
+      <UniqueIdentifier>{f540809c-322e-4a27-8fab-c61db25471f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\Primitives\Quad">
+      <UniqueIdentifier>{8aad9299-0ac8-4412-ba30-021b67fd3195}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -83,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="RenderSystem.cpp">
       <Filter>GameEngine\GraphicsEngine\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Quad.cpp">
+      <Filter>GameEngine\GraphicsEngine\Primitives\Quad</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +148,12 @@
     </ClInclude>
     <ClInclude Include="Prerequisites.h">
       <Filter>GameEngine\GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Quad.h">
+      <Filter>GameEngine\GraphicsEngine\Primitives\Quad</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>GameEngine\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

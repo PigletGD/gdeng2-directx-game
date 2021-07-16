@@ -1,11 +1,9 @@
 #include "AppWindow.h"
 #include <Windows.h>
-#include "Vector3D.h"
 #include "Matrix4x4.h"
 #include "InputSystem.h"
 
 struct vec3 { float x, y, z; };
-struct vertex { Vector3D position, color, color1; };
 
 __declspec(align(16))
 struct constant
@@ -16,12 +14,88 @@ struct constant
 	float m_theta;
 };
 
+AppWindow* AppWindow::sharedInstance = nullptr;
+
 AppWindow::AppWindow()
 {
 }
 
 AppWindow::~AppWindow()
 {
+}
+
+AppWindow* AppWindow::get()
+{
+	return sharedInstance;
+}
+
+void AppWindow::intialize()
+{
+	sharedInstance = new AppWindow();
+}
+
+void AppWindow::destroy()
+{
+	delete sharedInstance;
+}
+
+void AppWindow::initializeEngine()
+{
+	GraphicsEngine::create();
+	InputSystem::create();
+
+	InputSystem::get()->addListener(this);
+	InputSystem::get()->showCursor(false);
+
+	RECT rc = this->getClientWindowRect();
+	m_swap_chain = GraphicsEngine::get()->getRenderSystem()->createSwapChain(this->m_HWND, rc.right - rc.left, rc.bottom - rc.top);
+
+	m_world_cam.setTranslation(Vector3D(0, 0, -2));
+
+	// DEFINING QUAD PROPERTIES
+	vertex vertex_list[] = {
+		// QUAD 1
+		{Vector3D( 1.5f, 0.5f, 2.0f), Vector3D(1.0f, 1.0f, 1.0f), Vector3D(0.3f, 0.3f, 0.3f)}, // POS1
+		{Vector3D( 2.5f, 0.5f, 2.0f), Vector3D(1.0f, 1.0f, 0.0f), Vector3D(0.3f, 0.3f, 0.0f)}, // POS2
+		{Vector3D( 2.5f,-0.5f, 2.0f), Vector3D(1.0f, 0.0f, 1.0f), Vector3D(0.3f, 0.0f, 0.3f)}, // POS3
+		{Vector3D( 1.5f,-0.5f, 2.0f), Vector3D(1.0f, 0.0f, 0.0f), Vector3D(0.3f, 0.0f, 0.0f)}, // POS4
+
+		// QUAD 2
+		{Vector3D(-0.5f, 0.5f, 1.0f), Vector3D(1.0f, 1.0f, 1.0f), Vector3D(0.3f, 0.3f, 0.3f)}, // POS1
+		{Vector3D( 0.5f, 0.5f, 1.0f), Vector3D(0.0f, 1.0f, 1.0f), Vector3D(0.0f, 0.3f, 0.3f)}, // POS2
+		{Vector3D( 0.5f,-0.5f, 1.0f), Vector3D(1.0f, 0.0f, 1.0f), Vector3D(0.3f, 0.0f, 0.3f)}, // POS3
+		{Vector3D(-0.5f,-0.5f, 1.0f), Vector3D(0.0f, 0.0f, 1.0f), Vector3D(0.0f, 0.0f, 0.3f)}, // POS4
+
+		// QUAD 3
+		{Vector3D(-2.5f, 0.5f, 0.0f), Vector3D(1.0f, 1.0f, 1.0f), Vector3D(0.3f, 0.3f, 0.3f)}, // POS1
+		{Vector3D(-1.5f, 0.5f, 0.0f), Vector3D(0.0f, 1.0f, 1.0f), Vector3D(0.0f, 0.3f, 0.3f)}, // POS2
+		{Vector3D(-1.5f,-0.5f, 0.0f), Vector3D(1.0f, 1.0f, 0.0f), Vector3D(0.3f, 0.3f, 0.0f)}, // POS3
+		{Vector3D(-2.5f,-0.5f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f), Vector3D(0.0f, 0.3f, 0.0f)}, // POS4
+	};
+	UINT size_vertex_list = ARRAYSIZE(vertex_list);
+
+	void* shader_byte_code = nullptr;
+	size_t size_shader = 0;
+
+	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
+	m_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
+
+	int num_quads = ((int)ARRAYSIZE(vertex_list)) / 4;
+	for (int i = 0; i < num_quads; i++) {
+		quads.push_back(new Quad(vertex_list[(4 * i)], vertex_list[(4 * i) + 1], vertex_list[(4 * i) + 2], vertex_list[(4 * i) + 3]));
+		quads[i]->createBuffers(shader_byte_code, size_shader);
+	}
+
+	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+
+	GraphicsEngine::get()->getRenderSystem()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
+	m_ps = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shader_byte_code, size_shader);
+	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+
+	constant cc;
+	cc.m_theta = 0;
+
+	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
 }
 
 void AppWindow::updateTime() {
@@ -43,24 +117,6 @@ void AppWindow::update()
 	if (m_delta_pos > 1.0f) m_delta_pos = 0;
 
 	m_delta_scale += m_delta_time * 2.0f;
-
-	//cc.m_world.setScale(Vector3D::lerp(Vector3D(0.5f, 0.5f, 0), Vector3D(1, 1, 0), (sin(m_delta_scale) + 1.0f) * 0.5f));
-	//temp.setTranslation(Vector3D::lerp(Vector3D(-1.5f, -1.5f, 0), Vector3D(1.5f, 1.5f, 0), m_delta_pos));
-	//cc.m_world *= temp;
-
-	/*cc.m_world.setScale(Vector3D(m_scale_cube, m_scale_cube, m_scale_cube));
-
-	temp.setIdentity();
-	temp.setRotationZ(0.0f);
-	cc.m_world *= temp;
-
-	temp.setIdentity();
-	temp.setRotationY(m_rot_y);
-	cc.m_world *= temp;
-
-	temp.setIdentity();
-	temp.setRotationX(m_rot_x);
-	cc.m_world *= temp;*/
 
 	cc.m_world.setIdentity();
 
@@ -86,14 +142,6 @@ void AppWindow::update()
 
 	cc.m_view = world_cam;
 
-	/*cc.m_proj.setOrthoLH
-	(
-		(this->getClientWindowRect().right - this->getClientWindowRect().left) / 400.0f,
-		(this->getClientWindowRect().bottom - this->getClientWindowRect().top) / 400.0f,
-		-4.0f,
-		4.0f
-	);*/
-
 	int width = (this->getClientWindowRect().right - this->getClientWindowRect().left);
 	int height = (this->getClientWindowRect().bottom - this->getClientWindowRect().top);
 
@@ -105,72 +153,6 @@ void AppWindow::update()
 void AppWindow::onCreate()
 {
 	Window::onCreate();
-
-	InputSystem::get()->addListener(this);
-	InputSystem::get()->showCursor(false);
-	
-	RECT rc = this->getClientWindowRect();
-	m_swap_chain = GraphicsEngine::get()->getRenderSystem()->createSwapChain(this->m_HWND, rc.right - rc.left, rc.bottom - rc.top);
-
-	m_world_cam.setTranslation(Vector3D(0, 0, -2));
-
-	vertex vertex_list[] = {
-		// FRONT FACE
-		{Vector3D(-0.5f,-0.5f,-0.5f), Vector3D(0.0f, 0.0f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f)}, // POS1
-		{Vector3D(-0.5f, 0.5f,-0.5f), Vector3D(1.0f, 1.0f, 0.0f), Vector3D(1.0f, 0.0f, 1.0f)}, // POS2
-		{Vector3D( 0.5f, 0.5f,-0.5f), Vector3D(0.0f, 0.0f, 1.0f), Vector3D(1.0f, 0.0f, 0.0f)}, // POS3
-		{Vector3D( 0.5f,-0.5f,-0.5f), Vector3D(0.0f, 1.0f, 1.0f), Vector3D(1.0f, 1.0f, 1.0f)}, // POS4
-		// BACK FACE
-		{Vector3D( 0.5f,-0.5f, 0.5f), Vector3D(1.0f, 0.0f, 0.0f), Vector3D(0.0f, 0.0f, 1.0f)}, // POS5
-		{Vector3D( 0.5f, 0.5f, 0.5f), Vector3D(1.0f, 0.0f, 1.0f), Vector3D(0.0f, 1.0f, 1.0f)}, // POS6
-		{Vector3D(-0.5f, 0.5f, 0.5f), Vector3D(1.0f, 1.0f, 1.0f), Vector3D(0.0f, 0.0f, 0.0f)}, // POS7
-		{Vector3D(-0.5f,-0.5f, 0.5f), Vector3D(0.0f, 1.0f, 0.0f), Vector3D(1.0f, 1.0f, 0.0f)}, // POS8
-	};
-
-	// CREATING MULTIPLE BUFFERS FOR MULTIPLE TRIANGLES/QUADS
-	UINT size_vertex_list = ARRAYSIZE(vertex_list);
-
-	unsigned int index_list[] =
-	{
-		// FRONT SIDE
-		0, 1, 2, // TRI1
-		2, 3, 0, // TRI2
-		// BACK SIDE
-		4, 5, 6, // TRI3
-		6, 7, 4, // TRI4
-		// TOP SIDE
-		1, 6, 5, // TRI5
-		5, 2, 1, // TRI6
-		// BOTTOM SIDE
-		7, 0, 3, // TRI7
-		3, 4, 7, // TRI8
-		// RIGHT SIDE
-		3, 2, 5, // TRI9
-		5, 4, 3, // TRI10
-		// LEFT SIDE
-		7, 6, 1, // TRI11
-		1, 0, 7  // TRI12
-	};
-
-	UINT size_index_list = ARRAYSIZE(index_list);
-	m_ib = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(index_list, size_index_list);
-
-	void* shader_byte_code = nullptr;
-	size_t size_shader = 0;
-
-	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
-	m_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
-	m_vb = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(vertex_list, sizeof(vertex), size_vertex_list, shader_byte_code, size_shader);
-	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
-
-	GraphicsEngine::get()->getRenderSystem()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
-	m_ps = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shader_byte_code, size_shader);
-	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
-
-	constant cc;
-	cc.m_theta = 0;
-
-	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
 }
 
 void AppWindow::onUpdate()
@@ -192,10 +174,7 @@ void AppWindow::onUpdate()
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_vs);
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_ps);
 
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
-
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
+	for (int i = 0; i < quads.size(); i++) quads[i]->draw();
 
 	m_swap_chain->present(true);
 
@@ -210,11 +189,13 @@ void AppWindow::onDestroy()
 
 void AppWindow::onFocus()
 {
+	InputSystem::get()->showCursor(false);
 	InputSystem::get()->addListener(this);
 }
 
 void AppWindow::onKillFocus()
 {
+	InputSystem::get()->showCursor(true);
 	InputSystem::get()->removeListener(this);
 }
 

@@ -4,19 +4,14 @@
 #pragma comment(lib, "d3d11.lib")
 
 int main()
-{
-	try {
-		GraphicsEngine::create();
-		InputSystem::create();
-	}
-	catch (...) { return -1; }
-
-	
+{	
 	{
 		try {
-			AppWindow app;
+			AppWindow::intialize();
+			AppWindow* app = (AppWindow*) AppWindow::get();
+			app->initializeEngine();
 
-			while (app.isRun());
+			while (app->isRun());
 		}
 		catch (...)
 		{

@@ -10,12 +10,26 @@
 #include "PixelShader.h"
 #include "InputListener.h"
 #include "Matrix4x4.h"
+#include "Quad.h"
+
+#include "Vertex.h"
+
+#include <vector>
 
 class AppWindow : public Window, public InputListener
 {
 public:
 	AppWindow();
 	~AppWindow();
+	AppWindow(AppWindow const&) {};
+	AppWindow& operator=(AppWindow const&) {};
+	static AppWindow* sharedInstance;
+
+	static AppWindow* get();
+	static void intialize();
+	static void destroy();
+
+	void initializeEngine();
 
 	void updateTime();
 	void update();
@@ -37,6 +51,8 @@ public:
 
 private:
 	SwapChainPtr m_swap_chain;
+
+	std::vector<Quad*> quads;
 
 	VertexBufferPtr m_vb;
 	IndexBufferPtr m_ib;
