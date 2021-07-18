@@ -6,6 +6,7 @@
 #include "ConstantBuffer.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include "AlphaBlendState.h"
 
 #include <d3dcompiler.h>
 #include <exception>
@@ -101,6 +102,16 @@ ConstantBufferPtr RenderSystem::createConstantBuffer(void* buffer, UINT size_buf
 	}
 	catch (...) {}
 	return cb;
+}
+
+AlphaBlendStatePtr RenderSystem::createAlphaBlendState()
+{
+	AlphaBlendStatePtr abs = nullptr;
+	try {
+		abs = std::make_shared<AlphaBlendState>(this);
+	}
+	catch (...) {}
+	return abs;
 }
 
 VertexShaderPtr RenderSystem::createVertexShader(const void* shader_byte_code, size_t byte_code_size)

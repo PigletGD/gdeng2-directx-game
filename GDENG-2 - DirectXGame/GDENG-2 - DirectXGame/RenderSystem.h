@@ -14,6 +14,7 @@ public:
 	VertexBufferPtr createVertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader);
 	IndexBufferPtr createIndexBuffer(void* list_indices, UINT size_list);
 	ConstantBufferPtr createConstantBuffer(void* buffer, UINT size_buffer);
+	AlphaBlendStatePtr createAlphaBlendState();
 
 	VertexShaderPtr createVertexShader(const void* shader_byte_code, size_t byte_code_size);
 	bool compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
@@ -47,5 +48,6 @@ private:
 	friend class ConstantBuffer;
 	friend class VertexShader;
 	friend class PixelShader;
+	friend class AlphaBlendState;
 	friend class Texture;
 };

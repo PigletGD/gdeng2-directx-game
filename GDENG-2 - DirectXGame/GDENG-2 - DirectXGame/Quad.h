@@ -2,8 +2,9 @@
 
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
-
 #include "Vertex.h"
+
+#include "Prerequisites.h"
 
 class Quad
 {

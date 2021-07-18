@@ -46,7 +46,10 @@ void AppWindow::initializeEngine()
 	InputSystem::create();
 
 	InputSystem::get()->addListener(this);
+	InputSystem::get()->addListener(GraphicsEngine::get()->getCameraSystem());
 	InputSystem::get()->showCursor(false);
+
+	GraphicsEngine::get()->getCameraSystem()->initializeGizmoTexture();
 
 	m_wood_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\brick.png");
 	m_mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\teapot.obj");
@@ -61,11 +64,11 @@ void AppWindow::initializeEngine()
 		// FRONT FACE
 		Vector3D(-0.5f,-0.5f,-0.5f), // POS1
 		Vector3D(-0.5f, 0.5f,-0.5f), // POS2
-		Vector3D( 0.5f, 0.5f,-0.5f), // POS3
-		Vector3D( 0.5f,-0.5f,-0.5f), // POS4
+		Vector3D(0.5f, 0.5f,-0.5f), // POS3
+		Vector3D(0.5f,-0.5f,-0.5f), // POS4
 		// BACK FACE
-		Vector3D( 0.5f,-0.5f, 0.5f), // POS5
-		Vector3D( 0.5f, 0.5f, 0.5f), // POS6
+		Vector3D(0.5f,-0.5f, 0.5f), // POS5
+		Vector3D(0.5f, 0.5f, 0.5f), // POS6
 		Vector3D(-0.5f, 0.5f, 0.5f), // POS7
 		Vector3D(-0.5f,-0.5f, 0.5f), // POS8
 	};
@@ -169,23 +172,32 @@ void AppWindow::initializeEngine()
 	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 	m_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
 
-	/*int num_quads = ((int)ARRAYSIZE(vertex_list)) / 4;
-	for (int i = 0; i < num_quads; i++) {
-		quads.push_back(new Quad(vertex_list[(4 * i)], vertex_list[(4 * i) + 1], vertex_list[(4 * i) + 2], vertex_list[(4 * i) + 3]));
-		quads[i]->createBuffers(shader_byte_code, size_shader);
-	}*/
+	//GraphicsEngine::get()->getCameraSystem()->createCameraBuffers(shader_byte_code, size_shader);
+
 	m_vb = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(vertex_list, sizeof(vertex), size_vertex_list, shader_byte_code, size_shader);
 
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+
+	shader_byte_code = nullptr;
+	size_shader = 0;
 
 	GraphicsEngine::get()->getRenderSystem()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
 	m_ps = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shader_byte_code, size_shader);
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 
+	//GraphicsEngine::get()->getCameraSystem()->createCameraShaders(shader_byte_code, size_shader);
+
 	constant cc;
 	cc.m_theta = 0;
 
 	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
+
+	m_abs = GraphicsEngine::get()->getRenderSystem()->createAlphaBlendState();
+}
+
+float AppWindow::getDeltaTime()
+{
+	return m_delta_time;
 }
 
 void AppWindow::updateTime() {
@@ -201,41 +213,11 @@ void AppWindow::update()
 	constant cc;
 	cc.m_theta = m_theta;
 
-	Matrix4x4 temp;
-
-	m_delta_pos += m_delta_time * 0.1f;
-	if (m_delta_pos > 1.0f) m_delta_pos = 0;
-
-	m_delta_scale += m_delta_time * 2.0f;
+	GraphicsEngine::get()->getCameraSystem()->updateCurrentCamera();
 
 	cc.m_world.setIdentity();
-
-	Matrix4x4 world_cam;
-	world_cam.setIdentity();
-
-	temp.setIdentity();
-	temp.setRotationX(m_rot_x);
-	world_cam *= temp;
-	temp.setIdentity();
-	temp.setRotationY(m_rot_y);
-	world_cam *= temp;
-
-	Vector3D new_pos = m_world_cam.getTranslation() + 
-		world_cam.getZDirection() * (m_forward * m_delta_time) +
-		world_cam.getXDirection() * (m_rightward * m_delta_time);
-
-	world_cam.setTranslation(new_pos);
-
-	m_world_cam = world_cam;
-
-	world_cam.inverse();
-
-	cc.m_view = world_cam;
-
-	int width = (this->getClientWindowRect().right - this->getClientWindowRect().left);
-	int height = (this->getClientWindowRect().bottom - this->getClientWindowRect().top);
-
-	cc.m_proj.setPerspectiveFovLH(1.57f, (float)width / (float)height, 0.1f, 100.0f);
+	cc.m_view = GraphicsEngine::get()->getCameraSystem()->getCurrentCameraView();
+	cc.m_proj = GraphicsEngine::get()->getCameraSystem()->getCurrentCameraProjection();
 
 	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
 }
@@ -251,11 +233,13 @@ void AppWindow::onUpdate()
 
 	InputSystem::get()->update();
 
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setAlphaBlendState(m_abs);
+
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain, 1.0f, 0.4f, 0.4f, 1);
 
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
-	
+
 	update();
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
@@ -266,12 +250,12 @@ void AppWindow::onUpdate()
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, m_wood_tex);
 
-	//for (int i = 0; i < quads.size(); i++) quads[i]->draw();
-
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(m_mesh->getVertexBuffer());
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_mesh->getIndexBuffer());
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_mesh->getIndexBuffer()->getSizeIndexList(), 0, 0);
+
+	GraphicsEngine::get()->getCameraSystem()->drawGizmos(m_ps);
 
 	m_swap_chain->present(true);
 
@@ -287,21 +271,23 @@ void AppWindow::onDestroy()
 void AppWindow::onFocus()
 {
 	InputSystem::get()->showCursor(false);
+	InputSystem::get()->addListener(GraphicsEngine::get()->getCameraSystem());
 	InputSystem::get()->addListener(this);
 }
 
 void AppWindow::onKillFocus()
 {
 	InputSystem::get()->showCursor(true);
+	InputSystem::get()->removeListener(GraphicsEngine::get()->getCameraSystem());
 	InputSystem::get()->removeListener(this);
 }
 
 void AppWindow::onKeyDown(int key)
 {
-	if (key == 'W') m_forward = 1.0f;
+	/*if (key == 'W') m_forward = 1.0f;
 	else if (key == 'S') m_forward = -1.0f;
 	else if (key == 'A') m_rightward = -1.0f;
-	else if (key == 'D') m_rightward = 1.0f;
+	else if (key == 'D') m_rightward = 1.0f;*/
 }
 
 void AppWindow::onKeyUp(int key)
@@ -312,13 +298,13 @@ void AppWindow::onKeyUp(int key)
 
 void AppWindow::onMouseMove(const Point& mouse_pos)
 {
-	int width = (this->getClientWindowRect().right - this->getClientWindowRect().left);
+	/*int width = (this->getClientWindowRect().right - this->getClientWindowRect().left);
 	int height = (this->getClientWindowRect().bottom - this->getClientWindowRect().top);
 
 	m_rot_x += (mouse_pos.m_y - (height * 0.5f)) * m_delta_time * 0.2f;
 	m_rot_y += (mouse_pos.m_x - (width * 0.5f))* m_delta_time * 0.2f;
 
-	InputSystem::get()->setCursorPosition(Point((int)(width * 0.5f), (int)(height * 0.5f)));
+	InputSystem::get()->setCursorPosition(Point((int)(width * 0.5f), (int)(height * 0.5f)));*/
 }
 
 void AppWindow::onLeftMouseDown(const Point& mouse_pos)

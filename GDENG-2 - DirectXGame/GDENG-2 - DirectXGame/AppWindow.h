@@ -8,6 +8,7 @@
 #include "ConstantBuffer.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include "AlphaBlendState.h"
 #include "InputListener.h"
 #include "Matrix4x4.h"
 #include "Quad.h"
@@ -31,7 +32,9 @@ public:
 
 	void initializeEngine();
 
+	float getDeltaTime();
 	void updateTime();
+	
 	void update();
 
 	virtual void onCreate() override;
@@ -62,6 +65,8 @@ private:
 	
 	VertexShaderPtr m_vs;
 	PixelShaderPtr m_ps;
+
+	AlphaBlendStatePtr m_abs;
 
 	long m_old_delta;
 	long m_new_delta;

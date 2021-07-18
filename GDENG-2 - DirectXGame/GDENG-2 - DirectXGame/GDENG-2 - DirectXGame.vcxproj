@@ -143,7 +143,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AlphaBlendState.cpp" />
     <ClCompile Include="AppWindow.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="DeviceContext.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
@@ -165,7 +168,10 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AlphaBlendState.h" />
     <ClInclude Include="AppWindow.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="DeviceContext.h" />
     <ClInclude Include="GraphicsEngine.h" />

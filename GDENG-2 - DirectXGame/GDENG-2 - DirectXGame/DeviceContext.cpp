@@ -5,6 +5,7 @@
 #include "ConstantBuffer.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include "AlphaBlendState.h"
 #include "Texture.h"
 
 #include <exception>
@@ -81,6 +82,11 @@ void DeviceContext::setVertexShader(const VertexShaderPtr& vertex_shader)
 void DeviceContext::setPixelShader(const PixelShaderPtr& pixel_shader)
 {
 	m_device_context->PSSetShader(pixel_shader->m_ps, nullptr, 0);
+}
+
+void DeviceContext::setAlphaBlendState(const AlphaBlendStatePtr& alpha_blend_state)
+{
+	m_device_context->OMSetBlendState(alpha_blend_state->m_blend_state, nullptr, 0xFFFFFFFF);
 }
 
 void DeviceContext::setTexture(const VertexShaderPtr& vertex_shader, const TexturePtr& texture)

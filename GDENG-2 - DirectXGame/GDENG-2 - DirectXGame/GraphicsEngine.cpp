@@ -24,6 +24,11 @@ GraphicsEngine::GraphicsEngine()
 	}
 	catch (...) { throw std::exception("Mesh Manager not created successfully"); }
 
+	try {
+		m_camera_system = new CameraSystem();
+	}
+	catch (...) { throw std::exception("Camera System not created successfully"); }
+
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
 
@@ -37,6 +42,7 @@ GraphicsEngine::~GraphicsEngine()
 {
 	GraphicsEngine::m_engine = nullptr;
 
+	delete m_camera_system;
 	delete m_mesh_manager;
 	delete m_tex_manager;
 	delete m_render_system;
@@ -45,6 +51,11 @@ GraphicsEngine::~GraphicsEngine()
 RenderSystem* GraphicsEngine::getRenderSystem()
 {
 	return m_render_system;
+}
+
+CameraSystem* GraphicsEngine::getCameraSystem()
+{
+	return m_camera_system;
 }
 
 TextureManager* GraphicsEngine::getTextureManager()

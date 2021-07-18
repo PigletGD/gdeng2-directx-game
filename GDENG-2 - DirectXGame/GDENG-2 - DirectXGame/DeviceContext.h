@@ -23,6 +23,8 @@ public:
 	void setVertexShader(const VertexShaderPtr& vertex_shader);
 	void setPixelShader(const PixelShaderPtr& pixel_shader);
 
+	void setAlphaBlendState(const AlphaBlendStatePtr& alpha_blend_state);
+
 	void setTexture(const VertexShaderPtr& vertex_shader, const TexturePtr& texture);
 	void setTexture(const PixelShaderPtr& pixel_shader, const TexturePtr& texture);
 
