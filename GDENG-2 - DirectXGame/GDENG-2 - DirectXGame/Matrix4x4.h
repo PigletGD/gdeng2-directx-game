@@ -141,6 +141,13 @@ public:
 		return Vector3D(m_mat[3][0], m_mat[3][1], m_mat[3][2]);
 	}
 
+	void flipZBasisVector()
+	{
+		m_mat[2][0] *= -1;
+		m_mat[2][1] *= -1;
+		m_mat[2][2] *= -1;
+	}
+
 	void setPerspectiveFovLH(float fov, float aspect, float znear, float zfar)
 	{
 		float yscale = 1.0f / tan(fov / 2.0f);

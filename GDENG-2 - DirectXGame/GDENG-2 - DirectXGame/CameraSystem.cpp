@@ -22,17 +22,14 @@ void CameraSystem::initializeGizmoTexture()
 
 void CameraSystem::createCameraBuffers(void* shader_byte_code, UINT size_byte_shader)
 {
-	/*for (int i = 0; i < cameraList.size(); i++)
-		cameraList[i]->createBuffers(shader_byte_code, size_byte_shader);*/
+	for (int i = 0; i < cameraList.size(); i++)
+		cameraList[i]->createBuffers(shader_byte_code, size_byte_shader);
 }
 
-void CameraSystem::createCameraShaders(void* shader_byte_code, UINT size_byte_shader)
+void CameraSystem::setCameraShaders(const VertexShaderPtr& vs, const PixelShaderPtr& ps)
 {
-	//size_t size_shader = size_byte_shader;
-
-	/*GraphicsEngine::get()->getRenderSystem()->compilePixelShader(L"PixelGizmoShader.hlsl", "psmain", &shader_byte_code, &size_shader);
-	m_gizmo_ps = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shader_byte_code, size_byte_shader);
-	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();*/
+	m_gizmo_vs = vs;
+	m_gizmo_ps = ps;
 }
 
 void CameraSystem::switchToPreviousCamera()
@@ -72,6 +69,13 @@ void CameraSystem::updateCurrentCamera()
 	world_cam.setTranslation(new_pos);
 
 	cameraList[m_camera_index]->setWorldCameraMatrix(world_cam);
+
+	//cameraList[m_camera_index]->updateQuad();
+}
+
+Matrix4x4 CameraSystem::getCurrentCameraWorld()
+{
+	return cameraList[m_camera_index]->getWorldCameraMatrix();
 }
 
 Matrix4x4 CameraSystem::getCurrentCameraView()
@@ -89,14 +93,14 @@ Matrix4x4 CameraSystem::getCurrentCameraProjection()
 	return cameraList[m_camera_index]->getProjection();
 }
 
-void CameraSystem::drawGizmos(PixelShaderPtr ps)
+void CameraSystem::drawGizmos(const VertexShaderPtr& vs, const PixelShaderPtr& ps, constant cc)
 {
-	/*GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_gizmo_ps, m_gizmo_icon);
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(ps, m_gizmo_icon);
 
 	for (int i = 0; i < cameraList.size(); i++) {
 		if (i != m_camera_index)
-			cameraList[i]->drawGizmoIcon();
-	}*/
+			cameraList[i]->drawGizmoIcon(vs, ps, cc);
+	}
 }
 
 void CameraSystem::onKeyDown(int key)

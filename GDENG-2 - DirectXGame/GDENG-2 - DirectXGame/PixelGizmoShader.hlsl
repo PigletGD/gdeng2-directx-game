@@ -1,4 +1,4 @@
-Texture2D Texture: register(t0);
+Texture2D Texture : register(t0);
 sampler TextureSampler: register(s0);
 
 struct PS_INPUT
@@ -17,5 +17,5 @@ cbuffer constant: register(b0)
 
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
-	return Texture.Sample(TextureSampler, input.texcoord * 0.5);
+	return Texture.Sample(TextureSampler, input.texcoord);
 }

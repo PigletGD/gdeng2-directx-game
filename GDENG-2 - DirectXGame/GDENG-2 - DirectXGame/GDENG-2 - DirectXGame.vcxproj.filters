@@ -230,6 +230,9 @@
     <ClInclude Include="AlphaBlendState.h">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\AlphaBlendState</Filter>
     </ClInclude>
+    <ClInclude Include="ConstantData.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\ConstantBuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl">
@@ -239,6 +242,9 @@
       <Filter>App</Filter>
     </FxCompile>
     <FxCompile Include="VertexMeshLayoutShader.hlsl">
+      <Filter>App</Filter>
+    </FxCompile>
+    <FxCompile Include="PixelGizmoShader.hlsl">
       <Filter>App</Filter>
     </FxCompile>
   </ItemGroup>

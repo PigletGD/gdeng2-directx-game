@@ -3,17 +3,11 @@
 #include "Matrix4x4.h"
 #include "InputSystem.h"
 #include "Mesh.h"
+#include "ConstantData.h"
 
 struct vec3 { float x, y, z; };
 
-__declspec(align(16))
-struct constant
-{
-	Matrix4x4 m_world;
-	Matrix4x4 m_view;
-	Matrix4x4 m_proj;
-	float m_theta;
-};
+
 
 AppWindow* AppWindow::sharedInstance = nullptr;
 
@@ -81,30 +75,6 @@ void AppWindow::initializeEngine()
 		Vector2D(1.0f,0.0f)
 	};
 
-	/*
-	// DEFINING QUAD PROPERTIES
-	vertex vertex_list[] = {
-		// QUAD 1
-		{Vector3D( 1.5f, 0.5f, 2.0f), Vector3D(1.0f, 1.0f, 1.0f), Vector3D(0.3f, 0.3f, 0.3f)}, // POS1
-		{Vector3D( 2.5f, 0.5f, 2.0f), Vector3D(1.0f, 1.0f, 0.0f), Vector3D(0.3f, 0.3f, 0.0f)}, // POS2
-		{Vector3D( 2.5f,-0.5f, 2.0f), Vector3D(1.0f, 0.0f, 1.0f), Vector3D(0.3f, 0.0f, 0.3f)}, // POS3
-		{Vector3D( 1.5f,-0.5f, 2.0f), Vector3D(1.0f, 0.0f, 0.0f), Vector3D(0.3f, 0.0f, 0.0f)}, // POS4
-
-		// QUAD 2
-		{Vector3D(-0.5f, 0.5f, 1.0f), Vector3D(1.0f, 1.0f, 1.0f), Vector3D(0.3f, 0.3f, 0.3f)}, // POS1
-		{Vector3D( 0.5f, 0.5f, 1.0f), Vector3D(0.0f, 1.0f, 1.0f), Vector3D(0.0f, 0.3f, 0.3f)}, // POS2
-		{Vector3D( 0.5f,-0.5f, 1.0f), Vector3D(1.0f, 0.0f, 1.0f), Vector3D(0.3f, 0.0f, 0.3f)}, // POS3
-		{Vector3D(-0.5f,-0.5f, 1.0f), Vector3D(0.0f, 0.0f, 1.0f), Vector3D(0.0f, 0.0f, 0.3f)}, // POS4
-
-		// QUAD 3
-		{Vector3D(-2.5f, 0.5f, 0.0f), Vector3D(1.0f, 1.0f, 1.0f), Vector3D(0.3f, 0.3f, 0.3f)}, // POS1
-		{Vector3D(-1.5f, 0.5f, 0.0f), Vector3D(0.0f, 1.0f, 1.0f), Vector3D(0.0f, 0.3f, 0.3f)}, // POS2
-		{Vector3D(-1.5f,-0.5f, 0.0f), Vector3D(1.0f, 1.0f, 0.0f), Vector3D(0.3f, 0.3f, 0.0f)}, // POS3
-		{Vector3D(-2.5f,-0.5f, 0.0f), Vector3D(0.0f, 1.0f, 0.0f), Vector3D(0.0f, 0.3f, 0.0f)}, // POS4
-	};
-	UINT size_vertex_list = ARRAYSIZE(vertex_list);
-	*/
-
 	vertex vertex_list[] =
 	{
 		//X - Y - Z
@@ -113,12 +83,10 @@ void AppWindow::initializeEngine()
 		{ position_list[2],texcoord_list[2] },
 		{ position_list[3],texcoord_list[3] },
 
-
 		{ position_list[4],texcoord_list[1] },
 		{ position_list[5],texcoord_list[0] },
 		{ position_list[6],texcoord_list[2] },
 		{ position_list[7],texcoord_list[3] },
-
 
 		{ position_list[1],texcoord_list[1] },
 		{ position_list[6],texcoord_list[0] },
@@ -172,20 +140,15 @@ void AppWindow::initializeEngine()
 	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 	m_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
 
-	//GraphicsEngine::get()->getCameraSystem()->createCameraBuffers(shader_byte_code, size_shader);
+	GraphicsEngine::get()->getCameraSystem()->createCameraBuffers(shader_byte_code, size_shader);
 
 	m_vb = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(vertex_list, sizeof(vertex), size_vertex_list, shader_byte_code, size_shader);
 
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 
-	shader_byte_code = nullptr;
-	size_shader = 0;
-
 	GraphicsEngine::get()->getRenderSystem()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
 	m_ps = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shader_byte_code, size_shader);
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
-
-	//GraphicsEngine::get()->getCameraSystem()->createCameraShaders(shader_byte_code, size_shader);
 
 	constant cc;
 	cc.m_theta = 0;
@@ -210,16 +173,7 @@ void AppWindow::updateTime() {
 
 void AppWindow::update()
 {
-	constant cc;
-	cc.m_theta = m_theta;
-
-	GraphicsEngine::get()->getCameraSystem()->updateCurrentCamera();
-
-	cc.m_world.setIdentity();
-	cc.m_view = GraphicsEngine::get()->getCameraSystem()->getCurrentCameraView();
-	cc.m_proj = GraphicsEngine::get()->getCameraSystem()->getCurrentCameraProjection();
-
-	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
+	
 }
 
 void AppWindow::onCreate()
@@ -240,7 +194,16 @@ void AppWindow::onUpdate()
 	RECT rc = this->getClientWindowRect();
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
 
-	update();
+	constant cc;
+	cc.m_theta = m_theta;
+
+	GraphicsEngine::get()->getCameraSystem()->updateCurrentCamera();
+
+	cc.m_world.setIdentity();
+	cc.m_view = GraphicsEngine::get()->getCameraSystem()->getCurrentCameraView();
+	cc.m_proj = GraphicsEngine::get()->getCameraSystem()->getCurrentCameraProjection();
+
+	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb);
@@ -255,7 +218,7 @@ void AppWindow::onUpdate()
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_mesh->getIndexBuffer()->getSizeIndexList(), 0, 0);
 
-	GraphicsEngine::get()->getCameraSystem()->drawGizmos(m_ps);
+	GraphicsEngine::get()->getCameraSystem()->drawGizmos(m_vs, m_ps, cc);
 
 	m_swap_chain->present(true);
 
@@ -284,10 +247,6 @@ void AppWindow::onKillFocus()
 
 void AppWindow::onKeyDown(int key)
 {
-	/*if (key == 'W') m_forward = 1.0f;
-	else if (key == 'S') m_forward = -1.0f;
-	else if (key == 'A') m_rightward = -1.0f;
-	else if (key == 'D') m_rightward = 1.0f;*/
 }
 
 void AppWindow::onKeyUp(int key)
@@ -298,13 +257,6 @@ void AppWindow::onKeyUp(int key)
 
 void AppWindow::onMouseMove(const Point& mouse_pos)
 {
-	/*int width = (this->getClientWindowRect().right - this->getClientWindowRect().left);
-	int height = (this->getClientWindowRect().bottom - this->getClientWindowRect().top);
-
-	m_rot_x += (mouse_pos.m_y - (height * 0.5f)) * m_delta_time * 0.2f;
-	m_rot_y += (mouse_pos.m_x - (width * 0.5f))* m_delta_time * 0.2f;
-
-	InputSystem::get()->setCursorPosition(Point((int)(width * 0.5f), (int)(height * 0.5f)));*/
 }
 
 void AppWindow::onLeftMouseDown(const Point& mouse_pos)

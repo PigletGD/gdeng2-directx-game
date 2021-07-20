@@ -24,9 +24,19 @@ public:
 		return Vector3D(m_x + vec.m_x, m_y + vec.m_y, m_z + vec.m_z);
 	}
 
+	Vector3D operator +(float value)
+	{
+		return Vector3D(m_x + value, m_y + value, m_z + value);
+	}
+
 	Vector3D operator -(Vector3D vec)
 	{
 		return Vector3D(m_x - vec.m_x, m_y - vec.m_y, m_z - vec.m_z);
+	}
+
+	Vector3D operator -(float value)
+	{
+		return Vector3D(m_x - value, m_y - value, m_z - value);
 	}
 
 	Vector3D operator *(float num)

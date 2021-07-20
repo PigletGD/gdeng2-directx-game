@@ -3,6 +3,8 @@
 #include "GraphicsEngine.h"
 #include "DeviceContext.h"
 
+#include "ConstantData.h"
+
 Quad::Quad(vertex v1, vertex v2, vertex v3, vertex v4)
 {
 	vertex_list[0] = v1;
@@ -36,4 +38,12 @@ void Quad::draw()
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
+}
+
+void Quad::update(Vector3D pos1, Vector3D pos2, Vector3D pos3, Vector3D pos4)
+{
+	vertex_list[0] = { pos1,  Vector2D(0, 2) };
+	vertex_list[1] = { pos2,  Vector2D(2, 2) };
+	vertex_list[2] = { pos3,  Vector2D(2, 0) };
+	vertex_list[3] = { pos4,  Vector2D(0, 0) };
 }

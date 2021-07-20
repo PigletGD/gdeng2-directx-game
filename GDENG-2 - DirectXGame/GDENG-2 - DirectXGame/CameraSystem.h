@@ -3,7 +3,7 @@
 #include "InputListener.h"
 #include "Camera.h"
 #include "Matrix4x4.h"
-
+#include "ConstantData.h"
 #include "Prerequisites.h"
 
 #include <vector>
@@ -16,17 +16,18 @@ public:
 
 	void initializeGizmoTexture();
 	void createCameraBuffers(void* shader_byte_code, UINT size_byte_shader);
-	void createCameraShaders(void* shader_byte_code, UINT size_byte_shader);
+	void setCameraShaders(const VertexShaderPtr& vs, const PixelShaderPtr& ps);
 
 	void switchToPreviousCamera();
 	void switchToNextCamera();
 
 	void updateCurrentCamera();
 	
+	Matrix4x4 getCurrentCameraWorld();
 	Matrix4x4 getCurrentCameraView();
 	Matrix4x4 getCurrentCameraProjection();
 
-	void drawGizmos(PixelShaderPtr ps);
+	void drawGizmos(const VertexShaderPtr& vs, const PixelShaderPtr& ps, constant cc);
 
 	virtual void onKeyDown(int key) override;
 	virtual void onKeyUp(int key) override;
@@ -49,5 +50,7 @@ private:
 	bool m_pressed_m = false;
 
 	TexturePtr m_gizmo_icon;
-	//PixelShaderPtr m_gizmo_ps;
+
+	VertexShaderPtr m_gizmo_vs;
+	PixelShaderPtr m_gizmo_ps;
 };

@@ -13,10 +13,13 @@ public:
 	~Quad();
 
 	void createBuffers(void* shader_byte_code, UINT size_byte_shader);
+
 	void draw();
+	void update(Vector3D pos1, Vector3D pos2, Vector3D pos3, Vector3D pos4);
 private:
 	VertexBufferPtr m_vb;
 	IndexBufferPtr m_ib;
+	ConstantBufferPtr m_cb;
 
 	vertex vertex_list[4];
 	UINT size_vertex_list;

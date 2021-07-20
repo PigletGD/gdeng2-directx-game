@@ -2,7 +2,7 @@
 #include "Quad.h"
 #include "Vector3D.h"
 #include "Matrix4x4.h"
-
+#include "ConstantData.h"
 #include "Prerequisites.h"
 
 class Camera
@@ -22,11 +22,13 @@ public:
 	float getYRot();
 	void updateRotation(float delta_rot_x, float delta_rot_y);
 
-	void drawGizmoIcon();
+	void drawGizmoIcon(const VertexShaderPtr& vs, const PixelShaderPtr& ps, constant cc);
 
 	void switchProjectionMode();
 	void setOrthographicView();
 	void setPerspectiveView();
+
+	void updateQuad();
 
 	Matrix4x4 getProjection();
 
@@ -44,4 +46,6 @@ private:
 	float m_far_clip_plane = 100.0f;
 
 	Quad* m_gizmo_icon;
+
+	ConstantBufferPtr m_cb;
 };
