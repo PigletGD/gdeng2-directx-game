@@ -28,10 +28,19 @@ void CameraSystem::createCameraBuffers(void* shader_byte_code, UINT size_byte_sh
 		cameraList[i]->createBuffers(shader_byte_code, size_byte_shader);
 }
 
-void CameraSystem::setCameraShaders(const VertexShaderPtr& vs, const PixelShaderPtr& ps)
+void CameraSystem::setCameraShaders()
 {
-	m_gizmo_vs = vs;
-	m_gizmo_ps = ps;
+	void* shader_byte_code = nullptr;
+	size_t size_shader = 0;
+
+	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
+	m_gizmo_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
+	createCameraBuffers(shader_byte_code, size_shader);
+	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+
+	GraphicsEngine::get()->getRenderSystem()->compilePixelShader(L"PixelGizmoShader.hlsl", "psmain", &shader_byte_code, &size_shader);
+	m_gizmo_ps = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shader_byte_code, size_shader);
+	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 }
 
 void CameraSystem::switchToPreviousCamera()
@@ -71,8 +80,6 @@ void CameraSystem::updateCurrentCamera()
 	world_cam.setTranslation(new_pos);
 
 	cameraList[m_camera_index]->setWorldCameraMatrix(world_cam);
-
-	//cameraList[m_camera_index]->updateQuad();
 }
 
 Matrix4x4 CameraSystem::getCurrentCameraWorld()
@@ -97,11 +104,13 @@ Matrix4x4 CameraSystem::getCurrentCameraProjection()
 
 void CameraSystem::drawGizmos(const VertexShaderPtr& vs, const PixelShaderPtr& ps, constant cc)
 {
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(ps, m_gizmo_icon);
+	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(ps, m_gizmo_icon);
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_gizmo_ps, m_gizmo_icon);
 
 	for (int i = 0; i < cameraList.size(); i++) {
 		if (i != m_camera_index)
-			cameraList[i]->drawGizmoIcon(vs, ps, cc);
+			cameraList[i]->drawGizmoIcon(m_gizmo_vs, m_gizmo_ps, cc);
+			//cameraList[i]->drawGizmoIcon(vs, ps, cc);
 	}
 }
 

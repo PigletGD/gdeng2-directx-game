@@ -135,6 +135,12 @@
     <ClCompile Include="AlphaBlendState.cpp">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\AlphaBlendState</Filter>
     </ClCompile>
+    <ClCompile Include="QuadTransitionColor.cpp">
+      <Filter>GameEngine\GraphicsEngine\Primitives\Quad</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexColorBuffer.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -233,6 +239,12 @@
     <ClInclude Include="ConstantData.h">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\ConstantBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="QuadTransitionColor.h">
+      <Filter>GameEngine\GraphicsEngine\Primitives\Quad</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexColorBuffer.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl">
@@ -245,6 +257,12 @@
       <Filter>App</Filter>
     </FxCompile>
     <FxCompile Include="PixelGizmoShader.hlsl">
+      <Filter>App</Filter>
+    </FxCompile>
+    <FxCompile Include="PixelTransitionColorShader.hlsl">
+      <Filter>App</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexTransitionColorShader.hlsl">
       <Filter>App</Filter>
     </FxCompile>
   </ItemGroup>

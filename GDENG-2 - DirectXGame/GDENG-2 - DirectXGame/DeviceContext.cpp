@@ -1,6 +1,7 @@
 #include "DeviceContext.h"
 #include "SwapChain.h"
 #include "VertexBuffer.h"
+#include "VertexColorBuffer.h"
 #include "IndexBuffer.h"
 #include "ConstantBuffer.h"
 #include "VertexShader.h"
@@ -29,6 +30,15 @@ void DeviceContext::clearRenderTargetColor(const SwapChainPtr& swap_chain, float
 }
 
 void DeviceContext::setVertexBuffer(const VertexBufferPtr& vertex_buffer)
+{
+	UINT stride = vertex_buffer->m_size_vertex;
+	UINT offset = 0;
+
+	m_device_context->IASetVertexBuffers(0, 1, &vertex_buffer->m_buffer, &stride, &offset);
+	m_device_context->IASetInputLayout(vertex_buffer->m_layout);
+}
+
+void DeviceContext::setVertexBuffer(const VertexColorBufferPtr& vertex_buffer)
 {
 	UINT stride = vertex_buffer->m_size_vertex;
 	UINT offset = 0;

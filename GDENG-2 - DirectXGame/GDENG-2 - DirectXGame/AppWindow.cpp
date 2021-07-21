@@ -5,10 +5,6 @@
 #include "Mesh.h"
 #include "ConstantData.h"
 
-struct vec3 { float x, y, z; };
-
-
-
 AppWindow* AppWindow::sharedInstance = nullptr;
 
 AppWindow::AppWindow()
@@ -45,13 +41,14 @@ void AppWindow::initializeEngine()
 
 	GraphicsEngine::get()->getCameraSystem()->initializeGizmoTexture();
 
-	m_wood_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\brick.png");
-	m_mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\teapot.obj");
-
 	RECT rc = this->getClientWindowRect();
 	m_swap_chain = GraphicsEngine::get()->getRenderSystem()->createSwapChain(this->m_HWND, rc.right - rc.left, rc.bottom - rc.top);
 
 	m_world_cam.setTranslation(Vector3D(0, 0, -2));
+
+	/*
+	m_wood_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\brick.png");
+	m_mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\teapot.obj");
 
 	Vector3D position_list[] =
 	{
@@ -149,6 +146,36 @@ void AppWindow::initializeEngine()
 	GraphicsEngine::get()->getRenderSystem()->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);
 	m_ps = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shader_byte_code, size_shader);
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+	*/
+	
+	vertex_color vertex_list[] = {
+		//x - y - z				r - g - b
+		{Vector3D(-0.5f,-0.5f, 0.0f),	Vector3D(-0.32f,-0.11f, 0.0f),	Vector3D(0.0f, 0.0f, 0.0f),	Vector3D(0.0f, 1.0f, 0.0f)}, // POS1
+		{Vector3D(-0.5f, 0.5f, 0.0f),	Vector3D(-0.11f, 0.78f, 0.0f),	Vector3D(1.0f, 1.0f, 0.0f),	Vector3D(0.0f, 1.0f, 1.0f)}, // POS2
+		{Vector3D( 0.5f,-0.5f, 0.0f),	Vector3D( 0.75f,-0.73f, 0.0f),	Vector3D(0.0f, 0.0f, 1.0f),	Vector3D(1.0f, 0.0f, 0.0f)}, // POS3
+		{Vector3D( 0.5f, 0.5f, 0.0f),	Vector3D( 0.88f, 0.77f, 0.0f),	Vector3D(1.0f, 1.0f, 1.0f),	Vector3D(0.0f, 0.0f, 1.0f)}  // POS4
+	};
+	UINT size_vertex_list = ARRAYSIZE(vertex_list);
+
+	m_quad_color = new QuadTransitionColor(vertex_list[0], vertex_list[1], vertex_list[2], vertex_list[3]);
+
+	void* shader_byte_code = nullptr;
+	size_t size_shader = 0;
+
+	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"VertexTransitionColorShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
+	m_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
+
+	m_quad_color->createBuffers(shader_byte_code, size_shader);
+
+	GraphicsEngine::get()->getCameraSystem()->createCameraBuffers(shader_byte_code, size_shader);
+
+	//m_vcb = GraphicsEngine::get()->getRenderSystem()->createVertexColorBuffer(vertex_list, sizeof(vertex_color), size_vertex_list, shader_byte_code, size_shader);
+
+	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+
+	GraphicsEngine::get()->getRenderSystem()->compilePixelShader(L"PixelTransitionColorShader.hlsl", "psmain", &shader_byte_code, &size_shader);
+	m_ps = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shader_byte_code, size_shader);
+	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 
 	constant cc;
 	cc.m_theta = 0;
@@ -156,6 +183,8 @@ void AppWindow::initializeEngine()
 	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
 
 	m_abs = GraphicsEngine::get()->getRenderSystem()->createAlphaBlendState();
+
+	GraphicsEngine::get()->getCameraSystem()->setCameraShaders();
 }
 
 float AppWindow::getDeltaTime()
@@ -211,12 +240,14 @@ void AppWindow::onUpdate()
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_vs);
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_ps);
 
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, m_wood_tex);
+	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, m_wood_tex);
 
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(m_mesh->getVertexBuffer());
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_mesh->getIndexBuffer());
+	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(m_mesh->getVertexBuffer());
+	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_mesh->getIndexBuffer());
 
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_mesh->getIndexBuffer()->getSizeIndexList(), 0, 0);
+	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_mesh->getIndexBuffer()->getSizeIndexList(), 0, 0);
+
+	m_quad_color->draw();
 
 	GraphicsEngine::get()->getCameraSystem()->drawGizmos(m_vs, m_ps, cc);
 

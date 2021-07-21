@@ -2,6 +2,7 @@
 #include "SwapChain.h"
 #include "DeviceContext.h"
 #include "VertexBuffer.h"
+#include "VertexColorBuffer.h"
 #include "IndexBuffer.h"
 #include "ConstantBuffer.h"
 #include "VertexShader.h"
@@ -79,6 +80,16 @@ VertexBufferPtr RenderSystem::createVertexBuffer(void* list_vertices, UINT size_
 	VertexBufferPtr vb = nullptr;
 	try {
 		vb = std::make_shared<VertexBuffer>(list_vertices, size_vertex, size_list, shader_byte_code, size_byte_shader, this);
+	}
+	catch (...) {}
+	return vb;
+}
+
+VertexColorBufferPtr RenderSystem::createVertexColorBuffer(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader)
+{
+	VertexColorBufferPtr vb = nullptr;
+	try {
+		vb = std::make_shared<VertexColorBuffer>(list_vertices, size_vertex, size_list, shader_byte_code, size_byte_shader, this);
 	}
 	catch (...) {}
 	return vb;

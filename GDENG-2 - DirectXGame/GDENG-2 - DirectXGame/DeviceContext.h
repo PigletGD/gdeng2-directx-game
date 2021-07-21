@@ -12,6 +12,7 @@ public:
 	void clearRenderTargetColor(const SwapChainPtr& swap_chain, float red, float green, float blue, float alpha);
 
 	void setVertexBuffer(const VertexBufferPtr& vertex_buffer);
+	void setVertexBuffer(const VertexColorBufferPtr& vertex_buffer);
 	void setIndexBuffer(const IndexBufferPtr& index_buffer);
 
 	void drawTriangleList(UINT vertex_count, UINT start_vertex_index);

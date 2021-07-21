@@ -4,6 +4,7 @@
 #include "SwapChain.h"
 #include "DeviceContext.h"
 #include "VertexBuffer.h"
+#include "VertexColorBuffer.h"
 #include "IndexBuffer.h"
 #include "ConstantBuffer.h"
 #include "VertexShader.h"
@@ -12,6 +13,7 @@
 #include "InputListener.h"
 #include "Matrix4x4.h"
 #include "Quad.h"
+#include "QuadTransitionColor.h"
 
 #include "Vertex.h"
 
@@ -55,11 +57,12 @@ public:
 	TexturePtr m_wood_tex;
 	MeshPtr m_mesh;
 private:
+	QuadTransitionColor* m_quad_color;
+
 	SwapChainPtr m_swap_chain;
 
-	std::vector<Quad*> quads;
-
 	VertexBufferPtr m_vb;
+	VertexColorBufferPtr m_vcb;
 	IndexBufferPtr m_ib;
 	ConstantBufferPtr m_cb;
 	

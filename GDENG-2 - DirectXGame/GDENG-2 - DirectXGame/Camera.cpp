@@ -11,10 +11,10 @@ Camera::Camera()
 {
 	m_world_cam.setTranslation(Vector3D(0, 0, -2));
 
-	m_gizmo_icon = new Quad({Vector3D(-0.05f,-0.05f, 0.0f), Vector2D(2, 2)},
-							{Vector3D(-0.05f, 0.05f, 0.0f), Vector2D(2, 0)},
+	m_gizmo_icon = new Quad({Vector3D(-0.05f,-0.05f, 0.0f), Vector2D(1, 1)},
+							{Vector3D(-0.05f, 0.05f, 0.0f), Vector2D(1, 0)},
 							{Vector3D( 0.05f, 0.05f, 0.0f), Vector2D(0, 0)},
-							{Vector3D( 0.05f,-0.05f, 0.0f), Vector2D(0, 2)});
+							{Vector3D( 0.05f,-0.05f, 0.0f), Vector2D(0, 1)});
 }
 
 Camera::~Camera()

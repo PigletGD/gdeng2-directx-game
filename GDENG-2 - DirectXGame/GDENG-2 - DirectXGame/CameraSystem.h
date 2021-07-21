@@ -16,7 +16,7 @@ public:
 
 	void initializeGizmoTexture();
 	void createCameraBuffers(void* shader_byte_code, UINT size_byte_shader);
-	void setCameraShaders(const VertexShaderPtr& vs, const PixelShaderPtr& ps);
+	void setCameraShaders();
 
 	void switchToPreviousCamera();
 	void switchToNextCamera();
