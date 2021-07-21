@@ -9,7 +9,6 @@ AlphaBlendState::AlphaBlendState(RenderSystem* system) :
 {
 	ID3D11BlendState* d3dBlendState;
 	D3D11_BLEND_DESC blend_desc = {};
-	//ZeroMemory(&omDesc, sizeof(D3D11_BLEND_DESC));
 
 	auto& rend_target_desc = blend_desc.RenderTarget[0];
 	rend_target_desc.BlendEnable = true;

@@ -121,8 +121,6 @@ void Camera::setPerspectiveView()
 void Camera::updateQuad()
 {
 	Vector3D pos = getWorldCameraTranslation();
-
-	m_gizmo_icon->update(pos + Vector3D(-0.5f, 0.5f, 0.0f), pos + Vector3D(0.5f, 0.5f, 0.0f), pos + Vector3D(0.5f, -0.5f, 0.0f), pos + Vector3D(-0.5f, -0.5f, 0.0f));
 }
 
 Matrix4x4 Camera::getProjection()

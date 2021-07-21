@@ -8,6 +8,8 @@ CameraSystem::CameraSystem()
 {
 	cameraList.push_back(new Camera());
 	cameraList.push_back(new Camera());
+	cameraList.push_back(new Camera());
+	cameraList.push_back(new Camera());
 }
 
 CameraSystem::~CameraSystem()
