@@ -64,6 +64,9 @@
     <Filter Include="GameEngine\GraphicsEngine\RenderSystem\AlphaBlendState">
       <UniqueIdentifier>{cff076e1-ec3f-4d97-a2f2-aae49f9d6c87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\EngineTime">
+      <UniqueIdentifier>{bb865765-db7d-493e-b5f0-024a69bf0800}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -140,6 +143,9 @@
     </ClCompile>
     <ClCompile Include="VertexColorBuffer.cpp">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineTime.cpp">
+      <Filter>GameEngine\GraphicsEngine\EngineTime</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -244,6 +250,9 @@
     </ClInclude>
     <ClInclude Include="VertexColorBuffer.h">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineTime.h">
+      <Filter>GameEngine\GraphicsEngine\EngineTime</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

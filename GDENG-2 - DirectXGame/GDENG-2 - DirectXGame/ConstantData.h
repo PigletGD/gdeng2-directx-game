@@ -8,5 +8,6 @@ struct constant
 	Matrix4x4 m_world;
 	Matrix4x4 m_view;
 	Matrix4x4 m_proj;
-	float m_theta;
+	float m_time;
+	float m_lerp_speed;
 };

@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "EngineTime.h"
 
 #include <iostream>
 #include <exception>
@@ -69,6 +70,8 @@ Window::~Window()
 
 bool Window::broadcast()
 {
+	EngineTime::LogFrameStart();
+
 	MSG msg;
 
 	if (!this->m_is_init)
@@ -87,6 +90,8 @@ bool Window::broadcast()
 	}
 
 	Sleep(1);
+
+	EngineTime::LogFrameEnd();
 
 	return true;
 }

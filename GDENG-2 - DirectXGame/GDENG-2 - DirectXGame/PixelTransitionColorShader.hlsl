@@ -10,10 +10,11 @@ cbuffer constant: register(b0)
 	row_major float4x4 m_world;
 	row_major float4x4 m_view;
 	row_major float4x4 m_proj;
-	float m_theta;
+	float m_time;
+	float m_lerp_speed;
 };
 
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
-	return float4(lerp(input.color, input.color1, (sin(m_theta) + 1.0f) / 2.0f),1.0f);
+	return float4(lerp(input.color, input.color1, (sin(m_time * m_lerp_speed) + 1.0f) / 2.0f), 1.0f);
 }

@@ -26,7 +26,7 @@ void Camera::createBuffers(void* shader_byte_code, UINT size_byte_shader)
 	m_gizmo_icon->createBuffers(shader_byte_code, size_byte_shader);
 
 	constant cc;
-	cc.m_theta = 0;
+	cc.m_time = 0;
 
 	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
 }
@@ -77,7 +77,7 @@ void Camera::drawGizmoIcon(const VertexShaderPtr& vs, const PixelShaderPtr& ps, 
 	Matrix4x4 temp;
 	temp.inverse();
 
-	cc.m_theta = 0;
+	cc.m_time = 0;
 	cc.m_world.setIdentity();
 	cc.m_world = GraphicsEngine::get()->getCameraSystem()->getCurrentCameraWorld();
 	cc.m_world.flipZBasisVector();

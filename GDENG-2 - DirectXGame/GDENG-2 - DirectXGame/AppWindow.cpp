@@ -4,6 +4,7 @@
 #include "InputSystem.h"
 #include "Mesh.h"
 #include "ConstantData.h"
+#include "EngineTime.h"
 
 AppWindow* AppWindow::sharedInstance = nullptr;
 
@@ -32,6 +33,8 @@ void AppWindow::destroy()
 
 void AppWindow::initializeEngine()
 {
+	EngineTime::initialize();
+
 	GraphicsEngine::create();
 	InputSystem::create();
 
@@ -148,16 +151,38 @@ void AppWindow::initializeEngine()
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 	*/
 	
+	// SLIDE 13 VERTICES
 	vertex_color vertex_list[] = {
 		//x - y - z				r - g - b
-		{Vector3D(-0.5f,-0.5f, 0.0f),	Vector3D(-0.32f,-0.11f, 0.0f),	Vector3D(0.0f, 0.0f, 0.0f),	Vector3D(0.0f, 1.0f, 0.0f)}, // POS1
-		{Vector3D(-0.5f, 0.5f, 0.0f),	Vector3D(-0.11f, 0.78f, 0.0f),	Vector3D(1.0f, 1.0f, 0.0f),	Vector3D(0.0f, 1.0f, 1.0f)}, // POS2
-		{Vector3D( 0.5f,-0.5f, 0.0f),	Vector3D( 0.75f,-0.73f, 0.0f),	Vector3D(0.0f, 0.0f, 1.0f),	Vector3D(1.0f, 0.0f, 0.0f)}, // POS3
-		{Vector3D( 0.5f, 0.5f, 0.0f),	Vector3D( 0.88f, 0.77f, 0.0f),	Vector3D(1.0f, 1.0f, 1.0f),	Vector3D(0.0f, 0.0f, 1.0f)}  // POS4
+		{Vector3D(-0.99f,-0.75f, 0.0f),	Vector3D(-0.43f,-0.11f, 0.0f),	Vector3D(0.0f, 0.0f, 0.0f),	Vector3D(0.0f, 1.0f, 0.0f)}, // bottom-left
+		{Vector3D(-1.17f, 0.15f, 0.0f),	Vector3D(-0.14f, 0.78f, 0.0f),	Vector3D(1.0f, 1.0f, 0.0f),	Vector3D(1.0f, 1.0f, 0.0f)}, // top-left
+		{Vector3D( 0.20f,-0.31f, 0.0f),	Vector3D( 0.99f,-0.73f, 0.0f),	Vector3D(0.0f, 0.0f, 1.0f),	Vector3D(1.0f, 0.0f, 0.0f)}, // bottom-right
+		{Vector3D(-0.07f, 0.15f, 0.0f),	Vector3D( 1.17f, 0.77f, 0.0f),	Vector3D(1.0f, 1.0f, 1.0f),	Vector3D(0.0f, 0.0f, 1.0f)}  // top-right
 	};
 	UINT size_vertex_list = ARRAYSIZE(vertex_list);
 
-	m_quad_color = new QuadTransitionColor(vertex_list[0], vertex_list[1], vertex_list[2], vertex_list[3]);
+	// SLIDE 14 VERTICES
+	vertex_color vertex_list_two[] = {
+		//x - y - z				r - g - b
+		{Vector3D(-0.96f,-0.87f, 0.0f),	Vector3D(-0.43f,-0.15f, 0.0f),	Vector3D(0.0f, 0.0f, 0.0f),	Vector3D(0.0f, 1.0f, 0.0f)}, // bottom-left
+		{Vector3D(-1.13f,-0.21f, 0.0f),	Vector3D(-0.19f, 0.77f, 0.0f),	Vector3D(1.0f, 1.0f, 0.0f),	Vector3D(1.0f, 1.0f, 0.0f)}, // top-left
+		{Vector3D( 1.32f,-0.28f, 0.0f),	Vector3D( 0.00f,-0.73f, 0.0f),	Vector3D(0.0f, 0.0f, 1.0f),	Vector3D(1.0f, 0.0f, 0.0f)}, // bottom-right
+		{Vector3D(-0.96f,-0.87f, 0.0f),	Vector3D( 1.06f, 0.75f, 0.0f),	Vector3D(1.0f, 1.0f, 1.0f),	Vector3D(0.0f, 0.0f, 1.0f)}  // top-right
+	};
+
+	// OFFSET
+	for (int i = 0; i < 4; i++) {
+		vertex_list[i].position.m_x -= 1.5f;
+		vertex_list[i].position1.m_x -= 1.5f;
+
+		vertex_list_two[i].position.m_x += 1.5f;
+		vertex_list_two[i].position1.m_x += 1.5f;
+	}
+
+	// SLIDE 13 QUAD
+	m_quad_color_one = new QuadTransitionColor(vertex_list[0], vertex_list[1], vertex_list[2], vertex_list[3]);
+	// SLIDE 14 QUAD
+	m_quad_color_two = new QuadTransitionColor(vertex_list_two[0], vertex_list_two[1], vertex_list_two[2], vertex_list_two[3]);
 
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
@@ -165,11 +190,10 @@ void AppWindow::initializeEngine()
 	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"VertexTransitionColorShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 	m_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
 
-	m_quad_color->createBuffers(shader_byte_code, size_shader);
+	m_quad_color_one->createBuffers(shader_byte_code, size_shader);
+	m_quad_color_two->createBuffers(shader_byte_code, size_shader);
 
 	GraphicsEngine::get()->getCameraSystem()->createCameraBuffers(shader_byte_code, size_shader);
-
-	//m_vcb = GraphicsEngine::get()->getRenderSystem()->createVertexColorBuffer(vertex_list, sizeof(vertex_color), size_vertex_list, shader_byte_code, size_shader);
 
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 
@@ -178,7 +202,7 @@ void AppWindow::initializeEngine()
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 
 	constant cc;
-	cc.m_theta = 0;
+	cc.m_time = 0;
 
 	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
 
@@ -189,20 +213,17 @@ void AppWindow::initializeEngine()
 
 float AppWindow::getDeltaTime()
 {
-	return m_delta_time;
+	return EngineTime::getDeltaTime();
 }
 
-void AppWindow::updateTime() {
-	m_old_delta = m_new_delta;
-	m_new_delta = ::GetTickCount64();
-	m_delta_time = (m_old_delta) ? (m_new_delta - m_old_delta) * 0.001f : 0.0f;
-
-	m_theta += 1.57 * m_delta_time;
-}
-
-void AppWindow::update()
+void AppWindow::updateTimeLinear()
 {
-	
+	m_time_linear += EngineTime::getDeltaTime() * 0.4f; // delta * speed
+}
+
+void AppWindow::updateTimeWave()
+{
+	m_time_wave += EngineTime::getDeltaTime() * ((sin(m_time_linear) + 1.0f) / 2.0f) * 10.0f; // delta * sin wave time * max speed
 }
 
 void AppWindow::onCreate()
@@ -224,7 +245,8 @@ void AppWindow::onUpdate()
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
 
 	constant cc;
-	cc.m_theta = m_theta;
+	cc.m_time = m_time_wave;
+	cc.m_lerp_speed = 1.0f;
 
 	GraphicsEngine::get()->getCameraSystem()->updateCurrentCamera();
 
@@ -247,14 +269,23 @@ void AppWindow::onUpdate()
 
 	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_mesh->getIndexBuffer()->getSizeIndexList(), 0, 0);
 
-	m_quad_color->draw();
+	m_quad_color_one->draw();
+
+	cc.m_time = m_time_linear;
+	cc.m_lerp_speed = 1.25f;
+	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
+
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb);
+
+	m_quad_color_two->draw();
 
 	GraphicsEngine::get()->getCameraSystem()->drawGizmos(m_vs, m_ps, cc);
 
 	m_swap_chain->present(true);
 
-	updateTime();
-
+	updateTimeLinear();
+	updateTimeWave();
 }
 
 void AppWindow::onDestroy()

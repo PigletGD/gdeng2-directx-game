@@ -1,6 +1,7 @@
 #include "CameraSystem.h"
 #include "AppWindow.h"
 #include "InputSystem.h"
+#include "EngineTime.h"
 
 #include <iostream>
 
@@ -74,8 +75,8 @@ void CameraSystem::updateCurrentCamera()
 	world_cam *= temp;
 
 	Vector3D new_pos = cameraList[m_camera_index]->getWorldCameraTranslation() +
-		world_cam.getZDirection() * (m_forward * app->getDeltaTime()) +
-		world_cam.getXDirection() * (m_rightward * app->getDeltaTime());
+		world_cam.getZDirection() * (m_forward * EngineTime::getDeltaTime()) +
+		world_cam.getXDirection() * (m_rightward * EngineTime::getDeltaTime());
 
 	world_cam.setTranslation(new_pos);
 
@@ -152,8 +153,8 @@ void CameraSystem::onMouseMove(const Point& mouse_pos)
 	int width = (app->getClientWindowRect().right - app->getClientWindowRect().left);
 	int height = (app->getClientWindowRect().bottom - app->getClientWindowRect().top);
 
-	float delta_rot_x = (mouse_pos.m_y - (height * 0.5f)) * app->getDeltaTime() * 0.2f;
-	float delta_rot_y = (mouse_pos.m_x - (width * 0.5f)) * app->getDeltaTime() * 0.2f;
+	float delta_rot_x = (mouse_pos.m_y - (height * 0.5f)) * EngineTime::getDeltaTime() * 0.2f;
+	float delta_rot_y = (mouse_pos.m_x - (width * 0.5f)) * EngineTime::getDeltaTime() * 0.2f;
 
 	cameraList[m_camera_index]->updateRotation(delta_rot_x, delta_rot_y);
 

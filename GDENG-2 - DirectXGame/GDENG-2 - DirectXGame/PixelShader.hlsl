@@ -12,7 +12,8 @@ cbuffer constant: register(b0)
 	row_major float4x4 m_world;
 	row_major float4x4 m_view;
 	row_major float4x4 m_proj;
-	float m_theta;
+	float m_time;
+	float m_lerp_speed;
 };
 
 float4 psmain(PS_INPUT input) : SV_TARGET

@@ -35,9 +35,8 @@ public:
 	void initializeEngine();
 
 	float getDeltaTime();
-	void updateTime();
-	
-	void update();
+	void updateTimeLinear();
+	void updateTimeWave();
 
 	virtual void onCreate() override;
 	virtual void onUpdate() override;
@@ -57,7 +56,8 @@ public:
 	TexturePtr m_wood_tex;
 	MeshPtr m_mesh;
 private:
-	QuadTransitionColor* m_quad_color;
+	QuadTransitionColor* m_quad_color_one;
+	QuadTransitionColor* m_quad_color_two;
 
 	SwapChainPtr m_swap_chain;
 
@@ -71,14 +71,12 @@ private:
 
 	AlphaBlendStatePtr m_abs;
 
-	long m_old_delta;
-	long m_new_delta;
-	float m_delta_time;
-
 	float m_delta_pos;
 	float m_delta_scale;
 	float m_delta_rot;
-	float m_theta;
+
+	float m_time_linear;
+	float m_time_wave;
 
 	float m_rot_x = 0.0f;
 	float m_rot_y = 0.0f;
