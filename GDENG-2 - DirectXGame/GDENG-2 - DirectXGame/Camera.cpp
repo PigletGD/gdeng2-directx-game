@@ -9,7 +9,7 @@
 
 Camera::Camera()
 {
-	m_world_cam.setTranslation(Vector3D(0, 0, -2));
+	m_world_cam.setTranslation(Vector3D(0, 0.5f, -2));
 
 	m_gizmo_icon = new Quad({Vector3D(-0.05f,-0.05f, 0.0f), Vector2D(1, 1)},
 							{Vector3D(-0.05f, 0.05f, 0.0f), Vector2D(1, 0)},
@@ -82,7 +82,6 @@ void Camera::drawGizmoIcon(const VertexShaderPtr& vs, const PixelShaderPtr& ps, 
 	cc.m_world = GraphicsEngine::get()->getCameraSystem()->getCurrentCameraWorld();
 	cc.m_world.flipZBasisVector();
 	cc.m_world.setTranslation(m_world_cam.getTranslation());
-	
 
 	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
 

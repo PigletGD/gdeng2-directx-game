@@ -11,6 +11,8 @@ public:
 
 	void clearRenderTargetColor(const SwapChainPtr& swap_chain, float red, float green, float blue, float alpha);
 
+	void setRasterizerState(const SwapChainPtr& swap_chain);
+	
 	void setVertexBuffer(const VertexBufferPtr& vertex_buffer);
 	void setVertexBuffer(const VertexColorBufferPtr& vertex_buffer);
 	void setIndexBuffer(const IndexBufferPtr& index_buffer);
@@ -38,4 +40,5 @@ private:
 	RenderSystem* m_system = nullptr;
 
 	friend class ConstantBuffer;
+	friend class SwapChain;
 };

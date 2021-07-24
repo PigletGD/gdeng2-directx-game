@@ -4,6 +4,9 @@
 #include "Vector3D.h"
 #include "Vector4D.h"
 
+#include <iostream>
+#include <string>
+
 class Matrix4x4 {
 public:
 	Matrix4x4() {}
@@ -104,6 +107,29 @@ public:
 		}
 
 		this->setMatrix(out);
+	}
+
+	Matrix4x4 multiplyTo(const Matrix4x4& matrix)
+	{
+		Matrix4x4 out;
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				out.m_mat[i][j] =
+					m_mat[i][0] * matrix.m_mat[0][j] + m_mat[i][1] * matrix.m_mat[1][j] +
+					m_mat[i][2] * matrix.m_mat[2][j] + m_mat[i][3] * matrix.m_mat[3][j];
+			}
+		}
+
+		return out;
+	}
+
+	void debug() {
+		std::cout << std::to_string(m_mat[0][0]) << " " << std::to_string(m_mat[0][1]) << " " << std::to_string(m_mat[0][2]) << " " << std::to_string(m_mat[0][3]) << std::endl;
+		std::cout << std::to_string(m_mat[1][0]) << " " << std::to_string(m_mat[1][1]) << " " << std::to_string(m_mat[1][2]) << " " << std::to_string(m_mat[1][3]) << std::endl;
+		std::cout << std::to_string(m_mat[2][0]) << " " << std::to_string(m_mat[2][1]) << " " << std::to_string(m_mat[2][2]) << " " << std::to_string(m_mat[2][3]) << std::endl;
+		std::cout << std::to_string(m_mat[3][0]) << " " << std::to_string(m_mat[3][1]) << " " << std::to_string(m_mat[3][2]) << " " << std::to_string(m_mat[3][3]) << std::endl << std::endl;
 	}
 
 	void operator *=(const Matrix4x4& matrix)

@@ -67,6 +67,21 @@
     <Filter Include="GameEngine\GraphicsEngine\EngineTime">
       <UniqueIdentifier>{bb865765-db7d-493e-b5f0-024a69bf0800}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\Primitives\Cube">
+      <UniqueIdentifier>{c3981e5a-879e-4476-a91f-55a24ab2c5b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Utils">
+      <UniqueIdentifier>{2dea9940-9810-47d1-ba84-230a137ff840}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Utils\MathUtils">
+      <UniqueIdentifier>{84963093-1e96-4938-93be-01a74396f7a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Shaders">
+      <UniqueIdentifier>{6d098b55-9133-4f50-b4f4-f733c8ed1180}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\Primitives\Plane">
+      <UniqueIdentifier>{e87e31b5-be1c-4457-86a0-f1c7502e02ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -146,6 +161,18 @@
     </ClCompile>
     <ClCompile Include="EngineTime.cpp">
       <Filter>GameEngine\GraphicsEngine\EngineTime</Filter>
+    </ClCompile>
+    <ClCompile Include="AGameObject.cpp">
+      <Filter>GameEngine\GraphicsEngine\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>GameEngine\GraphicsEngine\Primitives\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="MathUtils.cpp">
+      <Filter>GameEngine\Utils\MathUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>GameEngine\GraphicsEngine\Primitives\Plane</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -254,25 +281,37 @@
     <ClInclude Include="EngineTime.h">
       <Filter>GameEngine\GraphicsEngine\EngineTime</Filter>
     </ClInclude>
+    <ClInclude Include="AGameObject.h">
+      <Filter>GameEngine\GraphicsEngine\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>GameEngine\GraphicsEngine\Primitives\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="MathUtils.h">
+      <Filter>GameEngine\Utils\MathUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>GameEngine\GraphicsEngine\Primitives\Plane</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VertexShader.hlsl">
-      <Filter>App</Filter>
+    <FxCompile Include="PixelGizmoShader.hlsl">
+      <Filter>GameEngine\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="PixelShader.hlsl">
-      <Filter>App</Filter>
-    </FxCompile>
-    <FxCompile Include="VertexMeshLayoutShader.hlsl">
-      <Filter>App</Filter>
-    </FxCompile>
-    <FxCompile Include="PixelGizmoShader.hlsl">
-      <Filter>App</Filter>
+      <Filter>GameEngine\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="PixelTransitionColorShader.hlsl">
-      <Filter>App</Filter>
+      <Filter>GameEngine\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexMeshLayoutShader.hlsl">
+      <Filter>GameEngine\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>GameEngine\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="VertexTransitionColorShader.hlsl">
-      <Filter>App</Filter>
+      <Filter>GameEngine\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -5,6 +5,7 @@
 #include "Mesh.h"
 #include "ConstantData.h"
 #include "EngineTime.h"
+#include "MathUtils.h"
 
 AppWindow* AppWindow::sharedInstance = nullptr;
 
@@ -150,39 +151,6 @@ void AppWindow::initializeEngine()
 	m_ps = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shader_byte_code, size_shader);
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 	*/
-	
-	// SLIDE 13 VERTICES
-	vertex_color vertex_list[] = {
-		//x - y - z				r - g - b
-		{Vector3D(-0.99f,-0.75f, 0.0f),	Vector3D(-0.43f,-0.11f, 0.0f),	Vector3D(0.0f, 0.0f, 0.0f),	Vector3D(0.0f, 1.0f, 0.0f)}, // bottom-left
-		{Vector3D(-1.17f, 0.15f, 0.0f),	Vector3D(-0.14f, 0.78f, 0.0f),	Vector3D(1.0f, 1.0f, 0.0f),	Vector3D(1.0f, 1.0f, 0.0f)}, // top-left
-		{Vector3D( 0.20f,-0.31f, 0.0f),	Vector3D( 0.99f,-0.73f, 0.0f),	Vector3D(0.0f, 0.0f, 1.0f),	Vector3D(1.0f, 0.0f, 0.0f)}, // bottom-right
-		{Vector3D(-0.07f, 0.15f, 0.0f),	Vector3D( 1.17f, 0.77f, 0.0f),	Vector3D(1.0f, 1.0f, 1.0f),	Vector3D(0.0f, 0.0f, 1.0f)}  // top-right
-	};
-	UINT size_vertex_list = ARRAYSIZE(vertex_list);
-
-	// SLIDE 14 VERTICES
-	vertex_color vertex_list_two[] = {
-		//x - y - z				r - g - b
-		{Vector3D(-0.96f,-0.87f, 0.0f),	Vector3D(-0.43f,-0.15f, 0.0f),	Vector3D(0.0f, 0.0f, 0.0f),	Vector3D(0.0f, 1.0f, 0.0f)}, // bottom-left
-		{Vector3D(-1.13f,-0.21f, 0.0f),	Vector3D(-0.19f, 0.77f, 0.0f),	Vector3D(1.0f, 1.0f, 0.0f),	Vector3D(1.0f, 1.0f, 0.0f)}, // top-left
-		{Vector3D( 1.32f,-0.28f, 0.0f),	Vector3D( 0.00f,-0.73f, 0.0f),	Vector3D(0.0f, 0.0f, 1.0f),	Vector3D(1.0f, 0.0f, 0.0f)}, // bottom-right
-		{Vector3D(-0.96f,-0.87f, 0.0f),	Vector3D( 1.06f, 0.75f, 0.0f),	Vector3D(1.0f, 1.0f, 1.0f),	Vector3D(0.0f, 0.0f, 1.0f)}  // top-right
-	};
-
-	// OFFSET
-	for (int i = 0; i < 4; i++) {
-		vertex_list[i].position.m_x -= 1.5f;
-		vertex_list[i].position1.m_x -= 1.5f;
-
-		vertex_list_two[i].position.m_x += 1.5f;
-		vertex_list_two[i].position1.m_x += 1.5f;
-	}
-
-	// SLIDE 13 QUAD
-	m_quad_color_one = new QuadTransitionColor(vertex_list[0], vertex_list[1], vertex_list[2], vertex_list[3]);
-	// SLIDE 14 QUAD
-	m_quad_color_two = new QuadTransitionColor(vertex_list_two[0], vertex_list_two[1], vertex_list_two[2], vertex_list_two[3]);
 
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
@@ -190,8 +158,17 @@ void AppWindow::initializeEngine()
 	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"VertexTransitionColorShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 	m_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
 
-	m_quad_color_one->createBuffers(shader_byte_code, size_shader);
-	m_quad_color_two->createBuffers(shader_byte_code, size_shader);
+	// PLANE OBJECT: renders first
+	Plane* plane_object = new Plane("Plane 0", shader_byte_code, size_shader);
+	plane_object->setScale(5, 5, 1);
+	m_object_list.push_back(plane_object);
+
+	// CUBE OBJECT: renders second, will render entirely in front of plane without depth stencil buffer
+	Cube* cube_object = new Cube("Cube 0", shader_byte_code, size_shader);
+	cube_object->setAnimSpeed(MathUtils::randomFloat(-3.75f, 3.75f));
+	cube_object->setScale(0.5f, 0.5f, 0.5f);
+	InputSystem::get()->addListener(cube_object);
+	m_object_list.push_back(cube_object);
 
 	GraphicsEngine::get()->getCameraSystem()->createCameraBuffers(shader_byte_code, size_shader);
 
@@ -242,10 +219,14 @@ void AppWindow::onUpdate()
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain, 1.0f, 0.4f, 0.4f, 1);
 
 	RECT rc = this->getClientWindowRect();
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(rc.right - rc.left, rc.bottom - rc.top);
+	int width = rc.right - rc.left;
+	int height = rc.bottom - rc.top;
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(width, height);
+
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRasterizerState(m_swap_chain);
 
 	constant cc;
-	cc.m_time = m_time_wave;
+	cc.m_time = m_time_linear;
 	cc.m_lerp_speed = 1.0f;
 
 	GraphicsEngine::get()->getCameraSystem()->updateCurrentCamera();
@@ -269,16 +250,10 @@ void AppWindow::onUpdate()
 
 	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_mesh->getIndexBuffer()->getSizeIndexList(), 0, 0);
 
-	m_quad_color_one->draw();
-
-	cc.m_time = m_time_linear;
-	cc.m_lerp_speed = 1.25f;
-	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
-
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb);
-
-	m_quad_color_two->draw();
+	for (int i = 0; i < m_object_list.size(); i++) {
+		m_object_list[i]->update(EngineTime::getDeltaTime());
+		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
+	}
 
 	GraphicsEngine::get()->getCameraSystem()->drawGizmos(m_vs, m_ps, cc);
 

@@ -14,7 +14,8 @@
 #include "Matrix4x4.h"
 #include "Quad.h"
 #include "QuadTransitionColor.h"
-
+#include "Cube.h"
+#include "Plane.h"
 #include "Vertex.h"
 
 #include <vector>
@@ -56,11 +57,10 @@ public:
 	TexturePtr m_wood_tex;
 	MeshPtr m_mesh;
 private:
-	QuadTransitionColor* m_quad_color_one;
-	QuadTransitionColor* m_quad_color_two;
+	std::vector<AGameObject*> m_object_list;
 
 	SwapChainPtr m_swap_chain;
-
+	
 	VertexBufferPtr m_vb;
 	VertexColorBufferPtr m_vcb;
 	IndexBufferPtr m_ib;
