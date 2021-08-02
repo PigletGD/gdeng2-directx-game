@@ -16,10 +16,11 @@ Cube::Cube(std::string name, void* shaderByteCode, size_t sizeShader) : AGameObj
 	//Vector3D color3(MathUtils::randomFloat(0.0f, 1.0f), MathUtils::randomFloat(0.0f, 1.0f), MathUtils::randomFloat(0.0f, 1.0f));
 	//Vector3D color4(MathUtils::randomFloat(0.0f, 1.0f), MathUtils::randomFloat(0.0f, 1.0f), MathUtils::randomFloat(0.0f, 1.0f));
 
-	Vector3D color1(1, 0, 0);
+	Vector3D color1(1, 0, 1);
 	Vector3D color2(1, 1, 0);
-	Vector3D color3(0, 1, 0);
-	Vector3D color4(0, 1, 1);
+	Vector3D color3(0, 0, 1);
+	Vector3D color4(1, 0, 0);
+	Vector3D color5(0, 1, 0);
 
 	vertex_color quad_list[] = {
 		// x, y, z
@@ -32,7 +33,7 @@ Cube::Cube(std::string name, void* shaderByteCode, size_t sizeShader) : AGameObj
 		// back face
 		{Vector3D( 0.5f,-0.5f, 0.5f), Vector3D( 0.5f,-0.5f, 0.5f), color3, color3},
 		{Vector3D( 0.5f, 0.5f, 0.5f), Vector3D( 0.5f, 0.5f, 0.5f), color4, color4},
-		{Vector3D(-0.5f, 0.5f, 0.5f), Vector3D(-0.5f, 0.5f, 0.5f), color4, color4},
+		{Vector3D(-0.5f, 0.5f, 0.5f), Vector3D(-0.5f, 0.5f, 0.5f), color5, color5},
 		{Vector3D(-0.5f,-0.5f, 0.5f), Vector3D(-0.5f,-0.5f, 0.5f), color3, color3}
 	};
 
@@ -127,12 +128,31 @@ void Cube::onKeyDown(int key)
 
 		float rotSpeed = m_ticks * m_speed;
 		this->setRotation(rotSpeed, rotSpeed, rotSpeed);
+
+		// Lerp
+		//float delta = (sin(m_ticks) + 1.0f) * 0.5f;
+		
+		//float pos = (-1.0f * (1.0f - delta)) + (1.0f * delta);
+		//float scale = (1.0f * (1.0f - delta)) + (0.25f * delta);
+
+		//setPosition(pos, pos, 0);
+		//setScale(scale, scale, scale);
+
 	}
 	else if (key == 'F') {
 		m_ticks -= m_delta_time;
 
 		float rotSpeed = m_ticks * m_speed;
 		this->setRotation(rotSpeed, rotSpeed, rotSpeed);
+
+		// Lerp
+		//float delta = (sin(m_ticks) + 1.0f) * 0.5f;
+
+		//float pos = (-1.0f * (1.0f - delta)) + (1.0f * delta);
+		//float scale = (1.0f * (1.0f - delta)) + (0.25f * delta);
+
+		//setPosition(pos, pos, 0);
+		//setScale(scale, scale, scale);
 	}
 }
 

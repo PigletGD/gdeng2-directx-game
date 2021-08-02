@@ -39,14 +39,16 @@ void AppWindow::initializeEngine()
 	GraphicsEngine::create();
 	InputSystem::create();
 
-	InputSystem::get()->addListener(this);
 	InputSystem::get()->addListener(GraphicsEngine::get()->getCameraSystem());
 	InputSystem::get()->showCursor(false);
 
-	GraphicsEngine::get()->getCameraSystem()->initializeGizmoTexture();
+	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
+	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
+
+	camera_system->initializeGizmoTexture();
 
 	RECT rc = this->getClientWindowRect();
-	m_swap_chain = GraphicsEngine::get()->getRenderSystem()->createSwapChain(this->m_HWND, rc.right - rc.left, rc.bottom - rc.top);
+	m_swap_chain = render_system->createSwapChain(this->m_HWND, rc.right - rc.left, rc.bottom - rc.top);
 
 	m_world_cam.setTranslation(Vector3D(0, 0, -2));
 
@@ -155,37 +157,61 @@ void AppWindow::initializeEngine()
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
 
-	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"VertexTransitionColorShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
-	m_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
+	render_system->compileVertexShader(L"VertexTransitionColorShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
+	m_vs = render_system->createVertexShader(shader_byte_code, size_shader);
 
 	// PLANE OBJECT: renders first
 	Plane* plane_object = new Plane("Plane 0", shader_byte_code, size_shader);
-	plane_object->setScale(5, 5, 1);
+	plane_object->setScale(7, 7, 1);
 	m_object_list.push_back(plane_object);
 
-	// CUBE OBJECT: renders second, will render entirely in front of plane without depth stencil buffer
+	/* CUBE OBJECT: renders second, will render entirely in front of plane without depth stencil buffer
+	for (int i = 0; i < 0; i++) {
+		Cube* cube_object = new Cube("Cube " + std::to_string(i), shader_byte_code, size_shader);
+		cube_object->setAnimSpeed(MathUtils::randomFloat(-3.75f, 3.75f));
+		cube_object->setPosition(MathUtils::randomFloat(-6.9f, 6.9f), MathUtils::randomFloat(-6.9f, 6.9f), MathUtils::randomFloat(-6.9f, 6.9f));
+		cube_object->setScale(1.0f, 1.0f, 1.0f);
+		InputSystem::get()->addListener(cube_object);
+		m_object_list.push_back(cube_object);
+	}*/
+
 	Cube* cube_object = new Cube("Cube 0", shader_byte_code, size_shader);
 	cube_object->setAnimSpeed(MathUtils::randomFloat(-3.75f, 3.75f));
-	cube_object->setScale(0.5f, 0.5f, 0.5f);
+	cube_object->setPosition(0.0f, 0.9f, 0.0f);
+	cube_object->setScale(1.0f, 1.0f, 1.0f);
 	InputSystem::get()->addListener(cube_object);
 	m_object_list.push_back(cube_object);
 
-	GraphicsEngine::get()->getCameraSystem()->createCameraBuffers(shader_byte_code, size_shader);
+	Cube* cube_object_1 = new Cube("Cube 1", shader_byte_code, size_shader);
+	cube_object_1->setAnimSpeed(MathUtils::randomFloat(-3.75f, 3.75f));
+	cube_object_1->setPosition(-1.5f, 2.0f, 0.0f);
+	cube_object_1->setScale(1.0f, 1.0f, 1.0f);
+	InputSystem::get()->addListener(cube_object_1);
+	m_object_list.push_back(cube_object_1);
 
-	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+	Cube* cube_object_2 = new Cube("Cube 2", shader_byte_code, size_shader);
+	cube_object_2->setAnimSpeed(MathUtils::randomFloat(-3.75f, 3.75f));
+	cube_object_2->setPosition(-1.5f, 3.0f, -2.0f);
+	cube_object_2->setScale(1.0f, 1.0f, 1.0f);
+	InputSystem::get()->addListener(cube_object_2);
+	m_object_list.push_back(cube_object_2);
 
-	GraphicsEngine::get()->getRenderSystem()->compilePixelShader(L"PixelTransitionColorShader.hlsl", "psmain", &shader_byte_code, &size_shader);
-	m_ps = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shader_byte_code, size_shader);
-	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+	camera_system->createCameraBuffers(shader_byte_code, size_shader);
+
+	render_system->releaseCompiledShader();
+
+	render_system->compilePixelShader(L"PixelTransitionColorShader.hlsl", "psmain", &shader_byte_code, &size_shader);
+	m_ps = render_system->createPixelShader(shader_byte_code, size_shader);
+	render_system->releaseCompiledShader();
 
 	constant cc;
 	cc.m_time = 0;
 
-	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
+	m_cb = render_system->createConstantBuffer(&cc, sizeof(constant));
 
-	m_abs = GraphicsEngine::get()->getRenderSystem()->createAlphaBlendState();
+	m_abs = render_system->createAlphaBlendState();
 
-	GraphicsEngine::get()->getCameraSystem()->setCameraShaders();
+	camera_system->setCameraShaders();
 }
 
 float AppWindow::getDeltaTime()
@@ -212,36 +238,40 @@ void AppWindow::onUpdate()
 {
 	Window::onUpdate();
 
+	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
+	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
+	DeviceContextPtr device_context = render_system->getImmediateDeviceContext();
+
 	InputSystem::get()->update();
 
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setAlphaBlendState(m_abs);
+	device_context->setAlphaBlendState(m_abs);
 
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain, 1.0f, 0.4f, 0.4f, 1);
+	device_context->clearRenderTargetColor(m_swap_chain, 1.0f, 0.4f, 0.4f, 1);
 
-	RECT rc = this->getClientWindowRect();
+	RECT rc = getClientWindowRect();
 	int width = rc.right - rc.left;
 	int height = rc.bottom - rc.top;
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(width, height);
+	device_context->setViewportSize(width, height);
 
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRasterizerState(m_swap_chain);
+	device_context->setRasterizerState(m_swap_chain);
 
 	constant cc;
 	cc.m_time = m_time_linear;
 	cc.m_lerp_speed = 1.0f;
 
-	GraphicsEngine::get()->getCameraSystem()->updateCurrentCamera();
+	camera_system->updateCurrentCamera();
 
 	cc.m_world.setIdentity();
-	cc.m_view = GraphicsEngine::get()->getCameraSystem()->getCurrentCameraView();
-	cc.m_proj = GraphicsEngine::get()->getCameraSystem()->getCurrentCameraProjection();
+	cc.m_view = camera_system->getCurrentCameraView();
+	cc.m_proj = camera_system->getCurrentCameraProjection();
 
-	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
+	m_cb->update(device_context, &cc);
 
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb);
+	device_context->setConstantBuffer(m_vs, m_cb);
+	device_context->setConstantBuffer(m_ps, m_cb);
 
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_vs);
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_ps);
+	device_context->setVertexShader(m_vs);
+	device_context->setPixelShader(m_ps);
 
 	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, m_wood_tex);
 
@@ -255,7 +285,7 @@ void AppWindow::onUpdate()
 		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
 	}
 
-	GraphicsEngine::get()->getCameraSystem()->drawGizmos(m_vs, m_ps, cc);
+	camera_system->drawGizmos(m_vs, m_ps, cc);
 
 	m_swap_chain->present(true);
 
@@ -272,46 +302,10 @@ void AppWindow::onFocus()
 {
 	InputSystem::get()->showCursor(false);
 	InputSystem::get()->addListener(GraphicsEngine::get()->getCameraSystem());
-	InputSystem::get()->addListener(this);
 }
 
 void AppWindow::onKillFocus()
 {
 	InputSystem::get()->showCursor(true);
 	InputSystem::get()->removeListener(GraphicsEngine::get()->getCameraSystem());
-	InputSystem::get()->removeListener(this);
-}
-
-void AppWindow::onKeyDown(int key)
-{
-}
-
-void AppWindow::onKeyUp(int key)
-{
-	m_forward = 0.0f;
-	m_rightward = 0.0f;
-}
-
-void AppWindow::onMouseMove(const Point& mouse_pos)
-{
-}
-
-void AppWindow::onLeftMouseDown(const Point& mouse_pos)
-{
-	m_scale_cube = 0.5f;
-}
-
-void AppWindow::onLeftMouseUp(const Point& mouse_pos)
-{
-	m_scale_cube = 1.0f;
-}
-
-void AppWindow::onRightMouseDown(const Point& mouse_pos)
-{
-	m_scale_cube = 2.0f;
-}
-
-void AppWindow::onRightMouseUp(const Point& mouse_pos)
-{
-	m_scale_cube = 1.0f;
 }
