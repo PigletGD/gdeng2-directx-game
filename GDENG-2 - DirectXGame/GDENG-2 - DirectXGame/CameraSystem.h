@@ -42,6 +42,8 @@ private:
 	std::vector<Camera*> cameraList;
 	int m_camera_index = 0;
 
+	float m_cam_speed = 5.0f;
+
 	float m_forward = 0.0f;
 	float m_rightward = 0.0f;
 

@@ -12,6 +12,14 @@ AGameObject::~AGameObject()
 {
 }
 
+void AGameObject::update(float deltaTime)
+{
+}
+
+void AGameObject::draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader, constant cc)
+{
+}
+
 void AGameObject::setPosition(float x, float y, float z)
 {
 	m_local_position = Vector3D(x, y, z);

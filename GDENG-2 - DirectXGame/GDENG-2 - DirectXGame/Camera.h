@@ -1,16 +1,19 @@
 #pragma once
+#include "AGameObject.h"
 #include "Quad.h"
 #include "Vector3D.h"
 #include "Matrix4x4.h"
 #include "ConstantData.h"
 #include "Prerequisites.h"
 
-class Camera
+class Camera : public AGameObject
 {
 public:
 	Camera();
 	~Camera();
 
+	void updatePosition(float deltaTime, float speed, float forwardness, float rightwardness);
+	void updateWorldAndViewMatrix();
 	void createBuffers(void* shader_byte_code, UINT size_byte_shader);
 
 	void setWorldCameraMatrix(Matrix4x4 world_cam);
@@ -30,10 +33,12 @@ public:
 
 	void updateQuad();
 
+	Matrix4x4 getViewMatrix();
 	Matrix4x4 getProjection();
 
 private:
 	Matrix4x4 m_world_cam;
+	Matrix4x4 m_view_cam;
 	Matrix4x4 m_proj_cam;
 
 	float m_rot_x = 0.0f;

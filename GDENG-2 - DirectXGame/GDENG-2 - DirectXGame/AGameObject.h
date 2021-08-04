@@ -12,8 +12,8 @@ public:
 	AGameObject(std::string name);
 	~AGameObject();
 
-	virtual void update(float deltaTime) = 0;
-	virtual void draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader, constant cc) = 0;
+	virtual void update(float deltaTime);
+	virtual void draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader, constant cc);
 
 	void setPosition(float x, float y, float z);
 	void setPosition(Vector3D pos);

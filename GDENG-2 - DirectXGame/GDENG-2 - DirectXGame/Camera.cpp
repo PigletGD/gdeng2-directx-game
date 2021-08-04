@@ -7,8 +7,9 @@
 #include <iostream>
 #include <string>
 
-Camera::Camera()
+Camera::Camera() : AGameObject("Camera")
 {
+	setPosition(Vector3D(0, 1, -2));
 	m_world_cam.setTranslation(Vector3D(0, 1, -2));
 
 	m_gizmo_icon = new Quad({Vector3D(-0.05f,-0.05f, 0.0f), Vector2D(1, 1)},
@@ -19,6 +20,73 @@ Camera::Camera()
 
 Camera::~Camera()
 {
+}
+
+void Camera::updatePosition(float deltaTime, float speed, float forward, float rightward)
+{
+	float moveSpeed = deltaTime * speed;
+
+	Vector3D localPos = getLocalPosition();
+	
+	Vector3D dir_z = m_world_cam.getZDirection() * moveSpeed * forward;
+	Vector3D dir_x = m_world_cam.getXDirection() * moveSpeed * rightward;
+	
+	Vector3D new_pos = localPos + dir_x + dir_z;
+
+	setPosition(new_pos);
+	updateWorldAndViewMatrix();
+}
+
+void Camera::updateRotation(float rot_x, float rot_y)
+{
+	Vector3D localRot = this->getLocalRotation();
+	float x = localRot.m_x;
+	float y = localRot.m_y;
+	float z = localRot.m_z;
+
+	//float speed = 0.005f;
+	x += rot_x;
+	y += rot_y;
+
+	if (x > 1.6023f) x = 1.6023f;
+	if (x < -1.6023f) x = -1.6023f;
+
+	this->setRotation(x, y, z);
+	this->updateWorldAndViewMatrix();
+
+	/*
+	m_rot_x += rot_x;
+	m_rot_y += rot_y;
+
+	if (m_rot_x > 1.6023f) m_rot_x = 1.6023f;
+	if (m_rot_x < -1.6023f) m_rot_x = -1.6023f;
+	*/
+}
+
+void Camera::updateWorldAndViewMatrix()
+{
+	m_world_cam.setIdentity();
+	
+	Matrix4x4 temp;
+	temp.setIdentity();
+
+	Vector3D localRot = getLocalRotation();
+
+	temp.setIdentity();
+	temp.setRotationX(localRot.m_x);
+	m_world_cam *= temp;
+
+	temp.setIdentity();
+	temp.setRotationY(localRot.m_y);
+	m_world_cam *= temp;
+
+	temp.setIdentity();
+	temp.setTranslation(getLocalPosition());
+	m_world_cam = m_world_cam.multiplyTo(temp);
+
+	temp = m_world_cam;
+	temp.inverse();
+	m_view_cam = temp;
 }
 
 void Camera::createBuffers(void* shader_byte_code, UINT size_byte_shader)
@@ -59,15 +127,6 @@ float Camera::getXRot()
 float Camera::getYRot()
 {
 	return m_rot_y;
-}
-
-void Camera::updateRotation(float rot_x, float rot_y)
-{
-	m_rot_x += rot_x;
-	m_rot_y += rot_y;
-
-	if (m_rot_x > 1.6023f) m_rot_x = 1.6023f;
-	if (m_rot_x < -1.6023f) m_rot_x = -1.6023f;
 }
 
 void Camera::drawGizmoIcon(const VertexShaderPtr& vs, const PixelShaderPtr& ps, constant cc)
@@ -120,6 +179,11 @@ void Camera::setPerspectiveView()
 void Camera::updateQuad()
 {
 	Vector3D pos = getWorldCameraTranslation();
+}
+
+Matrix4x4 Camera::getViewMatrix()
+{
+	return m_view_cam;
 }
 
 Matrix4x4 Camera::getProjection()

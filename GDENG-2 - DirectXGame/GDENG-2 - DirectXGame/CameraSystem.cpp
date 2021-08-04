@@ -8,9 +8,6 @@
 CameraSystem::CameraSystem()
 {
 	cameraList.push_back(new Camera());
-	cameraList.push_back(new Camera());
-	cameraList.push_back(new Camera());
-	cameraList.push_back(new Camera());
 }
 
 CameraSystem::~CameraSystem()
@@ -62,6 +59,7 @@ void CameraSystem::switchToNextCamera()
 
 void CameraSystem::updateCurrentCamera()
 {
+	/*
 	AppWindow* app = AppWindow::get();
 	
 	Matrix4x4 world_cam, temp;
@@ -81,6 +79,8 @@ void CameraSystem::updateCurrentCamera()
 	world_cam.setTranslation(new_pos);
 
 	cameraList[m_camera_index]->setWorldCameraMatrix(world_cam);
+	*/
+	cameraList[m_camera_index]->updatePosition(EngineTime::getDeltaTime(), m_cam_speed, m_forward, m_rightward);
 }
 
 Matrix4x4 CameraSystem::getCurrentCameraWorld()
@@ -90,12 +90,13 @@ Matrix4x4 CameraSystem::getCurrentCameraWorld()
 
 Matrix4x4 CameraSystem::getCurrentCameraView()
 {
+	/*
 	Matrix4x4 view;
 
 	view = cameraList[m_camera_index]->getWorldCameraMatrix();
 	view.inverse();
-
-	return view;
+	*/
+	return cameraList[m_camera_index]->getViewMatrix();
 }
 
 Matrix4x4 CameraSystem::getCurrentCameraProjection()
@@ -139,10 +140,9 @@ void CameraSystem::onKeyDown(int key)
 
 void CameraSystem::onKeyUp(int key)
 {
-	m_forward = 0.0f;
-	m_rightward = 0.0f;
-
-	if (key == 'Q') m_pressed_q = false;
+	if (key == 'W' || key == 'S') m_forward = 0.0f;
+	else if (key == 'A' || key == 'D') m_rightward = 0.0f;
+	else if (key == 'Q') m_pressed_q = false;
 	else if (key == 'E') m_pressed_e = false;
 	else if (key == 'M') m_pressed_m = false;
 }
@@ -156,9 +156,9 @@ void CameraSystem::onMouseMove(const Point& mouse_pos)
 	float delta_rot_x = (mouse_pos.m_y - (height * 0.5f)) * EngineTime::getDeltaTime() * 0.2f;
 	float delta_rot_y = (mouse_pos.m_x - (width * 0.5f)) * EngineTime::getDeltaTime() * 0.2f;
 
-	cameraList[m_camera_index]->updateRotation(delta_rot_x, delta_rot_y);
-
 	InputSystem::get()->setCursorPosition(Point((int)(width * 0.5f), (int)(height * 0.5f)));
+
+	cameraList[m_camera_index]->updateRotation(delta_rot_x, delta_rot_y);
 }
 
 void CameraSystem::onLeftMouseDown(const Point& mouse_pos)
