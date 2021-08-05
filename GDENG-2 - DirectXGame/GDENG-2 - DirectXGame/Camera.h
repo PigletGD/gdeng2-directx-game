@@ -12,37 +12,26 @@ public:
 	Camera();
 	~Camera();
 
-	void updatePosition(float deltaTime, float speed, float forwardness, float rightwardness);
-	void updateWorldAndViewMatrix();
-	void createBuffers(void* shader_byte_code, UINT size_byte_shader);
-
-	void setWorldCameraMatrix(Matrix4x4 world_cam);
-	Matrix4x4 getWorldCameraMatrix();
-	void setWorldCameraTranslation(Vector3D new_pos);
-	Vector3D getWorldCameraTranslation();
-
-	float getXRot();
-	float getYRot();
+	void updatePosition(float speed, float forward, float rightward);
 	void updateRotation(float delta_rot_x, float delta_rot_y);
 
-	void drawGizmoIcon(const VertexShaderPtr& vs, const PixelShaderPtr& ps, constant cc);
+	void updateWorldAndViewMatrix();
 
 	void switchProjectionMode();
 	void setOrthographicView();
 	void setPerspectiveView();
 
-	void updateQuad();
-
+	Matrix4x4 getWorldMatrix();
 	Matrix4x4 getViewMatrix();
-	Matrix4x4 getProjection();
+	Matrix4x4 getProjectionMatrix();
+
+	void createBuffersAndShaders();
+	void drawGizmoIcon(constant cc);
 
 private:
 	Matrix4x4 m_world_cam;
 	Matrix4x4 m_view_cam;
 	Matrix4x4 m_proj_cam;
-
-	float m_rot_x = 0.0f;
-	float m_rot_y = 0.0f;
 
 	bool m_is_perspective = true;
 
@@ -52,5 +41,7 @@ private:
 
 	Quad* m_gizmo_icon;
 
+	VertexShaderPtr m_vs;
+	PixelShaderPtr m_ps;
 	ConstantBufferPtr m_cb;
 };

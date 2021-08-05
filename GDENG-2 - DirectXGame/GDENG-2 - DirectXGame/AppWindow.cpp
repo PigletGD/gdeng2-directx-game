@@ -40,7 +40,6 @@ void AppWindow::initializeEngine()
 	InputSystem::create();
 
 	InputSystem::get()->addListener(GraphicsEngine::get()->getCameraSystem());
-	InputSystem::get()->showCursor(false);
 
 	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
 	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
@@ -177,26 +176,9 @@ void AppWindow::initializeEngine()
 
 	Cube* cube_object = new Cube("Cube 0", shader_byte_code, size_shader);
 	cube_object->setAnimSpeed(MathUtils::randomFloat(-3.75f, 3.75f));
-	cube_object->setPosition(0.0f, 0.9f, 0.0f);
 	cube_object->setScale(1.0f, 1.0f, 1.0f);
 	InputSystem::get()->addListener(cube_object);
 	m_object_list.push_back(cube_object);
-
-	Cube* cube_object_1 = new Cube("Cube 1", shader_byte_code, size_shader);
-	cube_object_1->setAnimSpeed(MathUtils::randomFloat(-3.75f, 3.75f));
-	cube_object_1->setPosition(-1.5f, 2.0f, 0.0f);
-	cube_object_1->setScale(1.0f, 1.0f, 1.0f);
-	InputSystem::get()->addListener(cube_object_1);
-	m_object_list.push_back(cube_object_1);
-
-	Cube* cube_object_2 = new Cube("Cube 2", shader_byte_code, size_shader);
-	cube_object_2->setAnimSpeed(MathUtils::randomFloat(-3.75f, 3.75f));
-	cube_object_2->setPosition(-1.5f, 3.0f, -2.0f);
-	cube_object_2->setScale(1.0f, 1.0f, 1.0f);
-	InputSystem::get()->addListener(cube_object_2);
-	m_object_list.push_back(cube_object_2);
-
-	camera_system->createCameraBuffers(shader_byte_code, size_shader);
 
 	render_system->releaseCompiledShader();
 
@@ -211,7 +193,7 @@ void AppWindow::initializeEngine()
 
 	m_abs = render_system->createAlphaBlendState();
 
-	camera_system->setCameraShaders();
+	camera_system->initializeInitialCamera();
 }
 
 float AppWindow::getDeltaTime()
@@ -221,7 +203,7 @@ float AppWindow::getDeltaTime()
 
 void AppWindow::updateTimeLinear()
 {
-	m_time_linear += EngineTime::getDeltaTime() * 0.4f; // delta * speed
+	m_time_linear += EngineTime::getDeltaTime();
 }
 
 void AppWindow::updateTimeWave()
@@ -261,9 +243,9 @@ void AppWindow::onUpdate()
 
 	camera_system->updateCurrentCamera();
 
-	cc.m_world.setIdentity();
-	cc.m_view = camera_system->getCurrentCameraView();
-	cc.m_proj = camera_system->getCurrentCameraProjection();
+	cc.m_world = camera_system->getCurrentCameraWorldMatrix();;
+	cc.m_view = camera_system->getCurrentCameraViewMatrix();
+	cc.m_proj = camera_system->getCurrentCameraProjectionMatrix();
 
 	m_cb->update(device_context, &cc);
 
@@ -285,7 +267,7 @@ void AppWindow::onUpdate()
 		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
 	}
 
-	camera_system->drawGizmos(m_vs, m_ps, cc);
+	camera_system->drawGizmos(cc);
 
 	m_swap_chain->present(true);
 
@@ -300,12 +282,10 @@ void AppWindow::onDestroy()
 
 void AppWindow::onFocus()
 {
-	InputSystem::get()->showCursor(false);
 	InputSystem::get()->addListener(GraphicsEngine::get()->getCameraSystem());
 }
 
 void AppWindow::onKillFocus()
 {
-	InputSystem::get()->showCursor(true);
 	InputSystem::get()->removeListener(GraphicsEngine::get()->getCameraSystem());
 }

@@ -15,7 +15,9 @@ public:
 	void addListener(InputListener* listener);
 	void removeListener(InputListener* listener);
 
+	const Point& getCursorPosition();
 	void setCursorPosition(const Point& pos);
+
 	void showCursor(bool show);
 
 	static InputSystem* get();

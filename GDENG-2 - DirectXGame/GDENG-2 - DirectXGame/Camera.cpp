@@ -3,6 +3,8 @@
 #include "ConstantBuffer.h"
 #include "GraphicsEngine.h"
 #include "DeviceContext.h"
+#include "EngineTime.h"
+#include "MathUtils.h"
 
 #include <iostream>
 #include <string>
@@ -10,7 +12,6 @@
 Camera::Camera() : AGameObject("Camera")
 {
 	setPosition(Vector3D(0, 1, -2));
-	m_world_cam.setTranslation(Vector3D(0, 1, -2));
 
 	m_gizmo_icon = new Quad({Vector3D(-0.05f,-0.05f, 0.0f), Vector2D(1, 1)},
 							{Vector3D(-0.05f, 0.05f, 0.0f), Vector2D(1, 0)},
@@ -22,9 +23,9 @@ Camera::~Camera()
 {
 }
 
-void Camera::updatePosition(float deltaTime, float speed, float forward, float rightward)
+void Camera::updatePosition(float speed, float forward, float rightward)
 {
-	float moveSpeed = deltaTime * speed;
+	float moveSpeed = EngineTime::getDeltaTime() * speed;
 
 	Vector3D localPos = getLocalPosition();
 	
@@ -34,6 +35,7 @@ void Camera::updatePosition(float deltaTime, float speed, float forward, float r
 	Vector3D new_pos = localPos + dir_x + dir_z;
 
 	setPosition(new_pos);
+
 	updateWorldAndViewMatrix();
 }
 
@@ -44,23 +46,15 @@ void Camera::updateRotation(float rot_x, float rot_y)
 	float y = localRot.m_y;
 	float z = localRot.m_z;
 
-	//float speed = 0.005f;
 	x += rot_x;
 	y += rot_y;
 
-	if (x > 1.6023f) x = 1.6023f;
-	if (x < -1.6023f) x = -1.6023f;
+	float lookLimit = MathUtils::DegToRad(90);
+	if (x > lookLimit) x = lookLimit;
+	else if (x < -lookLimit) x = -lookLimit;
 
 	this->setRotation(x, y, z);
 	this->updateWorldAndViewMatrix();
-
-	/*
-	m_rot_x += rot_x;
-	m_rot_y += rot_y;
-
-	if (m_rot_x > 1.6023f) m_rot_x = 1.6023f;
-	if (m_rot_x < -1.6023f) m_rot_x = -1.6023f;
-	*/
 }
 
 void Camera::updateWorldAndViewMatrix()
@@ -89,70 +83,6 @@ void Camera::updateWorldAndViewMatrix()
 	m_view_cam = temp;
 }
 
-void Camera::createBuffers(void* shader_byte_code, UINT size_byte_shader)
-{
-	m_gizmo_icon->createBuffers(shader_byte_code, size_byte_shader);
-
-	constant cc;
-	cc.m_time = 0;
-
-	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
-}
-
-void Camera::setWorldCameraMatrix(Matrix4x4 world_cam)
-{
-	m_world_cam = world_cam;
-}
-
-Matrix4x4 Camera::getWorldCameraMatrix()
-{
-	return m_world_cam;
-}
-
-void Camera::setWorldCameraTranslation(Vector3D new_pos)
-{
-	m_world_cam.setTranslation(new_pos);
-}
-
-Vector3D Camera::getWorldCameraTranslation()
-{
-	return m_world_cam.getTranslation();
-}
-
-float Camera::getXRot()
-{
-	return m_rot_x;
-}
-
-float Camera::getYRot()
-{
-	return m_rot_y;
-}
-
-void Camera::drawGizmoIcon(const VertexShaderPtr& vs, const PixelShaderPtr& ps, constant cc)
-{
-	Matrix4x4 translation;
-
-	Matrix4x4 temp;
-	temp.inverse();
-
-	cc.m_time = 0;
-	cc.m_world.setIdentity();
-	cc.m_world = GraphicsEngine::get()->getCameraSystem()->getCurrentCameraWorld();
-	cc.m_world.flipZBasisVector();
-	cc.m_world.setTranslation(m_world_cam.getTranslation());
-
-	m_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
-
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(vs, m_cb);
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBuffer(ps, m_cb);
-
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(vs);
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(ps);
-
-	m_gizmo_icon->draw();
-}
-
 void Camera::switchProjectionMode()
 {
 	m_is_perspective = !m_is_perspective;
@@ -176,9 +106,9 @@ void Camera::setPerspectiveView()
 	m_proj_cam.setPerspectiveFovLH(m_field_of_view, (float)width / (float)height, m_near_clip_plane, m_far_clip_plane);
 }
 
-void Camera::updateQuad()
+Matrix4x4 Camera::getWorldMatrix()
 {
-	Vector3D pos = getWorldCameraTranslation();
+	return m_world_cam;
 }
 
 Matrix4x4 Camera::getViewMatrix()
@@ -186,10 +116,59 @@ Matrix4x4 Camera::getViewMatrix()
 	return m_view_cam;
 }
 
-Matrix4x4 Camera::getProjection()
+Matrix4x4 Camera::getProjectionMatrix()
 {
 	if (m_is_perspective) setPerspectiveView();
 	else setOrthographicView();
 
 	return m_proj_cam;
+}
+
+void Camera::createBuffersAndShaders()
+{
+	void* shader_byte_code = nullptr;
+	size_t size_shader = 0;
+
+	constant cc;
+	cc.m_time = 0;
+
+	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
+	m_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
+	m_gizmo_icon->createBuffers(shader_byte_code, size_shader);
+
+	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
+	
+	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+
+	GraphicsEngine::get()->getRenderSystem()->compilePixelShader(L"PixelGizmoShader.hlsl", "psmain", &shader_byte_code, &size_shader);
+	m_ps = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shader_byte_code, size_shader);
+	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+}
+
+void Camera::drawGizmoIcon(constant cc)
+{
+	if (m_vs == nullptr) std::cout << "null\n";
+	if (m_cb == nullptr) std::cout << "nullllll\n";
+	if (m_ps == nullptr) std::cout << "nullllllllllllll\n";
+
+	Matrix4x4 translation;
+
+	Matrix4x4 temp;
+	temp.inverse();
+
+	cc.m_time = 0;
+	cc.m_world.flipZBasisVector();
+	cc.m_world.setTranslation(m_world_cam.getTranslation());
+
+	DeviceContextPtr dc = GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext();
+
+	m_cb->update(dc, &cc);
+
+	dc->setConstantBuffer(m_vs, m_cb);
+	dc->setConstantBuffer(m_ps, m_cb);
+
+	dc->setVertexShader(m_vs);
+	dc->setPixelShader(m_ps);
+
+	m_gizmo_icon->draw();
 }
