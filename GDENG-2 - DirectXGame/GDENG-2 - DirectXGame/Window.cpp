@@ -89,7 +89,7 @@ bool Window::broadcast()
 		DispatchMessage(&msg);
 	}
 
-	Sleep(1);
+	Sleep(0);
 
 	EngineTime::LogFrameEnd();
 

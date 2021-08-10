@@ -177,6 +177,7 @@ void AppWindow::initializeEngine()
 	Cube* cube_object = new Cube("Cube 0", shader_byte_code, size_shader);
 	cube_object->setAnimSpeed(MathUtils::randomFloat(-3.75f, 3.75f));
 	cube_object->setScale(1.0f, 1.0f, 1.0f);
+	cube_object->setPosition(0.0f, 0.0f, 2.0f);
 	InputSystem::get()->addListener(cube_object);
 	m_object_list.push_back(cube_object);
 
