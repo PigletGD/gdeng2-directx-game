@@ -1,20 +1,24 @@
 #include "AppWindow.h"
-#include <Windows.h>
 #include "Matrix4x4.h"
 #include "InputSystem.h"
-#include "Mesh.h"
 #include "ConstantData.h"
 #include "EngineTime.h"
 #include "MathUtils.h"
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+#include <Windows.h>
 
 AppWindow* AppWindow::sharedInstance = nullptr;
 
 AppWindow::AppWindow()
 {
+	
 }
 
 AppWindow::~AppWindow()
 {
+	
 }
 
 AppWindow* AppWindow::get()
@@ -22,7 +26,7 @@ AppWindow* AppWindow::get()
 	return sharedInstance;
 }
 
-void AppWindow::intialize()
+void AppWindow::create()
 {
 	sharedInstance = new AppWindow();
 }
@@ -32,13 +36,8 @@ void AppWindow::destroy()
 	delete sharedInstance;
 }
 
-void AppWindow::initializeEngine()
+void AppWindow::initialize()
 {
-	EngineTime::initialize();
-
-	GraphicsEngine::create();
-	InputSystem::create();
-
 	InputSystem::get()->addListener(GraphicsEngine::get()->getCameraSystem());
 
 	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
@@ -269,6 +268,21 @@ void AppWindow::onUpdate()
 	}
 
 	camera_system->drawGizmos(cc);
+
+	// ImGui
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	ImGui::Begin("Test");
+
+	if (ImGui::Button("Click meeee!"))
+		m_counter++;
+	ImGui::SameLine();
+	ImGui::Text(("Counter: " + std::to_string(m_counter)).c_str());
+	
+	ImGui::End();
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 	m_swap_chain->present(true);
 

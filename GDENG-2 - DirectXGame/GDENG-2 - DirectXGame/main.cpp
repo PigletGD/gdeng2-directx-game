@@ -1,18 +1,22 @@
 #include "AppWindow.h"
-#include "InputSystem.h"
 #include "EngineTime.h"
-
+#include "InputSystem.h"
 #pragma comment(lib, "d3d11.lib")
 
 int main()
 {	
 	{
-		try {
-			AppWindow::intialize();
-			AppWindow* app = (AppWindow*) AppWindow::get();
-			app->initializeEngine();
+		try
+		{
+			GraphicsEngine::create();
+			InputSystem::create();
+			EngineTime::create();
+			AppWindow::create();
+			AppWindow* app = AppWindow::get();
+			app->initialize();
 
-			while (app->isRun());
+			while (app->isRun())
+				;
 		}
 		catch (...)
 		{

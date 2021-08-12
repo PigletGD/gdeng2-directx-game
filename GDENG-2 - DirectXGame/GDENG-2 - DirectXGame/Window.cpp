@@ -1,11 +1,19 @@
 #include "Window.h"
 #include "EngineTime.h"
-
-#include <iostream>
+#include "GraphicsEngine.h"
+#include "RenderSystem.h"
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
 #include <exception>
+
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
+		return true;
+	
 	switch (msg)
 	{
 	case WM_CREATE: {
@@ -57,8 +65,17 @@ Window::Window()
 
 	if (!m_HWND) throw std::exception("Window not created successfully");
 
-	::ShowWindow(m_HWND, SW_SHOW);
-	::UpdateWindow(m_HWND);
+	// ImGui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	ImGui_ImplWin32_Init(m_HWND);
+	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
+	ImGui_ImplDX11_Init(render_system->m_d3d_device, render_system->m_imm_context);
+	ImGui::StyleColorsDark();
+	
+	ShowWindow(m_HWND, SW_SHOW);
+	UpdateWindow(m_HWND);
 
 	m_isRun = true;
 }

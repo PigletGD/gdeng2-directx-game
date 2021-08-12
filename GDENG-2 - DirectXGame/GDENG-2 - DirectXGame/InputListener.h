@@ -1,12 +1,11 @@
 #pragma once
-
 #include "Point.h"
 
 class InputListener
 {
 public:
 	InputListener(){}
-	~InputListener(){}
+	virtual ~InputListener(){}
 
 	// KEYBOARD pure virtual callback functions
 	virtual void onKeyDown(int key) = 0;

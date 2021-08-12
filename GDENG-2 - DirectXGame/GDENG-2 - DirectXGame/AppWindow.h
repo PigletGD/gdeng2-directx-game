@@ -29,20 +29,20 @@ public:
 	static AppWindow* sharedInstance;
 
 	static AppWindow* get();
-	static void intialize();
+	static void create();
 	static void destroy();
 
-	void initializeEngine();
+	void initialize();
 
 	float getDeltaTime();
 	void updateTimeLinear();
 	void updateTimeWave();
 
-	virtual void onCreate() override;
-	virtual void onUpdate() override;
-	virtual void onDestroy() override;
-	virtual void onFocus() override;
-	virtual void onKillFocus() override;
+	void onCreate() override;
+	void onUpdate() override;
+	void onDestroy() override;
+	void onFocus() override;
+	void onKillFocus() override;
 
 	TexturePtr m_wood_tex;
 	MeshPtr m_mesh;
@@ -63,6 +63,7 @@ private:
 
 	float m_time_linear;
 	float m_time_wave;
+	int m_counter = 0;
 
 	Matrix4x4 m_world_cam;
 };
