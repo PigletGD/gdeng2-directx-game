@@ -35,7 +35,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		::PostQuitMessage(0);
 		break; // Event fired when the window is destroyed
 	}
-	default: return ::DefWindowProc(hwnd, msg, wparam, lparam);
+	default: {
+		return ::DefWindowProc(hwnd, msg, wparam, lparam);
+	}
 	}
 
 	return NULL;
@@ -69,20 +71,23 @@ Window::Window()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	ImGui_ImplWin32_Init(m_HWND);
 	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
 	ImGui_ImplDX11_Init(render_system->m_d3d_device, render_system->m_imm_context);
 	ImGui::StyleColorsDark();
+	ImGuiStyle& style = ImGui::GetStyle();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
 	
 	ShowWindow(m_HWND, SW_SHOW);
 	UpdateWindow(m_HWND);
 
 	m_isRun = true;
-}
-
-Window::~Window()
-{
-	
 }
 
 bool Window::broadcast()
@@ -148,4 +153,10 @@ void Window::onFocus()
 void Window::onKillFocus()
 {
 
+}
+
+Window::~Window()
+{
+	ImGui::DestroyContext();
+	ImGui_ImplDX11_Shutdown();
 }

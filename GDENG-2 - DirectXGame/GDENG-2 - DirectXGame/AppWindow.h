@@ -46,6 +46,7 @@ public:
 
 	TexturePtr m_wood_tex;
 	MeshPtr m_mesh;
+
 private:
 	std::vector<AGameObject*> m_object_list;
 

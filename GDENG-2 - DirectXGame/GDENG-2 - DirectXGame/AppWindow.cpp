@@ -16,11 +16,6 @@ AppWindow::AppWindow()
 	
 }
 
-AppWindow::~AppWindow()
-{
-	
-}
-
 AppWindow* AppWindow::get()
 {
 	return sharedInstance;
@@ -226,15 +221,44 @@ void AppWindow::onUpdate()
 
 	InputSystem::get()->update();
 
+	// Clear
 	device_context->setAlphaBlendState(m_abs);
-
 	device_context->clearRenderTargetColor(m_swap_chain, 1.0f, 0.4f, 0.4f, 1);
 
+	// ImGui
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	// Create the docking environment
+	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
+		ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus |
+		ImGuiWindowFlags_NoBackground;
+
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->Pos);
+	ImGui::SetNextWindowSize(viewport->Size);
+	ImGui::SetNextWindowViewport(viewport->ID);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+	ImGui::Begin("InvisibleWindow", nullptr, windowFlags);
+	ImGui::PopStyleVar(3);
+	ImGuiID dockSpaceId = ImGui::GetID("InvisibleWindowDockSpace");
+	ImGui::DockSpace(dockSpaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+	ImGui::End();
+
+	ImGui::Begin("Test");
+	ImGui::Text("Hello world");
+	ImGui::End();
+	
 	RECT rc = getClientWindowRect();
 	int width = rc.right - rc.left;
 	int height = rc.bottom - rc.top;
+	
 	device_context->setViewportSize(width, height);
-
 	device_context->setRasterizerState(m_swap_chain);
 
 	constant cc;
@@ -269,21 +293,16 @@ void AppWindow::onUpdate()
 
 	camera_system->drawGizmos(cc);
 
-	// ImGui
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-	ImGui::Begin("Test");
-
-	if (ImGui::Button("Click meeee!"))
-		m_counter++;
-	ImGui::SameLine();
-	ImGui::Text(("Counter: " + std::to_string(m_counter)).c_str());
-	
-	ImGui::End();
+	// Render UI
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
+	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+	}
+	
 	m_swap_chain->present(true);
 
 	updateTimeLinear();
@@ -303,4 +322,9 @@ void AppWindow::onFocus()
 void AppWindow::onKillFocus()
 {
 	InputSystem::get()->removeListener(GraphicsEngine::get()->getCameraSystem());
+}
+
+AppWindow::~AppWindow()
+{
+
 }
