@@ -1,7 +1,6 @@
 #pragma once
-#include <d3d11.h>
-
 #include "Prerequisites.h"
+#include <d3d11.h>
 
 class DeviceContext
 {
@@ -11,8 +10,8 @@ public:
 
 	void clearRenderTargetColor(const SwapChainPtr& swap_chain, float red, float green, float blue, float alpha);
 
-	void setRasterizerState(const SwapChainPtr& swap_chain);
-	
+	void setRasterizerState(ID3D11RasterizerState* rasterizer_state);
+
 	void setVertexBuffer(const VertexBufferPtr& vertex_buffer);
 	void setVertexBuffer(const VertexColorBufferPtr& vertex_buffer);
 	void setIndexBuffer(const IndexBufferPtr& index_buffer);

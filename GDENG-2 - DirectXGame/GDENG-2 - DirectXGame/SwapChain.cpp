@@ -57,15 +57,6 @@ SwapChain::SwapChain(HWND hwnd, UINT width, UINT height, RenderSystem* system) :
 	buffer->Release();
 
 	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
-
-	D3D11_RASTERIZER_DESC rast_desc;
-	ZeroMemory(&rast_desc, sizeof(D3D11_RASTERIZER_DESC));
-	rast_desc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
-	rast_desc.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
-
-	hr = device->CreateRasterizerState(&rast_desc, &m_rs);
-
-	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
 }
 
 SwapChain::~SwapChain()

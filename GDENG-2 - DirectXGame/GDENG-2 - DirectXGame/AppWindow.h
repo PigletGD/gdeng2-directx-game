@@ -1,22 +1,8 @@
 #pragma once
 #include "Window.h"
-#include "GraphicsEngine.h"
-#include "SwapChain.h"
-#include "DeviceContext.h"
-#include "VertexBuffer.h"
-#include "VertexColorBuffer.h"
-#include "IndexBuffer.h"
-#include "ConstantBuffer.h"
-#include "VertexShader.h"
-#include "PixelShader.h"
-#include "AlphaBlendState.h"
 #include "Matrix4x4.h"
-#include "Quad.h"
-#include "QuadTransitionColor.h"
 #include "Cube.h"
-#include "Plane.h"
-#include "Vertex.h"
-
+#include "Prerequisites.h"
 #include <vector>
 
 class AppWindow : public Window
@@ -64,7 +50,6 @@ private:
 
 	float m_time_linear;
 	float m_time_wave;
-	int m_counter = 0;
 
 	Matrix4x4 m_world_cam;
 };

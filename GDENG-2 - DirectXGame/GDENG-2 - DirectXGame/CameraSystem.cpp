@@ -1,8 +1,9 @@
 #include "CameraSystem.h"
-#include "AppWindow.h"
-#include "InputSystem.h"
 #include "EngineTime.h"
-
+#include "InputSystem.h"
+#include "GraphicsEngine.h"
+#include "DeviceContext.h"
+#include "AppWindow.h"
 #include <iostream>
 
 CameraSystem::CameraSystem()

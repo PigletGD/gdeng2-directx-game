@@ -1,9 +1,15 @@
 #include "AppWindow.h"
-#include "Matrix4x4.h"
-#include "InputSystem.h"
-#include "ConstantData.h"
 #include "EngineTime.h"
+#include "InputSystem.h"
+#include "CameraSystem.h"
+#include "GraphicsEngine.h"
+#include "DeviceContext.h"
+#include "SwapChain.h"
+#include "ConstantBuffer.h"
+#include "ConstantData.h"
+#include "Matrix4x4.h"
 #include "MathUtils.h"
+#include "Plane.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -259,7 +265,6 @@ void AppWindow::onUpdate()
 	int height = rc.bottom - rc.top;
 	
 	device_context->setViewportSize(width, height);
-	device_context->setRasterizerState(m_swap_chain);
 
 	constant cc;
 	cc.m_time = m_time_linear;
@@ -286,7 +291,10 @@ void AppWindow::onUpdate()
 
 	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_mesh->getIndexBuffer()->getSizeIndexList(), 0, 0);
 
-	for (int i = 0; i < m_object_list.size(); i++) {
+	GraphicsEngine::get()->getRenderSystem()->setSolidRasterizerState();
+	
+	for (int i = 0; i < m_object_list.size(); i++)
+	{
 		m_object_list[i]->update(EngineTime::getDeltaTime());
 		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
 	}

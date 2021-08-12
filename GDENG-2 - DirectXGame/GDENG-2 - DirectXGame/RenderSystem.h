@@ -16,6 +16,9 @@ public:
 	ConstantBufferPtr createConstantBuffer(void* buffer, UINT size_buffer);
 	AlphaBlendStatePtr createAlphaBlendState();
 
+	void setSolidRasterizerState();
+	void setWireframeRasterizerState();
+	
 	VertexShaderPtr createVertexShader(const void* shader_byte_code, size_t byte_code_size);
 	bool compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 
@@ -33,13 +36,15 @@ private:
 	IDXGIFactory* m_dxgi_factory;
 	ID3D11DeviceContext* m_imm_context;
 
+	ID3D11RasterizerState* m_rasterizer_solid;
+	ID3D11RasterizerState* m_rasterizer_wireframe;
+
 	DeviceContextPtr m_imm_device_context;
 
 	ID3DBlob* m_blob = nullptr;
 	ID3DBlob* m_vsblob = nullptr;
 	ID3DBlob* m_psblob = nullptr;
 
-	
 	friend class Window;
 	friend class SwapChain;
 	friend class VertexBuffer;
@@ -50,4 +55,5 @@ private:
 	friend class PixelShader;
 	friend class AlphaBlendState;
 	friend class Texture;
+	friend class DeviceContext;
 };

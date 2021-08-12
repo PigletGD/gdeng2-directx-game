@@ -8,7 +8,6 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "AlphaBlendState.h"
-
 #include <d3dcompiler.h>
 #include <exception>
 
@@ -46,6 +45,17 @@ RenderSystem::RenderSystem()
 	m_d3d_device->QueryInterface(__uuidof(IDXGIDevice), (void**)&m_dxgi_device);
 	m_dxgi_device->GetParent(__uuidof(IDXGIAdapter), (void**)&m_dxgi_adapter);
 	m_dxgi_adapter->GetParent(__uuidof(IDXGIFactory), (void**)&m_dxgi_factory);
+
+	// Rasterizers
+	D3D11_RASTERIZER_DESC rasterizer_desc;
+	ZeroMemory(&rasterizer_desc, sizeof(D3D11_RASTERIZER_DESC));
+	rasterizer_desc.FillMode = D3D11_FILL_WIREFRAME;
+	rasterizer_desc.CullMode = D3D11_CULL_NONE;
+	m_d3d_device->CreateRasterizerState(&rasterizer_desc, &m_rasterizer_wireframe);
+	ZeroMemory(&rasterizer_desc, sizeof(D3D11_RASTERIZER_DESC));
+	rasterizer_desc.FillMode = D3D11_FILL_SOLID;
+	rasterizer_desc.CullMode = D3D11_CULL_BACK;
+	m_d3d_device->CreateRasterizerState(&rasterizer_desc, &m_rasterizer_solid);
 }
 
 RenderSystem::~RenderSystem()
@@ -58,6 +68,9 @@ RenderSystem::~RenderSystem()
 	m_dxgi_factory->Release();
 
 	m_d3d_device->Release();
+
+	m_rasterizer_solid->Release();
+	m_rasterizer_wireframe->Release();
 }
 
 SwapChainPtr RenderSystem::createSwapChain(HWND hwnd, UINT width, UINT height)
@@ -123,6 +136,16 @@ AlphaBlendStatePtr RenderSystem::createAlphaBlendState()
 	}
 	catch (...) {}
 	return abs;
+}
+
+void RenderSystem::setSolidRasterizerState()
+{
+	m_imm_device_context->setRasterizerState(m_rasterizer_solid);
+}
+
+void RenderSystem::setWireframeRasterizerState()
+{
+	m_imm_device_context->setRasterizerState(m_rasterizer_wireframe);
 }
 
 VertexShaderPtr RenderSystem::createVertexShader(const void* shader_byte_code, size_t byte_code_size)
