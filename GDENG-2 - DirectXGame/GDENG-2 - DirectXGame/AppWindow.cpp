@@ -6,6 +6,10 @@
 #include "ConstantData.h"
 #include "EngineTime.h"
 #include "MathUtils.h"
+#include "imgui.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_win32.h"
+#include "UIManager.h"
 
 AppWindow* AppWindow::sharedInstance = nullptr;
 
@@ -195,6 +199,27 @@ void AppWindow::initializeEngine()
 	m_abs = render_system->createAlphaBlendState();
 
 	camera_system->initializeInitialCamera();
+
+	/*
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsClassic();
+
+	// Setup Platform/Renderer bindings
+	ImGui_ImplWin32_Init(m_HWND);
+	ImGui_ImplDX11_Init(GraphicsEngine::get()->getRenderSystem()->m_d3d_device, GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->m_device_context);
+	*/
+}
+
+void AppWindow::createInterface()
+{
+	UIManager::initialize(m_HWND);
 }
 
 float AppWindow::getDeltaTime()
@@ -270,6 +295,8 @@ void AppWindow::onUpdate()
 
 	camera_system->drawGizmos(cc);
 
+	UIManager::getInstance()->drawAllUI();
+
 	m_swap_chain->present(true);
 
 	updateTimeLinear();
@@ -278,6 +305,8 @@ void AppWindow::onUpdate()
 
 void AppWindow::onDestroy()
 {
+	//UIManager::destroy();
+
 	Window::onDestroy();
 }
 

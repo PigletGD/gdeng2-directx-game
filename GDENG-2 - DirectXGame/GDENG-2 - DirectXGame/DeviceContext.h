@@ -34,11 +34,14 @@ public:
 	void setConstantBuffer(const VertexShaderPtr& vertex_shader, const ConstantBufferPtr& buffer);
 	void setConstantBuffer(const PixelShaderPtr& pixel_shader, const ConstantBufferPtr& buffer);
 
+	ID3D11DeviceContext* getContext();
+
 private:
 	ID3D11DeviceContext* m_device_context;
 
 	RenderSystem* m_system = nullptr;
 
+	friend class AppWindow;
 	friend class ConstantBuffer;
 	friend class SwapChain;
 };

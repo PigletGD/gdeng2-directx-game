@@ -33,6 +33,7 @@ public:
 	static void destroy();
 
 	void initializeEngine();
+	void createInterface();
 
 	float getDeltaTime();
 	void updateTimeLinear();

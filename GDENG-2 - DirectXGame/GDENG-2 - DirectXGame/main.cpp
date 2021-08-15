@@ -1,6 +1,7 @@
 #include "AppWindow.h"
 #include "InputSystem.h"
 #include "EngineTime.h"
+#include "UIManager.h"
 
 #pragma comment(lib, "d3d11.lib")
 
@@ -11,6 +12,7 @@ int main()
 			AppWindow::intialize();
 			AppWindow* app = (AppWindow*) AppWindow::get();
 			app->initializeEngine();
+			app->createInterface();
 
 			while (app->isRun());
 		}
