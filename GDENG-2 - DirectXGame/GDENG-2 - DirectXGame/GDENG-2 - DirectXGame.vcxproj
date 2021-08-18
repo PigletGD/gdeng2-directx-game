@@ -149,6 +149,7 @@
     <ClCompile Include="AUIScreen.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
+    <ClCompile Include="ColorPickerScreen.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="CreditsScreen.cpp" />
     <ClCompile Include="Cube.cpp" />
@@ -165,6 +166,7 @@
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MathUtils.cpp" />
+    <ClCompile Include="MenuBarScreen.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshManager.cpp" />
     <ClCompile Include="PixelShader.cpp" />
@@ -190,6 +192,7 @@
     <ClInclude Include="AUIScreen.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="ColorPickerScreen.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="ConstantData.h" />
     <ClInclude Include="CreditsScreen.h" />
@@ -210,6 +213,7 @@
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="MathUtils.h" />
     <ClInclude Include="Matrix4x4.h" />
+    <ClInclude Include="MenuBarScreen.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshManager.h" />
     <ClInclude Include="PixelShader.h" />

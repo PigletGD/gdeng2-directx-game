@@ -2,6 +2,7 @@
 #include "GraphicsEngine.h"
 #include "DeviceContext.h"
 #include "CreditsScreen.h"
+#include "MenuBarScreen.h"
 
 UIManager* UIManager::sharedInstance = NULL;
 
@@ -23,9 +24,13 @@ UIManager::UIManager(HWND windowHandle)
 	ImGui_ImplDX11_Init(GraphicsEngine::get()->getRenderSystem()->getDevice(), GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->getContext());
 
 	UINames uiNames;
-	CreditsScreen* creditsScreen = new CreditsScreen();
-	uiTable[uiNames.CREDITS_SCREEN] = creditsScreen;
-	uiList.push_back(creditsScreen);
+	//CreditsScreen* creditsScreen = new CreditsScreen();
+	//uiTable[uiNames.CREDITS_SCREEN] = creditsScreen;
+	//uiList.push_back(creditsScreen);
+
+	MenuBarScreen* menuBarScreen = new MenuBarScreen();
+	uiTable[uiNames.MENU_BAR_SCREEN] = menuBarScreen;
+	uiList.push_back(menuBarScreen);
 }
 
 UIManager::~UIManager()

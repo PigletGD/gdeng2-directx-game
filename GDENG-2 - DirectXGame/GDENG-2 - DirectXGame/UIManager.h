@@ -11,7 +11,9 @@
 
 class UINames {
 public:
+	const String MENU_BAR_SCREEN = "MENU_BAR_SCREEN";
 	const String CREDITS_SCREEN = "CREDITS_SCREEN";
+	const String COLOR_PICKER_SCREEN = "COLOR_PICKER_SCREEN";
 };
 
 class UIManager
@@ -38,4 +40,7 @@ private:
 
 	UIList uiList;
 	UITable uiTable;
+
+	friend class MenuBarScreen;
+	friend class AUIScreen;
 };

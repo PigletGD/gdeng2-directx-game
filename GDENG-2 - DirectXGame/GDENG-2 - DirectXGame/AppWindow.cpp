@@ -305,8 +305,6 @@ void AppWindow::onUpdate()
 
 void AppWindow::onDestroy()
 {
-	//UIManager::destroy();
-
 	Window::onDestroy();
 }
 

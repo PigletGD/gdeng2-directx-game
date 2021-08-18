@@ -94,6 +94,12 @@
     <Filter Include="GameEngine\UIManager\UIScreens\CreditsScreen">
       <UniqueIdentifier>{f277361c-f4e1-4216-97a8-2f884572b812}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens\MenuBarScreen">
+      <UniqueIdentifier>{7897bb79-6511-436c-ba95-c606715be930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens\ColorPickerScreen">
+      <UniqueIdentifier>{7cc2c904-d60d-4b72-9409-901efcf44d38}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -212,6 +218,12 @@
     </ClCompile>
     <ClCompile Include="CreditsScreen.cpp">
       <Filter>GameEngine\UIManager\UIScreens\CreditsScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuBarScreen.cpp">
+      <Filter>GameEngine\UIManager\UIScreens\MenuBarScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorPickerScreen.cpp">
+      <Filter>GameEngine\UIManager\UIScreens\ColorPickerScreen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -364,6 +376,12 @@
     </ClInclude>
     <ClInclude Include="CreditsScreen.h">
       <Filter>GameEngine\UIManager\UIScreens\CreditsScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBarScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens\MenuBarScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorPickerScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens\ColorPickerScreen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
