@@ -192,24 +192,6 @@
     <ClCompile Include="Plane.cpp">
       <Filter>GameEngine\GraphicsEngine\Primitives\Plane</Filter>
     </ClCompile>
-    <ClCompile Include="imgui.cpp">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_demo.cpp">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_draw.cpp">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_impl_dx11.cpp">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_impl_win32.cpp">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_widgets.cpp">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="UIManager.cpp">
       <Filter>GameEngine\UIManager</Filter>
     </ClCompile>
@@ -224,6 +206,24 @@
     </ClCompile>
     <ClCompile Include="ColorPickerScreen.cpp">
       <Filter>GameEngine\UIManager\UIScreens\ColorPickerScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_dx11.cpp">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_win32.cpp">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_tables.cpp">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>GameEngine\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -344,6 +344,21 @@
     <ClInclude Include="Plane.h">
       <Filter>GameEngine\GraphicsEngine\Primitives\Plane</Filter>
     </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>GameEngine\UIManager</Filter>
+    </ClInclude>
+    <ClInclude Include="AUIScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditsScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens\CreditsScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBarScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens\MenuBarScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorPickerScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens\ColorPickerScreen</Filter>
+    </ClInclude>
     <ClInclude Include="imconfig.h">
       <Filter>GameEngine\ImGui</Filter>
     </ClInclude>
@@ -367,21 +382,6 @@
     </ClInclude>
     <ClInclude Include="imstb_truetype.h">
       <Filter>GameEngine\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="UIManager.h">
-      <Filter>GameEngine\UIManager</Filter>
-    </ClInclude>
-    <ClInclude Include="AUIScreen.h">
-      <Filter>GameEngine\UIManager\UIScreens</Filter>
-    </ClInclude>
-    <ClInclude Include="CreditsScreen.h">
-      <Filter>GameEngine\UIManager\UIScreens\CreditsScreen</Filter>
-    </ClInclude>
-    <ClInclude Include="MenuBarScreen.h">
-      <Filter>GameEngine\UIManager\UIScreens\MenuBarScreen</Filter>
-    </ClInclude>
-    <ClInclude Include="ColorPickerScreen.h">
-      <Filter>GameEngine\UIManager\UIScreens\ColorPickerScreen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

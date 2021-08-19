@@ -107,6 +107,7 @@ void Cube::draw(int width, int height, VertexShaderPtr vertexShader, PixelShader
 	cc.m_world = allMatrix;
 
 	m_cb->update(deviceContext, &cc);
+
 	deviceContext->setConstantBuffer(vertexShader, m_cb);
 	deviceContext->setConstantBuffer(pixelShader, m_cb);
 

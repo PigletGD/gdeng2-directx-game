@@ -13,6 +13,7 @@ SwapChain::SwapChain(HWND hwnd, UINT width, UINT height, RenderSystem* system) :
 	desc.BufferCount = 1;
 	desc.BufferDesc.Width = width;
 	desc.BufferDesc.Height = height;
+	//desc.BufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	desc.BufferDesc.RefreshRate.Numerator = 60;
 	desc.BufferDesc.RefreshRate.Denominator = 1;
@@ -26,15 +27,34 @@ SwapChain::SwapChain(HWND hwnd, UINT width, UINT height, RenderSystem* system) :
 
 	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
 
+	// Gets back buffer
 	ID3D11Texture2D* buffer;
 	hr = m_swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffer);
 
 	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
 
-	hr = device->CreateRenderTargetView(buffer, NULL, &m_rtv);
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+
+	renderTargetViewDesc.Format = desc.BufferDesc.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+	hr = device->CreateRenderTargetView(buffer, &renderTargetViewDesc, &m_rtv);
+
+	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
+
+	shaderResourceViewDesc.Format = desc.BufferDesc.Format;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+	device->CreateShaderResourceView(buffer, &shaderResourceViewDesc, &m_srv);
 	buffer->Release();
 
 	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
+
+	// Depth Buffer
 
 	D3D11_TEXTURE2D_DESC tex_desc = {};
 	tex_desc.Width = width;
@@ -57,6 +77,54 @@ SwapChain::SwapChain(HWND hwnd, UINT width, UINT height, RenderSystem* system) :
 	buffer->Release();
 
 	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
+
+	/*mod
+
+	D3D11_TEXTURE2D_DESC textureDesc;
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+
+	///////////////////////// Map's Texture
+	// Initialize the  texture description.
+	ZeroMemory(&textureDesc, sizeof(textureDesc));
+
+	// Setup the texture description.
+	// We will have our map be a square
+	// We will need to have this texture bound as a render target AND a shader resource
+	textureDesc.Width = width / 2;
+	textureDesc.Height = height / 2;
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = 0;
+
+	// Create the texture
+	device->CreateTexture2D(&textureDesc, NULL, &m_rttm);
+
+	/////////////////////// Map's Render Target
+// Setup the description of the render target view.
+	renderTargetViewDesc.Format = textureDesc.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+	// Create the render target view.
+	device->CreateRenderTargetView(m_rttm, &renderTargetViewDesc, &m_rtv2);
+
+	/////////////////////// Map's Shader Resource View
+// Setup the description of the shader resource view.
+	shaderResourceViewDesc.Format = textureDesc.Format;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+	// Create the shader resource view.
+	device->CreateShaderResourceView(m_rttm, &shaderResourceViewDesc, &m_srv);
+
+	/*mod*/
 
 	D3D11_RASTERIZER_DESC rast_desc;
 	ZeroMemory(&rast_desc, sizeof(D3D11_RASTERIZER_DESC));

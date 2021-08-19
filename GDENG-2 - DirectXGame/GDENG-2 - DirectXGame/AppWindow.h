@@ -66,4 +66,6 @@ private:
 	float m_time_wave;
 
 	Matrix4x4 m_world_cam;
+
+	friend class CreditsScreen;
 };

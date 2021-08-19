@@ -10,6 +10,7 @@ public:
 	~DeviceContext();
 
 	void clearRenderTargetColor(const SwapChainPtr& swap_chain, float red, float green, float blue, float alpha);
+	void clearRenderTargetColorB(const SwapChainPtr& swap_chain, float red, float green, float blue, float alpha);
 
 	void setRasterizerState(const SwapChainPtr& swap_chain);
 	

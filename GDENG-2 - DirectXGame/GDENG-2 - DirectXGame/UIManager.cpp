@@ -11,7 +11,9 @@ UIManager::UIManager(HWND windowHandle)
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
-	(void)io;
+
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -24,10 +26,6 @@ UIManager::UIManager(HWND windowHandle)
 	ImGui_ImplDX11_Init(GraphicsEngine::get()->getRenderSystem()->getDevice(), GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->getContext());
 
 	UINames uiNames;
-	//CreditsScreen* creditsScreen = new CreditsScreen();
-	//uiTable[uiNames.CREDITS_SCREEN] = creditsScreen;
-	//uiList.push_back(creditsScreen);
-
 	MenuBarScreen* menuBarScreen = new MenuBarScreen();
 	uiTable[uiNames.MENU_BAR_SCREEN] = menuBarScreen;
 	uiList.push_back(menuBarScreen);
@@ -66,4 +64,10 @@ void UIManager::drawAllUI()
 
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+	}
 }
