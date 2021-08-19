@@ -8,6 +8,7 @@
 
 #include "CreditsScreen.h"
 #include "ColorPickerScreen.h"
+#include "ViewportScreen.h"
 #include "UIManager.h"
 
 MenuBarScreen::MenuBarScreen() : AUIScreen("Menu Bar")
@@ -30,6 +31,7 @@ void MenuBarScreen::drawUI()
 		if (ImGui::BeginMenu("Windows"))
 		{
 			if (ImGui::MenuItem("Color Picker")) { onCreateColorPickerScreen(); }
+			if (ImGui::MenuItem("Viewport")) { onCreateViewportScreen(); }
 			ImGui::EndMenu();
 		}
 
@@ -65,4 +67,19 @@ void MenuBarScreen::onCreateColorPickerScreen()
 		std::cout << "Created Color Picker Screen" << std::endl;
 	}
 	else std::cout << "Color Picker Screen Already Created" << std::endl;
+}
+
+void MenuBarScreen::onCreateViewportScreen()
+{
+	UIManager* uiManager = UIManager::getInstance();
+	UINames uiNames;
+
+	if (uiManager->uiTable[uiNames.VIEWPORT_SCREEN] == nullptr) {
+		ViewportScreen* viewportScreen = new ViewportScreen();
+		uiManager->uiTable[uiNames.VIEWPORT_SCREEN] = viewportScreen;
+		uiManager->uiList.push_back(viewportScreen);
+
+		std::cout << "Created Viewport Screen" << std::endl;
+	}
+	else std::cout << "Viewport Screen Already Created" << std::endl;
 }

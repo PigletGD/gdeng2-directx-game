@@ -39,6 +39,8 @@ public:
 	void updateTimeLinear();
 	void updateTimeWave();
 
+	void drawToRenderTarget();
+
 	virtual void onCreate() override;
 	virtual void onUpdate() override;
 	virtual void onDestroy() override;
@@ -68,4 +70,5 @@ private:
 	Matrix4x4 m_world_cam;
 
 	friend class CreditsScreen;
+	friend class ViewportScreen;
 };

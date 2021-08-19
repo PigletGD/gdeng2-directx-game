@@ -10,6 +10,7 @@ private:
 	virtual void drawUI() override;
 	void onCreateCreditsScreen();
 	void onCreateColorPickerScreen();
+	void onCreateViewportScreen();
 
 	friend class UIManager;
 

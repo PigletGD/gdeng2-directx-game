@@ -25,4 +25,5 @@ private:
 
 	friend class DeviceContext;
 	friend class CreditsScreen;
+	friend class RenderTexture;
 };

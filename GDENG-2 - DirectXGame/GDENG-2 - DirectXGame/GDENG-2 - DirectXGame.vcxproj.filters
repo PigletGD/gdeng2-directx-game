@@ -100,6 +100,12 @@
     <Filter Include="GameEngine\UIManager\UIScreens\ColorPickerScreen">
       <UniqueIdentifier>{7cc2c904-d60d-4b72-9409-901efcf44d38}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens\ViewportScreen">
+      <UniqueIdentifier>{34f33e56-0cc2-4dc8-9e80-8a46e9f30c45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\RenderTexture">
+      <UniqueIdentifier>{c47dc435-4b90-4353-9051-977b2a9ba841}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -192,9 +198,6 @@
     <ClCompile Include="Plane.cpp">
       <Filter>GameEngine\GraphicsEngine\Primitives\Plane</Filter>
     </ClCompile>
-    <ClCompile Include="UIManager.cpp">
-      <Filter>GameEngine\UIManager</Filter>
-    </ClCompile>
     <ClCompile Include="AUIScreen.cpp">
       <Filter>GameEngine\UIManager\UIScreens</Filter>
     </ClCompile>
@@ -224,6 +227,15 @@
     </ClCompile>
     <ClCompile Include="imgui_widgets.cpp">
       <Filter>GameEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>GameEngine\UIManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewportScreen.cpp">
+      <Filter>GameEngine\UIManager\UIScreens\ViewportScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTexture.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\RenderTexture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -382,6 +394,12 @@
     </ClInclude>
     <ClInclude Include="imstb_truetype.h">
       <Filter>GameEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewportScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens\ViewportScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTexture.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\RenderTexture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

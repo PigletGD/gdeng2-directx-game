@@ -237,6 +237,40 @@ void AppWindow::updateTimeWave()
 	m_time_wave += EngineTime::getDeltaTime() * ((sin(m_time_linear) + 1.0f) / 2.0f) * 10.0f; // delta * sin wave time * max speed
 }
 
+void AppWindow::drawToRenderTarget()
+{
+	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
+	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
+	DeviceContextPtr device_context = render_system->getImmediateDeviceContext();
+
+	RECT rc = getClientWindowRect();
+	int width = rc.right - rc.left;
+	int height = rc.bottom - rc.top;
+
+	constant cc;
+	cc.m_time = m_time_linear;
+	cc.m_lerp_speed = 1.0f;
+
+	cc.m_world = camera_system->getCurrentCameraWorldMatrix();;
+	cc.m_view = camera_system->getCurrentCameraViewMatrix();
+	cc.m_proj = camera_system->getCurrentCameraProjectionMatrix();
+
+	m_cb->update(device_context, &cc);
+
+	device_context->setConstantBuffer(m_vs, m_cb);
+	device_context->setConstantBuffer(m_ps, m_cb);
+
+	device_context->setVertexShader(m_vs);
+	device_context->setPixelShader(m_ps);
+
+	for (int i = 0; i < m_object_list.size(); i++) {
+		m_object_list[i]->update(EngineTime::getDeltaTime());
+		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
+	}
+
+	camera_system->drawGizmos(cc);
+}
+
 void AppWindow::onCreate()
 {
 	Window::onCreate();

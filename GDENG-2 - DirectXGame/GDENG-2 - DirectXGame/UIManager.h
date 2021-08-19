@@ -14,6 +14,7 @@ public:
 	const String MENU_BAR_SCREEN = "MENU_BAR_SCREEN";
 	const String CREDITS_SCREEN = "CREDITS_SCREEN";
 	const String COLOR_PICKER_SCREEN = "COLOR_PICKER_SCREEN";
+	const String VIEWPORT_SCREEN = "VIEWPORT_SCREEN";
 };
 
 class UIManager

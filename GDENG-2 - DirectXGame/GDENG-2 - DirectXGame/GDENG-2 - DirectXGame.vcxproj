@@ -174,6 +174,7 @@
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="QuadTransitionColor.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
+    <ClCompile Include="RenderTexture.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SwapChain.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VertexColorBuffer.cpp" />
     <ClCompile Include="VertexShader.cpp" />
+    <ClCompile Include="ViewportScreen.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +225,7 @@
     <ClInclude Include="Quad.h" />
     <ClInclude Include="QuadTransitionColor.h" />
     <ClInclude Include="RenderSystem.h" />
+    <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SwapChain.h" />
@@ -237,6 +240,7 @@
     <ClInclude Include="VertexColorBuffer.h" />
     <ClInclude Include="VertexMesh.h" />
     <ClInclude Include="VertexShader.h" />
+    <ClInclude Include="ViewportScreen.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
