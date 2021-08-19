@@ -17,6 +17,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	case WM_CREATE: {
 		break; // Event fired when the window is created
 	}
+	case WM_SIZE: {
+		Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+		if (window) window->onSize();
+		break; // Event fired when the window is resized
+	}
 	case WM_SETFOCUS: {
 		Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		if (window) window->onFocus();
@@ -137,4 +142,8 @@ void Window::onFocus()
 void Window::onKillFocus()
 {
 
+}
+
+void Window::onSize()
+{
 }

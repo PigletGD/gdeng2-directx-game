@@ -40,13 +40,14 @@ public:
 	void updateTimeLinear();
 	void updateTimeWave();
 
-	void drawToRenderTarget(Camera* camera);
+	void drawToRenderTarget(Camera* camera, UINT width, UINT height);
 
 	virtual void onCreate() override;
 	virtual void onUpdate() override;
 	virtual void onDestroy() override;
 	virtual void onFocus() override;
 	virtual void onKillFocus() override;
+	virtual void onSize() override;
 
 	TexturePtr m_wood_tex;
 	MeshPtr m_mesh;

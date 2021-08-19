@@ -237,15 +237,15 @@ void AppWindow::updateTimeWave()
 	m_time_wave += EngineTime::getDeltaTime() * ((sin(m_time_linear) + 1.0f) / 2.0f) * 10.0f; // delta * sin wave time * max speed
 }
 
-void AppWindow::drawToRenderTarget(Camera* camera)
+void AppWindow::drawToRenderTarget(Camera* camera, UINT width, UINT height)
 {
 	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
 	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
 	DeviceContextPtr device_context = render_system->getImmediateDeviceContext();
 
-	RECT rc = getClientWindowRect();
+	/*RECT rc = getClientWindowRect();
 	int width = rc.right - rc.left;
-	int height = rc.bottom - rc.top;
+	int height = rc.bottom - rc.top;*/
 
 	constant cc;
 	cc.m_time = m_time_linear;
@@ -361,4 +361,13 @@ void AppWindow::onFocus()
 void AppWindow::onKillFocus()
 {
 	InputSystem::get()->removeListener(GraphicsEngine::get()->getCameraSystem());
+}
+
+void AppWindow::onSize()
+{
+	RECT rc = getClientWindowRect();
+
+	m_swap_chain->resize(rc.right, rc.bottom);
+
+	onUpdate();
 }

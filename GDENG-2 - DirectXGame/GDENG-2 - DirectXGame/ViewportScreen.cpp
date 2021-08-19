@@ -1,9 +1,5 @@
 #include "ViewportScreen.h"
 
-#include "imgui.h"
-#include "imgui_impl_dx11.h"
-#include "imgui_impl_win32.h"
-
 #include "AppWindow.h"
 #include "GraphicsEngine.h"
 #include "DeviceContext.h"
@@ -12,7 +8,8 @@
 ViewportScreen::ViewportScreen() :
 	AUIScreen("Viewport Screen")
 {
-	m_rt = new RenderTexture(1024, 768);
+	oldSize = ImGui::GetContentRegionAvail();
+	m_rt = new RenderTexture(oldSize.x, oldSize.y);
 	m_camera = new Camera();
 
 	GraphicsEngine::get()->getCameraSystem()->addNewCamera(m_camera);
@@ -30,15 +27,26 @@ void ViewportScreen::drawUI()
 	/*Render Menu Bar for Viewing Options*/
 	ImGui::Begin("Viewport");
 
-	/*Update Camera in Camera Manager*/
+	//
+	//ImVec2 size = ImGui::GetWindowSize();
+	ImVec2 sizes = ImGui::GetContentRegionAvail();
 
-	/*Ask Render Texture to Update*/
-	m_rt->SetRenderTarget(device_context, swap_chain);
-	m_rt->ClearRenderTarget(device_context, swap_chain, 0.4f, 0.4f, 1.0f, 1.0f);
-	AppWindow::get()->drawToRenderTarget(m_camera);
+	if (sizes.x != oldSize.x || sizes.y != oldSize.y) {
+		m_rt->resize(sizes.x, sizes.y);
 
-	/*Load Image*/
-	ImGui::Image((void*)m_rt->m_shader_resource_view, ImVec2(1024, 768));
+		oldSize = sizes;
+	}
+
+	//Update Camera in Camera Manager//
+
+	//Ask Render Texture to Update//
+	m_rt->clearRenderTarget(device_context, swap_chain, 0.4f, 0.4f, 1.0f, 1.0f);
+	m_rt->setRenderTarget(device_context, swap_chain);
+	m_rt->setViewportSize(device_context, sizes.x, sizes.y);
+	AppWindow::get()->drawToRenderTarget(m_camera, sizes.x, sizes.y); // width and height don't matter
+
+	//Load Image
+	ImGui::Image((void*)m_rt->m_shader_resource_view, sizes);
 
 	ImGui::End();
 }

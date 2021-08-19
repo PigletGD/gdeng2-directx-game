@@ -1,6 +1,10 @@
 #pragma once
 #include "AUIScreen.h"
 
+#include "imgui.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_win32.h"
+
 #include "RenderTexture.h"
 #include "Camera.h"
 
@@ -14,6 +18,7 @@ private:
 
 	RenderTexture* m_rt;
 	Camera* m_camera;
+	ImVec2 oldSize;
 
 	friend class MenuBarScreen;
 };
