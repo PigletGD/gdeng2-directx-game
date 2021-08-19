@@ -9,13 +9,14 @@
 class Camera : public AGameObject
 {
 public:
-	Camera();
+	Camera(float width, float height);
 	~Camera();
 
 	void updatePosition(float speed, float forward, float rightward);
 	void updateRotation(float delta_rot_x, float delta_rot_y);
 
 	void updateWorldAndViewMatrix();
+	void updateWindowSize(float width, float height);
 
 	void switchProjectionMode();
 	void setOrthographicView();
@@ -32,6 +33,9 @@ private:
 	Matrix4x4 m_world_cam;
 	Matrix4x4 m_view_cam;
 	Matrix4x4 m_proj_cam;
+
+	float m_window_width;
+	float m_window_height;
 
 	bool m_is_perspective = true;
 

@@ -22,7 +22,8 @@ public:
 	void switchToNextCamera();
 
 	void updateCurrentCamera();
-	
+	void updateCurrentCameraWindowSize(float width, float height);
+
 	Matrix4x4 getCurrentCameraWorldMatrix();
 	Matrix4x4 getCurrentCameraViewMatrix();
 	Matrix4x4 getCurrentCameraProjectionMatrix();

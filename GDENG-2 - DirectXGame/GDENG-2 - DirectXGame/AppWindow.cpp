@@ -369,5 +369,7 @@ void AppWindow::onSize()
 
 	m_swap_chain->resize(rc.right, rc.bottom);
 
+	GraphicsEngine::get()->getCameraSystem()->updateCurrentCameraWindowSize(rc.right, rc.bottom);
+
 	onUpdate();
 }

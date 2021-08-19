@@ -10,7 +10,7 @@ ViewportScreen::ViewportScreen() :
 {
 	oldSize = ImGui::GetContentRegionAvail();
 	m_rt = new RenderTexture(oldSize.x, oldSize.y);
-	m_camera = new Camera();
+	m_camera = new Camera(oldSize.x, oldSize.y);
 
 	GraphicsEngine::get()->getCameraSystem()->addNewCamera(m_camera);
 }
@@ -33,6 +33,7 @@ void ViewportScreen::drawUI()
 
 	if (sizes.x != oldSize.x || sizes.y != oldSize.y) {
 		m_rt->resize(sizes.x, sizes.y);
+		m_camera->updateWindowSize(sizes.x, sizes.y);
 
 		oldSize = sizes;
 	}

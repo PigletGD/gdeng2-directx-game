@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string>
 
-Camera::Camera() : AGameObject("Camera")
+Camera::Camera(float width, float height) : AGameObject("Camera")
 {
 	setPosition(Vector3D(0, 1, -2));
 
@@ -17,6 +17,8 @@ Camera::Camera() : AGameObject("Camera")
 							{Vector3D(-0.05f, 0.05f, 0.0f), Vector2D(1, 0)},
 							{Vector3D( 0.05f, 0.05f, 0.0f), Vector2D(0, 0)},
 							{Vector3D( 0.05f,-0.05f, 0.0f), Vector2D(0, 1)});
+
+	updateWindowSize(width, height);
 }
 
 Camera::~Camera()
@@ -83,6 +85,12 @@ void Camera::updateWorldAndViewMatrix()
 	m_view_cam = temp;
 }
 
+void Camera::updateWindowSize(float width, float height)
+{
+	m_window_width = width;
+	m_window_height = height;
+}
+
 void Camera::switchProjectionMode()
 {
 	m_is_perspective = !m_is_perspective;
@@ -90,20 +98,14 @@ void Camera::switchProjectionMode()
 
 void Camera::setOrthographicView()
 {
-	AppWindow* app = AppWindow::get();
-	int width = (app->getClientWindowRect().right - app->getClientWindowRect().left);
-	int height = (app->getClientWindowRect().bottom - app->getClientWindowRect().top);
-
-	m_proj_cam.setOrthoLH(width/400.0f, height/400.0f, -4.0f, 4.0f);
+	m_proj_cam.setOrthoLH(m_window_width/400.0f, m_window_height/400.0f, -4.0f, 4.0f);
 }
 
 void Camera::setPerspectiveView()
 {
-	AppWindow* app = AppWindow::get();
-	int width = (app->getClientWindowRect().right - app->getClientWindowRect().left);
-	int height = (app->getClientWindowRect().bottom - app->getClientWindowRect().top);
+	
 
-	m_proj_cam.setPerspectiveFovLH(m_field_of_view, (float)width / (float)height, m_near_clip_plane, m_far_clip_plane);
+	m_proj_cam.setPerspectiveFovLH(m_field_of_view, m_window_width / m_window_height, m_near_clip_plane, m_far_clip_plane);
 }
 
 Matrix4x4 Camera::getWorldMatrix()
@@ -147,10 +149,6 @@ void Camera::createBuffersAndShaders()
 
 void Camera::drawGizmoIcon(constant cc)
 {
-	if (m_vs == nullptr) std::cout << "null\n";
-	if (m_cb == nullptr) std::cout << "nullllll\n";
-	if (m_ps == nullptr) std::cout << "nullllllllllllll\n";
-
 	Matrix4x4 translation;
 
 	Matrix4x4 temp;

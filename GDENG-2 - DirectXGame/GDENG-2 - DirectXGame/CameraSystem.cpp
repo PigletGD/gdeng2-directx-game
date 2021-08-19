@@ -7,7 +7,11 @@
 
 CameraSystem::CameraSystem()
 {
-	cameraList.push_back(new Camera());
+	AppWindow* app = AppWindow::get();
+	int width = (app->getClientWindowRect().right - app->getClientWindowRect().left);
+	int height = (app->getClientWindowRect().bottom - app->getClientWindowRect().top);
+
+	cameraList.push_back(new Camera(width, height));
 }
 
 CameraSystem::~CameraSystem()
@@ -19,7 +23,11 @@ void CameraSystem::addNewCamera()
 {
 	std::cout << "Added New Camera to Scene" << std::endl;
 
-	Camera* camera = new Camera();
+	AppWindow* app = AppWindow::get();
+	int width = (app->getClientWindowRect().right - app->getClientWindowRect().left);
+	int height = (app->getClientWindowRect().bottom - app->getClientWindowRect().top);
+
+	Camera* camera = new Camera(width, height);
 	camera->createBuffersAndShaders();
 	camera->updatePosition(m_cam_speed, m_forward, m_rightward);
 
@@ -84,6 +92,11 @@ void CameraSystem::updateCurrentCamera()
 	if (m_forward != 0 || m_rightward != 0)
 		cameraList[m_camera_index]->updatePosition(
 			m_cam_speed, m_forward, m_rightward);
+}
+
+void CameraSystem::updateCurrentCameraWindowSize(float width, float height)
+{
+	cameraList[m_camera_index]->updateWindowSize(width, height);
 }
 
 Matrix4x4 CameraSystem::getCurrentCameraWorldMatrix()
