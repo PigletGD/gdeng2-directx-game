@@ -13,6 +13,9 @@ ViewportScreen::ViewportScreen() :
 	AUIScreen("Viewport Screen")
 {
 	m_rt = new RenderTexture(1024, 768);
+	m_camera = new Camera();
+
+	GraphicsEngine::get()->getCameraSystem()->addNewCamera(m_camera);
 }
 
 ViewportScreen::~ViewportScreen()
@@ -30,9 +33,9 @@ void ViewportScreen::drawUI()
 	/*Update Camera in Camera Manager*/
 
 	/*Ask Render Texture to Update*/
-	m_rt->ClearRenderTarget(device_context, swap_chain, 0.4f, 0.4f, 1.0f, 1.0f);
 	m_rt->SetRenderTarget(device_context, swap_chain);
-	AppWindow::get()->drawToRenderTarget();
+	m_rt->ClearRenderTarget(device_context, swap_chain, 0.4f, 0.4f, 1.0f, 1.0f);
+	AppWindow::get()->drawToRenderTarget(m_camera);
 
 	/*Load Image*/
 	ImGui::Image((void*)m_rt->m_shader_resource_view, ImVec2(1024, 768));

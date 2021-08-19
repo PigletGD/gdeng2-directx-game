@@ -15,6 +15,7 @@ public:
 	~CameraSystem();
 
 	void addNewCamera();
+	void addNewCamera(Camera* new_camera);
 	void removeCurrentCamera();
 
 	void switchToPreviousCamera();

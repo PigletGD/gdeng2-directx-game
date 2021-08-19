@@ -16,6 +16,7 @@
 #include "Cube.h"
 #include "Plane.h"
 #include "Vertex.h"
+#include "Camera.h"
 
 #include <vector>
 
@@ -39,7 +40,7 @@ public:
 	void updateTimeLinear();
 	void updateTimeWave();
 
-	void drawToRenderTarget();
+	void drawToRenderTarget(Camera* camera);
 
 	virtual void onCreate() override;
 	virtual void onUpdate() override;

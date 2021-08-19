@@ -44,4 +44,8 @@ private:
 	VertexShaderPtr m_vs;
 	PixelShaderPtr m_ps;
 	ConstantBufferPtr m_cb;
+
+	bool m_is_active;
+
+	friend class CameraSystem;
 };

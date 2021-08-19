@@ -237,7 +237,7 @@ void AppWindow::updateTimeWave()
 	m_time_wave += EngineTime::getDeltaTime() * ((sin(m_time_linear) + 1.0f) / 2.0f) * 10.0f; // delta * sin wave time * max speed
 }
 
-void AppWindow::drawToRenderTarget()
+void AppWindow::drawToRenderTarget(Camera* camera)
 {
 	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
 	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
@@ -251,9 +251,9 @@ void AppWindow::drawToRenderTarget()
 	cc.m_time = m_time_linear;
 	cc.m_lerp_speed = 1.0f;
 
-	cc.m_world = camera_system->getCurrentCameraWorldMatrix();;
-	cc.m_view = camera_system->getCurrentCameraViewMatrix();
-	cc.m_proj = camera_system->getCurrentCameraProjectionMatrix();
+	cc.m_world = camera->getWorldMatrix();
+	cc.m_view = camera->getViewMatrix();
+	cc.m_proj = camera->getProjectionMatrix();
 
 	m_cb->update(device_context, &cc);
 

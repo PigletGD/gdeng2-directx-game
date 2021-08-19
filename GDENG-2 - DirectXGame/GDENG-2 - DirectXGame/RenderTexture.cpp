@@ -19,8 +19,8 @@ RenderTexture::RenderTexture(UINT width, UINT height)
 	// Setup the texture description.
 	// We will have our map be a square
 	// We will need to have this texture bound as a render target AND a shader resource
-	textureDesc.Width = width / 2;
-	textureDesc.Height = height / 2;
+	textureDesc.Width = width / 1.1f;
+	textureDesc.Height = height / 1.1f;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
 	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -72,6 +72,8 @@ RenderTexture::~RenderTexture()
 void RenderTexture::SetRenderTarget(const DeviceContextPtr& device_context, const SwapChainPtr& swap_chain)
 {
 	ID3D11DeviceContext* context = device_context->getContext();
+
+	// probably insert viewport resizing or smth
 
 	context->OMSetRenderTargets(1, &m_render_target_view, swap_chain->m_dsv);
 }

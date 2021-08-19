@@ -30,6 +30,19 @@ void CameraSystem::addNewCamera()
 	switchToNextCamera();
 }
 
+void CameraSystem::addNewCamera(Camera* new_camera)
+{
+	std::cout << "Added New Camera to Scene" << std::endl;
+
+	new_camera->createBuffersAndShaders();
+	new_camera->updatePosition(m_cam_speed, m_forward, m_rightward);
+	new_camera->m_is_active = true;
+
+	auto it = cameraList.begin() + m_camera_index + 1;
+
+	cameraList.insert(it, new_camera);
+}
+
 void CameraSystem::removeCurrentCamera()
 {
 	if (cameraList.size() <= 1) return;
