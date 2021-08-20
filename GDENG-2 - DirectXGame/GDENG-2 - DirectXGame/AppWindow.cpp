@@ -331,16 +331,7 @@ void AppWindow::onUpdate()
 
 	UIManager::getInstance()->drawAllUI();
 
-	/*device_context->clearRenderTargetColorB(m_swap_chain, 0.4f, 0.4f, 1.0f, 1);
-
-	for (int i = 0; i < m_object_list.size(); i++) {
-		m_object_list[i]->update(EngineTime::getDeltaTime());
-		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
-	}
-
-	camera_system->drawGizmos(cc);
-
-	UIManager::getInstance()->drawAllUI();*/
+	device_context->setRenderTarget(m_swap_chain);
 
 	m_swap_chain->present(true);
 

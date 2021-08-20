@@ -9,8 +9,9 @@ public:
 	DeviceContext(ID3D11DeviceContext* device_context, RenderSystem* system);
 	~DeviceContext();
 
+	void setRenderTarget(const SwapChainPtr& swap_chain);
+
 	void clearRenderTargetColor(const SwapChainPtr& swap_chain, float red, float green, float blue, float alpha);
-	void clearRenderTargetColorB(const SwapChainPtr& swap_chain, float red, float green, float blue, float alpha);
 
 	void setRasterizerState(const SwapChainPtr& swap_chain);
 	

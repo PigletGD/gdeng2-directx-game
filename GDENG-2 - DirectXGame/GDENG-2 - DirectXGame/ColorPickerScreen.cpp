@@ -23,7 +23,7 @@ void ColorPickerScreen::drawUI()
 		return;
 	}
 
-	ImGui::Begin("Color Picker Screen", &m_is_open);
+	ImGui::Begin("Color Picker Screen", &m_is_open);	
 	ImGui::ColorPicker3("Color", (float*)&m_color, 
 		ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_NoInputs);
 	ImGui::End();

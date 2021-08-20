@@ -71,6 +71,7 @@ private:
 
 	Matrix4x4 m_world_cam;
 
+	friend class UIManager;
 	friend class CreditsScreen;
 	friend class ViewportScreen;
 };

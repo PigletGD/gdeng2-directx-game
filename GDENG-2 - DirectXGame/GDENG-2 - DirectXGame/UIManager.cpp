@@ -3,6 +3,8 @@
 #include "DeviceContext.h"
 #include "CreditsScreen.h"
 #include "MenuBarScreen.h"
+#include "AppWindow.h"
+#include "SwapChain.h"
 
 UIManager* UIManager::sharedInstance = NULL;
 
@@ -59,11 +61,15 @@ void UIManager::drawAllUI()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	for (int i = 0; i < uiList.size(); i++)
+	for (int i = 0; i < uiList.size(); i++) {
 		uiList[i]->drawUI();
+	}
+
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRenderTarget(AppWindow::get()->m_swap_chain);
 
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	
 
 	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{

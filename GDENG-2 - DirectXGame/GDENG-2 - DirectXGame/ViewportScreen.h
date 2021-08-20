@@ -11,10 +11,12 @@
 class ViewportScreen : public AUIScreen
 {
 private:
-	ViewportScreen();
+	ViewportScreen(String name);
 	~ViewportScreen();
 
 	virtual void drawUI() override;
+
+	String m_name;
 
 	RenderTexture* m_rt;
 	Camera* m_camera;

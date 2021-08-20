@@ -74,6 +74,16 @@ void MenuBarScreen::onCreateViewportScreen()
 	UIManager* uiManager = UIManager::getInstance();
 	UINames uiNames;
 
+	String viewportName = uiNames.VIEWPORT_SCREEN + "_0";
+	int i = 0;
+
+	while (uiManager->uiTable[viewportName] != nullptr) {
+		i++;
+
+		viewportName = uiNames.VIEWPORT_SCREEN + "_" + std::to_string(i);
+	}
+
+	/*
 	if (uiManager->uiTable[uiNames.VIEWPORT_SCREEN] == nullptr) {
 		ViewportScreen* viewportScreen = new ViewportScreen();
 		uiManager->uiTable[uiNames.VIEWPORT_SCREEN] = viewportScreen;
@@ -82,4 +92,14 @@ void MenuBarScreen::onCreateViewportScreen()
 		std::cout << "Created Viewport Screen" << std::endl;
 	}
 	else std::cout << "Viewport Screen Already Created" << std::endl;
+	*/
+	
+	String name = "Viewport" + std::to_string(i);
+
+	ViewportScreen* viewportScreen = new ViewportScreen(name);
+	uiManager->uiTable[viewportName] = viewportScreen;
+	uiManager->uiList.push_back(viewportScreen);
+
+	std::cout << "Created Viewport Screen" << std::endl;
+
 }
