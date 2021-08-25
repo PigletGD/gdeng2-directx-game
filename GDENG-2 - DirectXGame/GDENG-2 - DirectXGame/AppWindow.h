@@ -51,6 +51,7 @@ public:
 
 	TexturePtr m_wood_tex;
 	MeshPtr m_mesh;
+
 private:
 	std::vector<AGameObject*> m_object_list;
 
@@ -66,12 +67,14 @@ private:
 
 	AlphaBlendStatePtr m_abs;
 
+	ID3D11RasterizerState* m_rs;
+
 	float m_time_linear;
 	float m_time_wave;
 
 	Matrix4x4 m_world_cam;
 
 	friend class UIManager;
-	friend class CreditsScreen;
 	friend class ViewportScreen;
+	friend class MenuBarScreen;
 };

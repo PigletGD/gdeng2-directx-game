@@ -210,24 +210,6 @@
     <ClCompile Include="ColorPickerScreen.cpp">
       <Filter>GameEngine\UIManager\UIScreens\ColorPickerScreen</Filter>
     </ClCompile>
-    <ClCompile Include="imgui.cpp">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_draw.cpp">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_impl_dx11.cpp">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_impl_win32.cpp">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_tables.cpp">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_widgets.cpp">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="UIManager.cpp">
       <Filter>GameEngine\UIManager</Filter>
     </ClCompile>
@@ -236,6 +218,24 @@
     </ClCompile>
     <ClCompile Include="RenderTexture.cpp">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\RenderTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="Libs\ImGui\imgui.cpp">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Libs\ImGui\imgui_draw.cpp">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Libs\ImGui\imgui_impl_dx11.cpp">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Libs\ImGui\imgui_impl_win32.cpp">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Libs\ImGui\imgui_tables.cpp">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Libs\ImGui\imgui_widgets.cpp">
+      <Filter>GameEngine\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -371,35 +371,35 @@
     <ClInclude Include="ColorPickerScreen.h">
       <Filter>GameEngine\UIManager\UIScreens\ColorPickerScreen</Filter>
     </ClInclude>
-    <ClInclude Include="imconfig.h">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui.h">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_impl_dx11.h">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_impl_win32.h">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_internal.h">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imstb_rectpack.h">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imstb_textedit.h">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imstb_truetype.h">
-      <Filter>GameEngine\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="ViewportScreen.h">
       <Filter>GameEngine\UIManager\UIScreens\ViewportScreen</Filter>
     </ClInclude>
     <ClInclude Include="RenderTexture.h">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\RenderTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGui\imconfig.h">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGui\imgui.h">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGui\imgui_impl_dx11.h">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGui\imgui_impl_win32.h">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGui\imgui_internal.h">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGui\imstb_rectpack.h">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGui\imstb_textedit.h">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGui\imstb_truetype.h">
+      <Filter>GameEngine\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

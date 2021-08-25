@@ -166,6 +166,7 @@ void AppWindow::initializeEngine()
 	// PLANE OBJECT: renders first
 	Plane* plane_object = new Plane("Plane 0", shader_byte_code, size_shader);
 	plane_object->setScale(7, 7, 1);
+	plane_object->setPosition(0.0f, -0.5f, 0.0f);
 	m_object_list.push_back(plane_object);
 
 	/* CUBE OBJECT: renders second, will render entirely in front of plane without depth stencil buffer
@@ -180,8 +181,7 @@ void AppWindow::initializeEngine()
 
 	Cube* cube_object = new Cube("Cube 0", shader_byte_code, size_shader);
 	cube_object->setAnimSpeed(MathUtils::randomFloat(-3.75f, 3.75f));
-	cube_object->setScale(1.0f, 1.0f, 1.0f);
-	cube_object->setPosition(0.0f, 0.0f, 2.0f);
+	cube_object->setPosition(0.0f, 0.0f, 0.0f);
 	InputSystem::get()->addListener(cube_object);
 	m_object_list.push_back(cube_object);
 
@@ -198,23 +198,9 @@ void AppWindow::initializeEngine()
 
 	m_abs = render_system->createAlphaBlendState();
 
+	m_rs = render_system->m_rs_solid;
+
 	camera_system->initializeInitialCamera();
-
-	/*
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
-	// Setup Dear ImGui style
-	ImGui::StyleColorsDark();
-	//ImGui::StyleColorsClassic();
-
-	// Setup Platform/Renderer bindings
-	ImGui_ImplWin32_Init(m_HWND);
-	ImGui_ImplDX11_Init(GraphicsEngine::get()->getRenderSystem()->m_d3d_device, GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->m_device_context);
-	*/
 }
 
 void AppWindow::createInterface()
@@ -243,10 +229,6 @@ void AppWindow::drawToRenderTarget(Camera* camera, UINT width, UINT height)
 	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
 	DeviceContextPtr device_context = render_system->getImmediateDeviceContext();
 
-	/*RECT rc = getClientWindowRect();
-	int width = rc.right - rc.left;
-	int height = rc.bottom - rc.top;*/
-
 	constant cc;
 	cc.m_time = m_time_linear;
 	cc.m_lerp_speed = 1.0f;
@@ -268,7 +250,7 @@ void AppWindow::drawToRenderTarget(Camera* camera, UINT width, UINT height)
 		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
 	}
 
-	camera_system->drawGizmos(cc);
+	//camera_system->drawGizmos(cc);
 }
 
 void AppWindow::onCreate()
@@ -295,7 +277,7 @@ void AppWindow::onUpdate()
 	int height = rc.bottom - rc.top;
 	device_context->setViewportSize(width, height);
 
-	device_context->setRasterizerState(m_swap_chain);
+	device_context->setRasterizerState(m_rs);
 
 	constant cc;
 	cc.m_time = m_time_linear;
@@ -327,7 +309,7 @@ void AppWindow::onUpdate()
 		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
 	}
 
-	camera_system->drawGizmos(cc);
+	//camera_system->drawGizmos(cc);
 
 	UIManager::getInstance()->drawAllUI();
 
@@ -358,9 +340,9 @@ void AppWindow::onSize()
 {
 	RECT rc = getClientWindowRect();
 
-	m_swap_chain->resize(rc.right, rc.bottom);
+	m_swap_chain->resize(rc.right - rc.left, rc.bottom - rc.top);
 
-	GraphicsEngine::get()->getCameraSystem()->updateCurrentCameraWindowSize(rc.right, rc.bottom);
+	GraphicsEngine::get()->getCameraSystem()->updateCurrentCameraWindowSize(rc.right - rc.left, rc.bottom - rc.top);
 
 	onUpdate();
 }

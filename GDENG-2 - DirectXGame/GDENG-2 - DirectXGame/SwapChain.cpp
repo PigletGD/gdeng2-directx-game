@@ -24,14 +24,13 @@ SwapChain::SwapChain(HWND hwnd, UINT width, UINT height, RenderSystem* system) :
 
 	HRESULT hr = m_system->m_dxgi_factory->CreateSwapChain(device, &desc, &m_swap_chain);
 
-	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
+	if (FAILED(hr)) throw std::exception("Swap Chain not created successfully");
 
 	reloadBuffers(width, height);
 }
 
 SwapChain::~SwapChain()
 {
-	m_rs->Release();
 	m_rtv->Release();
 	m_dsv->Release();
 	m_swap_chain->Release();
@@ -43,6 +42,7 @@ void SwapChain::resize(unsigned int width, unsigned int height)
 	if (m_dsv) m_dsv->Release();
 
 	m_swap_chain->ResizeBuffers(1, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+
 	reloadBuffers(width, height);
 }
 
@@ -61,19 +61,14 @@ void SwapChain::reloadBuffers(unsigned int width, unsigned int height)
 	ID3D11Texture2D* buffer;
 	HRESULT hr = m_swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffer);
 
-	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
+	if (FAILED(hr)) throw std::exception("Swap Chain not created successfully");
 
 	hr = device->CreateRenderTargetView(buffer, NULL, &m_rtv);
-
-	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
-
-	device->CreateShaderResourceView(buffer, NULL, &m_srv);
 	buffer->Release();
 
-	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
+	if (FAILED(hr)) throw std::exception("Swap Chain not created successfully");
 
 	// Depth Buffer
-
 	D3D11_TEXTURE2D_DESC tex_desc = {};
 	tex_desc.Width = width;
 	tex_desc.Height = height;
@@ -89,19 +84,10 @@ void SwapChain::reloadBuffers(unsigned int width, unsigned int height)
 
 	hr = device->CreateTexture2D(&tex_desc, nullptr, &buffer);
 
-	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
+	if (FAILED(hr)) throw std::exception("Swap Chain not created successfully");
 
 	hr = device->CreateDepthStencilView(buffer, NULL, &m_dsv);
 	buffer->Release();
 
-	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
-
-	D3D11_RASTERIZER_DESC rast_desc;
-	ZeroMemory(&rast_desc, sizeof(D3D11_RASTERIZER_DESC));
-	rast_desc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
-	rast_desc.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
-
-	hr = device->CreateRasterizerState(&rast_desc, &m_rs);
-
-	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
+	if (FAILED(hr)) throw std::exception("Swap Chain not created successfully");
 }

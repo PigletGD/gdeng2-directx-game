@@ -12,7 +12,8 @@ private:
 	void onCreateColorPickerScreen();
 	void onCreateViewportScreen();
 
-	friend class UIManager;
+	// Initialize as -1 for no viewport limit
+	int m_viewport_limit = 3;
 
-	bool isOpen = false;
+	friend class UIManager;
 };

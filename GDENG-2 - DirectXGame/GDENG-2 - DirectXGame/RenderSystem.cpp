@@ -46,6 +46,21 @@ RenderSystem::RenderSystem()
 	m_d3d_device->QueryInterface(__uuidof(IDXGIDevice), (void**)&m_dxgi_device);
 	m_dxgi_device->GetParent(__uuidof(IDXGIAdapter), (void**)&m_dxgi_adapter);
 	m_dxgi_adapter->GetParent(__uuidof(IDXGIFactory), (void**)&m_dxgi_factory);
+
+	D3D11_RASTERIZER_DESC rast_desc;
+	ZeroMemory(&rast_desc, sizeof(D3D11_RASTERIZER_DESC));
+	rast_desc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
+	rast_desc.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
+	res = m_d3d_device->CreateRasterizerState(&rast_desc, &m_rs_solid);
+
+	if (FAILED(res)) throw std::exception("RenderSystem not created successfully");
+
+	ZeroMemory(&rast_desc, sizeof(D3D11_RASTERIZER_DESC));
+	rast_desc.FillMode = D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
+	rast_desc.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
+	res = m_d3d_device->CreateRasterizerState(&rast_desc, &m_rs_wireframe);
+
+	if (FAILED(res)) throw std::exception("RenderSystem not created successfully");
 }
 
 RenderSystem::~RenderSystem()

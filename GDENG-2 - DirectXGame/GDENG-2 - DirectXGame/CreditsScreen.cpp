@@ -33,7 +33,6 @@ void CreditsScreen::drawUI()
 
 	ImGui::Begin("Credits", &m_is_open);
 	ImGui::Image((void*)m_logo->getTexture(), ImVec2(200, 200));
-	ImGui::Image((void*)AppWindow::get()->m_swap_chain->m_srv, ImVec2(200, 200));
 	ImGui::Text("\n\nAbout\n\n");
 	ImGui::Text("Scene Editor v0.02\n");
 	ImGui::Text("Developed by: Jacob V. Manzano\n\n");

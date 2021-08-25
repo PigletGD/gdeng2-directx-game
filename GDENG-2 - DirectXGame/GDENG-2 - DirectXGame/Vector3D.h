@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 class Vector3D
 {
 public:
@@ -28,6 +30,14 @@ public:
 		v.m_z = (start.m_z * (1.0f - delta)) + (end.m_z * delta);
 
 		return v;
+	}
+
+	float magnitude() {
+		float x_sqrd = m_x * m_x;
+		float y_sqrd = m_y * m_y;
+		float z_sqrd = m_z * m_z;
+
+		return sqrtf(x_sqrd + y_sqrd + z_sqrd);
 	}
 
 	Vector3D operator +(Vector3D vec)

@@ -10,6 +10,9 @@
 #include "ColorPickerScreen.h"
 #include "ViewportScreen.h"
 #include "UIManager.h"
+#include "GraphicsEngine.h"
+#include "DeviceContext.h"
+#include "AppWindow.h"
 
 MenuBarScreen::MenuBarScreen() : AUIScreen("Menu Bar")
 {
@@ -32,6 +35,34 @@ void MenuBarScreen::drawUI()
 		{
 			if (ImGui::MenuItem("Color Picker")) { onCreateColorPickerScreen(); }
 			if (ImGui::MenuItem("Viewport")) { onCreateViewportScreen(); }
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("View"))
+		{
+			RenderSystem* rs = GraphicsEngine::get()->getRenderSystem();
+			Camera* camera = GraphicsEngine::get()->getCameraSystem()->getCurrentCamera();
+
+			if (ImGui::BeginMenu("Viewmode"))
+			{
+				if (ImGui::MenuItem("Normal")) { std::cout << "idk yet" << std::endl; }
+				if (ImGui::MenuItem("Topdown")) { camera->setToTopDownViewMode(); }
+				if (ImGui::MenuItem("Front")) { camera->setToFrontViewMode(); }
+				if (ImGui::MenuItem("Right")) { camera->setToRighViewMode(); }
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Projection"))
+			{
+				if (ImGui::MenuItem("Perspective")) { camera->setToPerspectiveMode(true); }
+				if (ImGui::MenuItem("Orthographic")) { camera->setToPerspectiveMode(false); }
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Fill"))
+			{
+				if (ImGui::MenuItem("Solid")) { AppWindow::get()->m_rs = rs->m_rs_solid; }
+				if (ImGui::MenuItem("Wireframe")) { AppWindow::get()->m_rs = rs->m_rs_wireframe; }
+				ImGui::EndMenu();
+			}
+
 			ImGui::EndMenu();
 		}
 
@@ -77,29 +108,18 @@ void MenuBarScreen::onCreateViewportScreen()
 	String viewportName = uiNames.VIEWPORT_SCREEN + "_0";
 	int i = 0;
 
-	while (uiManager->uiTable[viewportName] != nullptr) {
+	while (m_viewport_limit != i && uiManager->uiTable[viewportName] != nullptr) {
 		i++;
 
 		viewportName = uiNames.VIEWPORT_SCREEN + "_" + std::to_string(i);
 	}
 
-	/*
-	if (uiManager->uiTable[uiNames.VIEWPORT_SCREEN] == nullptr) {
-		ViewportScreen* viewportScreen = new ViewportScreen();
-		uiManager->uiTable[uiNames.VIEWPORT_SCREEN] = viewportScreen;
+	if (m_viewport_limit != i) {
+		ViewportScreen* viewportScreen = new ViewportScreen(viewportName, i);
+		uiManager->uiTable[viewportName] = viewportScreen;
 		uiManager->uiList.push_back(viewportScreen);
 
 		std::cout << "Created Viewport Screen" << std::endl;
 	}
-	else std::cout << "Viewport Screen Already Created" << std::endl;
-	*/
-	
-	String name = "Viewport" + std::to_string(i);
-
-	ViewportScreen* viewportScreen = new ViewportScreen(name);
-	uiManager->uiTable[viewportName] = viewportScreen;
-	uiManager->uiList.push_back(viewportScreen);
-
-	std::cout << "Created Viewport Screen" << std::endl;
-
+	else std::cout << "Maximum Viewport Screens Already Reached" << std::endl;
 }

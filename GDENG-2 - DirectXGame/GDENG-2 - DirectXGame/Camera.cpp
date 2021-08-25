@@ -11,7 +11,7 @@
 
 Camera::Camera(float width, float height) : AGameObject("Camera")
 {
-	setPosition(Vector3D(0, 1, -2));
+	setPosition(Vector3D(0, 1, -4));
 
 	m_gizmo_icon = new Quad({Vector3D(-0.05f,-0.05f, 0.0f), Vector2D(1, 1)},
 							{Vector3D(-0.05f, 0.05f, 0.0f), Vector2D(1, 0)},
@@ -31,10 +31,13 @@ void Camera::updatePosition(float speed, float forward, float rightward)
 
 	Vector3D localPos = getLocalPosition();
 	
-	Vector3D dir_z = m_world_cam.getZDirection() * moveSpeed * forward;
-	Vector3D dir_x = m_world_cam.getXDirection() * moveSpeed * rightward;
+	Vector3D dir_x, dir_y, dir_z;
+
+	dir_x = m_world_cam.getXDirection() * moveSpeed * rightward;
+	if (!m_is_perspective) dir_y = m_world_cam.getYDirection() * moveSpeed * forward;
+	else dir_z = m_world_cam.getZDirection() * moveSpeed * forward;
 	
-	Vector3D new_pos = localPos + dir_x + dir_z;
+	Vector3D new_pos = localPos + dir_x + dir_y + dir_z;
 
 	setPosition(new_pos);
 
@@ -55,8 +58,8 @@ void Camera::updateRotation(float rot_x, float rot_y)
 	if (x > lookLimit) x = lookLimit;
 	else if (x < -lookLimit) x = -lookLimit;
 
-	this->setRotation(x, y, z);
-	this->updateWorldAndViewMatrix();
+	setRotation(x, y, z);
+	updateWorldAndViewMatrix();
 }
 
 void Camera::updateWorldAndViewMatrix()
@@ -91,6 +94,11 @@ void Camera::updateWindowSize(float width, float height)
 	m_window_height = height;
 }
 
+void Camera::setToPerspectiveMode(bool value)
+{
+	m_is_perspective = value;
+}
+
 void Camera::switchProjectionMode()
 {
 	m_is_perspective = !m_is_perspective;
@@ -98,14 +106,44 @@ void Camera::switchProjectionMode()
 
 void Camera::setOrthographicView()
 {
-	m_proj_cam.setOrthoLH(m_window_width/400.0f, m_window_height/400.0f, -4.0f, 4.0f);
+	m_proj_cam.setOrthoLH(m_window_width/400.0f, m_window_height/400.0f, -400.0f, 400.0f);
 }
 
 void Camera::setPerspectiveView()
 {
-	
-
 	m_proj_cam.setPerspectiveFovLH(m_field_of_view, m_window_width / m_window_height, m_near_clip_plane, m_far_clip_plane);
+}
+
+void Camera::setToNormalViewMode()
+{
+	// revert back to previous view maybe?
+}
+
+void Camera::setToTopDownViewMode()
+{
+	setRotation(MathUtils::DegToRad(90), 0, 0);
+
+	setPosition(0, getLocalPosition().magnitude(), 0);
+
+	updateWorldAndViewMatrix();
+}
+
+void Camera::setToFrontViewMode()
+{
+	setRotation(0, 0, 0);
+
+	setPosition(0, 0, -getLocalPosition().magnitude());
+
+	updateWorldAndViewMatrix();
+}
+
+void Camera::setToRighViewMode()
+{
+	setRotation(0, MathUtils::DegToRad(-90), 0);
+
+	setPosition(getLocalPosition().magnitude(), 0, 0);
+
+	updateWorldAndViewMatrix();
 }
 
 Matrix4x4 Camera::getWorldMatrix()

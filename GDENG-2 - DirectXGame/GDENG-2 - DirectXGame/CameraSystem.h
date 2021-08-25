@@ -14,9 +14,12 @@ public:
 	CameraSystem();
 	~CameraSystem();
 
+	Camera* getCurrentCamera();
+
 	void addNewCamera();
 	void addNewCamera(Camera* new_camera);
 	void removeCurrentCamera();
+	void removeCamera(Camera* camera);
 
 	void switchToPreviousCamera();
 	void switchToNextCamera();
@@ -43,7 +46,10 @@ public:
 
 private:
 	std::vector<Camera*> cameraList;
-	int m_camera_index = 0;
+	int m_view_camera_index = 0;
+	int m_control_camera_index = 0;
+
+	int m_viewport_camera_count = 0;
 
 	float m_cam_speed = 3.0f;
 

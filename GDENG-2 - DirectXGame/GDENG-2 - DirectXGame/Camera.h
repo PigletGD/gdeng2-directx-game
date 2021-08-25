@@ -18,9 +18,15 @@ public:
 	void updateWorldAndViewMatrix();
 	void updateWindowSize(float width, float height);
 
+	void setToPerspectiveMode(bool value);
 	void switchProjectionMode();
 	void setOrthographicView();
 	void setPerspectiveView();
+
+	void setToNormalViewMode();
+	void setToTopDownViewMode();
+	void setToFrontViewMode();
+	void setToRighViewMode();
 
 	Matrix4x4 getWorldMatrix();
 	Matrix4x4 getViewMatrix();

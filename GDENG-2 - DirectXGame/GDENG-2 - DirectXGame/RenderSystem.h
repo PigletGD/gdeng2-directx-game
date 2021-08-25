@@ -36,6 +36,9 @@ private:
 	IDXGIFactory* m_dxgi_factory;
 	ID3D11DeviceContext* m_imm_context;
 
+	ID3D11RasterizerState* m_rs_solid;
+	ID3D11RasterizerState* m_rs_wireframe;
+
 	DeviceContextPtr m_imm_device_context;
 
 	ID3DBlob* m_blob = nullptr;
@@ -53,4 +56,6 @@ private:
 	friend class PixelShader;
 	friend class AlphaBlendState;
 	friend class Texture;
+	friend class ViewportScreen;
+	friend class MenuBarScreen;
 };

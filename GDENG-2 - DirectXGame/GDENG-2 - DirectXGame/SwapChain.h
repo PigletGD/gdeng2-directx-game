@@ -19,16 +19,10 @@ private:
 	IDXGISwapChain* m_swap_chain;
 	ID3D11RenderTargetView* m_rtv;
 	ID3D11DepthStencilView* m_dsv;
-	ID3D11RasterizerState* m_rs;
-
-	ID3D11Texture2D* m_rttm;
-	ID3D11RenderTargetView* m_rtv2;
-	ID3D11ShaderResourceView* m_srv;
 
 	RenderSystem* m_system = nullptr;
 
 	friend class DeviceContext;
-	friend class CreditsScreen;
 	friend class RenderTexture;
 	friend class ViewportScreen;
 };

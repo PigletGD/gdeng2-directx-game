@@ -34,9 +34,9 @@ void DeviceContext::clearRenderTargetColor(const SwapChainPtr& swap_chain, float
 	m_device_context->OMSetRenderTargets(1, &swap_chain->m_rtv, swap_chain->m_dsv);
 }
 
-void DeviceContext::setRasterizerState(const SwapChainPtr& swap_chain)
+void DeviceContext::setRasterizerState(ID3D11RasterizerState* rs)
 {
-	m_device_context->RSSetState(swap_chain->m_rs);
+	m_device_context->RSSetState(rs);
 }
 
 void DeviceContext::setVertexBuffer(const VertexBufferPtr& vertex_buffer)
