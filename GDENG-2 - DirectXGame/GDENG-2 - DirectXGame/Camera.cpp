@@ -106,7 +106,7 @@ void Camera::switchProjectionMode()
 
 void Camera::setOrthographicView()
 {
-	m_proj_cam.setOrthoLH(m_window_width/400.0f, m_window_height/400.0f, -400.0f, 400.0f);
+	m_proj_cam.setOrthoLH(m_window_width/100.0f, m_window_height/100.0f, -400.0f, 400.0f);
 }
 
 void Camera::setPerspectiveView()

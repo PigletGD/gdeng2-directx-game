@@ -25,5 +25,8 @@ private:
 	Camera* m_camera;
 	ImVec2 m_old_size;
 
+	bool m_is_focused = false;
+	bool m_is_hovered = false;
+
 	friend class MenuBarScreen;
 };

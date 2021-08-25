@@ -43,7 +43,8 @@ void AppWindow::initializeEngine()
 	GraphicsEngine::create();
 	InputSystem::create();
 
-	InputSystem::get()->addListener(GraphicsEngine::get()->getCameraSystem());
+	GraphicsEngine::get()->getCameraSystem()->incrementFocusCount();
+	//InputSystem::get()->addListener(GraphicsEngine::get()->getCameraSystem());
 
 	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
 	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
@@ -266,6 +267,8 @@ void AppWindow::onUpdate()
 	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
 	DeviceContextPtr device_context = render_system->getImmediateDeviceContext();
 
+	camera_system->updateInputListener();
+
 	InputSystem::get()->update();
 
 	device_context->setAlphaBlendState(m_abs);
@@ -328,12 +331,12 @@ void AppWindow::onDestroy()
 
 void AppWindow::onFocus()
 {
-	InputSystem::get()->addListener(GraphicsEngine::get()->getCameraSystem());
+	GraphicsEngine::get()->getCameraSystem()->incrementFocusCount();
 }
 
 void AppWindow::onKillFocus()
 {
-	InputSystem::get()->removeListener(GraphicsEngine::get()->getCameraSystem());
+	GraphicsEngine::get()->getCameraSystem()->decrementFocusCount();
 }
 
 void AppWindow::onSize()

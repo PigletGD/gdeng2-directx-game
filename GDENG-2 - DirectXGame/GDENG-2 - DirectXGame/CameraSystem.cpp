@@ -147,6 +147,23 @@ void CameraSystem::removeCamera(Camera* camera)
 	else std::cout << "Could not delete camera" << std::endl;
 }
 
+void CameraSystem::switchCamera(Camera* camera)
+{
+	// Find camera to remove in camera list
+	auto itr = std::find(cameraList.begin(), cameraList.end(), camera);
+
+	if (itr != cameraList.end()) {
+		std::cout << "Switched from Camera " << std::to_string(m_control_camera_index);
+
+		int camera_index = std::distance(cameraList.begin(), itr);
+
+		m_control_camera_index = camera_index;
+
+		std::cout << " to " << std::to_string(m_control_camera_index) << std::endl;
+	}
+	else std::cout << "Could not switch camera" << std::endl;
+}
+
 void CameraSystem::switchToPreviousCamera()
 {
 	std::cout << "Switched from Camera " << std::to_string(m_control_camera_index);
@@ -237,6 +254,39 @@ void CameraSystem::drawGizmos(constant cc)
 	}
 }
 
+void CameraSystem::setHoverViewportState(bool value)
+{
+	m_is_over_viewport = value;
+}
+
+void CameraSystem::incrementFocusCount()
+{
+	m_window_focus_count++;
+
+	std::cout << "Increased focus count: " << std::to_string(m_window_focus_count) << std::endl;
+}
+
+void CameraSystem::decrementFocusCount()
+{
+	if (m_window_focus_count <= 0) return;
+
+	m_window_focus_count--;
+
+	std::cout << "Decreased focus count: " << std::to_string(m_window_focus_count) << std::endl;
+}
+
+void CameraSystem::updateInputListener()
+{
+	if (!m_is_listening && m_window_focus_count > 0) {
+		InputSystem::get()->addListener(this);
+		m_is_listening = true;
+	}
+	else if (m_is_listening && m_window_focus_count <= 0) {
+		InputSystem::get()->removeListener(this);
+		m_is_listening = false;
+	}
+}
+
 void CameraSystem::onKeyDown(int key)
 {
 	if (key == 'W') m_forward = 1.0f;
@@ -244,14 +294,6 @@ void CameraSystem::onKeyDown(int key)
 	else if (key == 'A') m_rightward = -1.0f;
 	else if (key == 'D') m_rightward = 1.0f;
 
-	else if (key == m_add_cam_key && !m_pressed_add_cam) {
-		addNewCamera();
-		m_pressed_add_cam = true;
-	}
-	else if (key == m_remove_cam_key && !m_pressed_remove_cam) {
-		removeCamera(cameraList[m_view_camera_index]);
-		m_pressed_remove_cam = true;
-	}
 	else if (key == m_prev_cam_key && !m_pressed_prev_cam) {
 		switchToPreviousCamera();
 		m_pressed_prev_cam = true;
@@ -260,22 +302,32 @@ void CameraSystem::onKeyDown(int key)
 		switchToNextCamera();
 		m_pressed_next_cam = true;
 	}
+	/*
+	else if (key == m_add_cam_key && !m_pressed_add_cam) {
+		addNewCamera();
+		m_pressed_add_cam = true;
+	}
+	else if (key == m_remove_cam_key && !m_pressed_remove_cam) {
+		removeCamera(cameraList[m_view_camera_index]);
+		m_pressed_remove_cam = true;
+	}
 	else if (key == m_switch_proj_key && !m_pressed_switch_proj) {
 		std::cout << "Switching Projection Mode" << std::endl;
 		cameraList[m_control_camera_index]->switchProjectionMode();
 		m_pressed_switch_proj = true;
 	}
+	*/
 }
 
 void CameraSystem::onKeyUp(int key)
 {
 	if (key == 'W' || key == 'S') m_forward = 0.0f;
 	else if (key == 'A' || key == 'D') m_rightward = 0.0f;
-	else if (key == m_add_cam_key) m_pressed_add_cam = false;
-	else if (key == m_remove_cam_key) m_pressed_remove_cam = false;
 	else if (key == m_prev_cam_key) m_pressed_prev_cam = false;
 	else if (key == m_next_cam_key) m_pressed_next_cam = false;
-	else if (key == m_switch_proj_key) m_pressed_switch_proj = false;
+	//else if (key == m_add_cam_key) m_pressed_add_cam = false;
+	//else if (key == m_remove_cam_key) m_pressed_remove_cam = false;
+	//else if (key == m_switch_proj_key) m_pressed_switch_proj = false;
 }
 
 void CameraSystem::onMouseMove(const Point& mouse_pos)
@@ -296,6 +348,13 @@ void CameraSystem::onMouseMove(const Point& mouse_pos)
 
 void CameraSystem::onLeftMouseDown(const Point& mouse_pos)
 {
+	if (m_is_over_viewport) return;
+
+	std::cout << "Switched from Camera " << std::to_string(m_control_camera_index);
+
+	m_control_camera_index = m_view_camera_index;
+
+	std::cout << " to " << std::to_string(m_control_camera_index) << std::endl;
 }
 
 void CameraSystem::onLeftMouseUp(const Point& mouse_pos)

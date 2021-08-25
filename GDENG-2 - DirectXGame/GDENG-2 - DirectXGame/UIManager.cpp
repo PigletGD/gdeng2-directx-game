@@ -61,7 +61,7 @@ void UIManager::drawAllUI()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	for (int i = 0; i < uiList.size(); i++) {
+	for (int i = uiList.size() - 1; i >= 0; i--) {
 		uiList[i]->drawUI();
 	}
 

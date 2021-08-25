@@ -28,38 +28,39 @@ void MenuBarScreen::drawUI()
 	{
 		if (ImGui::BeginMenu("About"))
 		{
-			if (ImGui::MenuItem("Credits")) { onCreateCreditsScreen(); }
+			if (ImGui::MenuItem("Credits")) { onCreateCreditsScreen(); ImGui::SetWindowFocus(nullptr); }
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Windows"))
 		{
-			if (ImGui::MenuItem("Color Picker")) { onCreateColorPickerScreen(); }
+			if (ImGui::MenuItem("Color Picker")) { onCreateColorPickerScreen(); ImGui::SetWindowFocus(nullptr); }
 			if (ImGui::MenuItem("Viewport")) { onCreateViewportScreen(); }
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("View"))
 		{
 			RenderSystem* rs = GraphicsEngine::get()->getRenderSystem();
+			CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
 			Camera* camera = GraphicsEngine::get()->getCameraSystem()->getCurrentCamera();
 
 			if (ImGui::BeginMenu("Viewmode"))
 			{
 				if (ImGui::MenuItem("Normal")) { std::cout << "idk yet" << std::endl; }
-				if (ImGui::MenuItem("Topdown")) { camera->setToTopDownViewMode(); }
-				if (ImGui::MenuItem("Front")) { camera->setToFrontViewMode(); }
-				if (ImGui::MenuItem("Right")) { camera->setToRighViewMode(); }
+				if (ImGui::MenuItem("Topdown")) { camera->setToTopDownViewMode(); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Front")) { camera->setToFrontViewMode(); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Right")) { camera->setToRighViewMode(); ImGui::SetWindowFocus(nullptr); }
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Projection"))
 			{
-				if (ImGui::MenuItem("Perspective")) { camera->setToPerspectiveMode(true); }
-				if (ImGui::MenuItem("Orthographic")) { camera->setToPerspectiveMode(false); }
+				if (ImGui::MenuItem("Perspective")) { camera->setToPerspectiveMode(true); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Orthographic")) { camera->setToPerspectiveMode(false); ImGui::SetWindowFocus(nullptr); }
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Fill"))
 			{
-				if (ImGui::MenuItem("Solid")) { AppWindow::get()->m_rs = rs->m_rs_solid; }
-				if (ImGui::MenuItem("Wireframe")) { AppWindow::get()->m_rs = rs->m_rs_wireframe; }
+				if (ImGui::MenuItem("Solid")) { AppWindow::get()->m_rs = rs->m_rs_solid; ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Wireframe")) { AppWindow::get()->m_rs = rs->m_rs_wireframe; ImGui::SetWindowFocus(nullptr); }
 				ImGui::EndMenu();
 			}
 

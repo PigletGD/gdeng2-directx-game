@@ -21,6 +21,7 @@ public:
 	void removeCurrentCamera();
 	void removeCamera(Camera* camera);
 
+	void switchCamera(Camera* camera);
 	void switchToPreviousCamera();
 	void switchToNextCamera();
 
@@ -34,6 +35,12 @@ public:
 	void initializeGizmoTexture();
 	void initializeInitialCamera();
 	void drawGizmos(constant cc);
+
+	void setHoverViewportState(bool value);
+	void lockSettingWindowFocus();
+	void incrementFocusCount();
+	void decrementFocusCount();
+	void updateInputListener();
 
 	virtual void onKeyDown(int key) override;
 	virtual void onKeyUp(int key) override;
@@ -50,6 +57,11 @@ private:
 	int m_control_camera_index = 0;
 
 	int m_viewport_camera_count = 0;
+
+	int m_window_focus_count = 0;
+	bool m_is_listening = false;
+	bool m_is_over_viewport = false;
+	bool m_lock_set_window_focus = false;
 
 	float m_cam_speed = 3.0f;
 

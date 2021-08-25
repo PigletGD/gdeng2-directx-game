@@ -91,6 +91,39 @@ void ViewportScreen::drawUI()
 		//Load Image
 		ImGui::Image((void*)m_rt->m_shader_resource_view, new_size);
 
+		if (ImGui::IsWindowHovered()) {
+			
+			if (ImGui::IsItemClicked(1)) ImGui::SetWindowFocus();
+
+			GraphicsEngine::get()->getCameraSystem()->setHoverViewportState(true);
+
+			m_is_hovered = true;
+		}
+		else {
+			if (m_is_hovered) {
+				GraphicsEngine::get()->getCameraSystem()->setHoverViewportState(false);
+
+				m_is_hovered = false;
+			}
+		}
+
+		if (ImGui::IsWindowFocused()) {
+			if (!m_is_focused) {
+				CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
+
+				camera_system->incrementFocusCount();
+				
+				m_is_focused = true;
+
+				GraphicsEngine::get()->getCameraSystem()->switchCamera(m_camera);
+			}
+		}
+		else if (m_is_focused) {
+			GraphicsEngine::get()->getCameraSystem()->decrementFocusCount();
+
+			m_is_focused = false;
+		}
+
 		ImGui::End();
 	}
 }
