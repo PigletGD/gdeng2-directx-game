@@ -1,11 +1,12 @@
 #pragma once
+
 #include <windows.h>
 
 class Window
 {
 public:
 	Window();
-	virtual ~Window();
+	~Window();
 
 	bool isRun();
 
@@ -16,6 +17,7 @@ public:
 	virtual void onDestroy();
 	virtual void onFocus();
 	virtual void onKillFocus();
+	virtual void onSize();
 
 private:
 	bool broadcast();

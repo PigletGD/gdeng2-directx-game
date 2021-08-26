@@ -24,18 +24,51 @@ SwapChain::SwapChain(HWND hwnd, UINT width, UINT height, RenderSystem* system) :
 
 	HRESULT hr = m_system->m_dxgi_factory->CreateSwapChain(device, &desc, &m_swap_chain);
 
-	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
+	if (FAILED(hr)) throw std::exception("Swap Chain not created successfully");
 
+	reloadBuffers(width, height);
+}
+
+SwapChain::~SwapChain()
+{
+	m_rtv->Release();
+	m_dsv->Release();
+	m_swap_chain->Release();
+}
+
+void SwapChain::resize(unsigned int width, unsigned int height)
+{
+	if (m_rtv) m_rtv->Release();
+	if (m_dsv) m_dsv->Release();
+
+	m_swap_chain->ResizeBuffers(1, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+
+	reloadBuffers(width, height);
+}
+
+bool SwapChain::present(bool vsync)
+{
+	m_swap_chain->Present(vsync, NULL);
+
+	return true;
+}
+
+void SwapChain::reloadBuffers(unsigned int width, unsigned int height)
+{
+	ID3D11Device* device = m_system->m_d3d_device;
+
+	// Gets back buffer
 	ID3D11Texture2D* buffer;
-	hr = m_swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffer);
+	HRESULT hr = m_swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&buffer);
 
-	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
+	if (FAILED(hr)) throw std::exception("Swap Chain not created successfully");
 
 	hr = device->CreateRenderTargetView(buffer, NULL, &m_rtv);
 	buffer->Release();
 
-	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
+	if (FAILED(hr)) throw std::exception("Swap Chain not created successfully");
 
+	// Depth Buffer
 	D3D11_TEXTURE2D_DESC tex_desc = {};
 	tex_desc.Width = width;
 	tex_desc.Height = height;
@@ -51,25 +84,10 @@ SwapChain::SwapChain(HWND hwnd, UINT width, UINT height, RenderSystem* system) :
 
 	hr = device->CreateTexture2D(&tex_desc, nullptr, &buffer);
 
-	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
+	if (FAILED(hr)) throw std::exception("Swap Chain not created successfully");
 
 	hr = device->CreateDepthStencilView(buffer, NULL, &m_dsv);
 	buffer->Release();
 
-	if (FAILED(hr)) throw std::exception("SwapChain not created successfully");
-}
-
-SwapChain::~SwapChain()
-{
-	m_rs->Release();
-	m_rtv->Release();
-	m_dsv->Release();
-	m_swap_chain->Release();
-}
-
-bool SwapChain::present(bool vsync)
-{
-	m_swap_chain->Present(vsync, NULL);
-
-	return true;
+	if (FAILED(hr)) throw std::exception("Swap Chain not created successfully");
 }

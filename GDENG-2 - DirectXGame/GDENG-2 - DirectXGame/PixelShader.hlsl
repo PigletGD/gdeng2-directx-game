@@ -48,7 +48,7 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 
 	//return float4(final_light, 1.0);
 
-	
-	//return Texture.Sample(TextureSampler , input.texcoord * 0.5);
-	return (Texture.Sample(TextureSampler , input.texcoord * 0.5) * float4(final_light,1.0));//
+
+	return Texture.Sample(TextureSampler , input.texcoord * 0.5);
+	//return (Texture.Sample(TextureSampler , input.texcoord * 0.5) * float4(final_light,1.0));//
 }

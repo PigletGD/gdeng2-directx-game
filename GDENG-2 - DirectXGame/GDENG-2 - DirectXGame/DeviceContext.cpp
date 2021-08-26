@@ -8,7 +8,7 @@
 #include "PixelShader.h"
 #include "AlphaBlendState.h"
 #include "Texture.h"
-#include "RenderSystem.h"
+
 #include <exception>
 
 DeviceContext::DeviceContext(ID3D11DeviceContext* device_context, RenderSystem* system) :
@@ -21,6 +21,11 @@ DeviceContext::~DeviceContext()
 	m_device_context->Release();
 }
 
+void DeviceContext::setRenderTarget(const SwapChainPtr& swap_chain)
+{
+	m_device_context->OMSetRenderTargets(1, &swap_chain->m_rtv, swap_chain->m_dsv);
+}
+
 void DeviceContext::clearRenderTargetColor(const SwapChainPtr& swap_chain, float red, float green, float blue, float alpha)
 {
 	FLOAT clear_color[] = { red, green, blue, alpha };
@@ -29,9 +34,9 @@ void DeviceContext::clearRenderTargetColor(const SwapChainPtr& swap_chain, float
 	m_device_context->OMSetRenderTargets(1, &swap_chain->m_rtv, swap_chain->m_dsv);
 }
 
-void DeviceContext::setRasterizerState(ID3D11RasterizerState* rasterizer_state)
+void DeviceContext::setRasterizerState(ID3D11RasterizerState* rs)
 {
-	m_device_context->RSSetState(rasterizer_state);
+	m_device_context->RSSetState(rs);
 }
 
 void DeviceContext::setVertexBuffer(const VertexBufferPtr& vertex_buffer)
@@ -122,4 +127,9 @@ void DeviceContext::setConstantBuffer(const VertexShaderPtr& vertex_shader, cons
 void DeviceContext::setConstantBuffer(const PixelShaderPtr& pixel_shader, const ConstantBufferPtr& buffer)
 {
 	m_device_context->PSSetConstantBuffers(0, 1, &buffer->m_buffer);
+}
+
+ID3D11DeviceContext* DeviceContext::getContext()
+{
+	return m_device_context;
 }

@@ -1,6 +1,7 @@
 #pragma once
-#include "Prerequisites.h"
 #include <d3d11.h>
+
+#include "Prerequisites.h"
 
 class DeviceContext
 {
@@ -8,10 +9,12 @@ public:
 	DeviceContext(ID3D11DeviceContext* device_context, RenderSystem* system);
 	~DeviceContext();
 
+	void setRenderTarget(const SwapChainPtr& swap_chain);
+
 	void clearRenderTargetColor(const SwapChainPtr& swap_chain, float red, float green, float blue, float alpha);
 
-	void setRasterizerState(ID3D11RasterizerState* rasterizer_state);
-
+	void setRasterizerState(ID3D11RasterizerState* rs);
+	
 	void setVertexBuffer(const VertexBufferPtr& vertex_buffer);
 	void setVertexBuffer(const VertexColorBufferPtr& vertex_buffer);
 	void setIndexBuffer(const IndexBufferPtr& index_buffer);
@@ -33,11 +36,14 @@ public:
 	void setConstantBuffer(const VertexShaderPtr& vertex_shader, const ConstantBufferPtr& buffer);
 	void setConstantBuffer(const PixelShaderPtr& pixel_shader, const ConstantBufferPtr& buffer);
 
+	ID3D11DeviceContext* getContext();
+
 private:
 	ID3D11DeviceContext* m_device_context;
 
 	RenderSystem* m_system = nullptr;
 
+	friend class AppWindow;
 	friend class ConstantBuffer;
 	friend class SwapChain;
 };

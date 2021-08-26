@@ -24,7 +24,7 @@ cbuffer constant: register(b0) {
 VS_OUTPUT vsmain(VS_INPUT input)
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
-	
+
 	// World Space
 	output.position = mul(input.position, m_world);
 	output.direction_to_camera = normalize(output.position.xyz - m_camera_position.xyz);//both -xyz and normalize the vector

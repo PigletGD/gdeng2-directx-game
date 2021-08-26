@@ -1,23 +1,20 @@
 #include "AppWindow.h"
-#include "GraphicsEngine.h"
 #include "InputSystem.h"
 #include "EngineTime.h"
+#include "UIManager.h"
+
 #pragma comment(lib, "d3d11.lib")
 
 int main()
 {	
 	{
-		try
-		{
-			GraphicsEngine::create();
-			InputSystem::create();
-			EngineTime::create();
-			AppWindow::create();
-			AppWindow* app = AppWindow::get();
-			app->initialize();
+		try {
+			AppWindow::intialize();
+			AppWindow* app = (AppWindow*) AppWindow::get();
+			app->initializeEngine();
+			app->createInterface();
 
-			while (app->isRun())
-				;
+			while (app->isRun());
 		}
 		catch (...)
 		{

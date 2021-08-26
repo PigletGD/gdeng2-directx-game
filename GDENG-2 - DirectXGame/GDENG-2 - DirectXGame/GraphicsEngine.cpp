@@ -2,8 +2,8 @@
 #include "RenderSystem.h"
 #include "TextureManager.h"
 #include "MeshManager.h"
-#include <exception>
 
+#include <exception>
 
 GraphicsEngine* GraphicsEngine::m_engine = nullptr;
 
@@ -40,7 +40,7 @@ GraphicsEngine::GraphicsEngine()
 
 GraphicsEngine::~GraphicsEngine()
 {
-	m_engine = nullptr;
+	GraphicsEngine::m_engine = nullptr;
 
 	delete m_camera_system;
 	delete m_mesh_manager;

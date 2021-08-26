@@ -8,7 +8,7 @@ class Window;
 class EngineTime
 {
 public:
-	static void create();
+	static void initialize();
 	static double getDeltaTime();
 
 private:

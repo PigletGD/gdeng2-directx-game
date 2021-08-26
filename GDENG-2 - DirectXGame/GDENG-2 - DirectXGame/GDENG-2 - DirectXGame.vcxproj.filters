@@ -83,7 +83,31 @@
       <UniqueIdentifier>{e87e31b5-be1c-4457-86a0-f1c7502e02ab}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameEngine\ImGui">
-      <UniqueIdentifier>{502a57b2-691b-466f-826a-c57bbc5ef507}</UniqueIdentifier>
+      <UniqueIdentifier>{d265b733-aa4d-459c-8cee-0fd904944e1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UIManager">
+      <UniqueIdentifier>{d2849aad-7a4f-4a77-8f52-66ff7a725dad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens">
+      <UniqueIdentifier>{5facd731-a92b-4577-9717-97251db9c264}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens\CreditsScreen">
+      <UniqueIdentifier>{f277361c-f4e1-4216-97a8-2f884572b812}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens\MenuBarScreen">
+      <UniqueIdentifier>{7897bb79-6511-436c-ba95-c606715be930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens\ColorPickerScreen">
+      <UniqueIdentifier>{7cc2c904-d60d-4b72-9409-901efcf44d38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens\ViewportScreen">
+      <UniqueIdentifier>{34f33e56-0cc2-4dc8-9e80-8a46e9f30c45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\RenderTexture">
+      <UniqueIdentifier>{c47dc435-4b90-4353-9051-977b2a9ba841}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens\SceneHeirarchy">
+      <UniqueIdentifier>{b06f2d3b-8c96-44ff-9a4e-807a32fcf3ff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +201,27 @@
     <ClCompile Include="Plane.cpp">
       <Filter>GameEngine\GraphicsEngine\Primitives\Plane</Filter>
     </ClCompile>
+    <ClCompile Include="AUIScreen.cpp">
+      <Filter>GameEngine\UIManager\UIScreens</Filter>
+    </ClCompile>
+    <ClCompile Include="CreditsScreen.cpp">
+      <Filter>GameEngine\UIManager\UIScreens\CreditsScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuBarScreen.cpp">
+      <Filter>GameEngine\UIManager\UIScreens\MenuBarScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorPickerScreen.cpp">
+      <Filter>GameEngine\UIManager\UIScreens\ColorPickerScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>GameEngine\UIManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewportScreen.cpp">
+      <Filter>GameEngine\UIManager\UIScreens\ViewportScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTexture.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\RenderTexture</Filter>
+    </ClCompile>
     <ClCompile Include="Libs\ImGui\imgui.cpp">
       <Filter>GameEngine\ImGui</Filter>
     </ClCompile>
@@ -186,15 +231,19 @@
     <ClCompile Include="Libs\ImGui\imgui_impl_dx11.cpp">
       <Filter>GameEngine\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Libs\ImGui\imgui_impl_win32.cpp">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="Libs\ImGui\imgui_tables.cpp">
       <Filter>GameEngine\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Libs\ImGui\imgui_widgets.cpp">
       <Filter>GameEngine\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Libs\ImGui\imgui_impl_win32.cpp">
-      <Filter>GameEngine\ImGui</Filter>
+    <ClCompile Include="ObjectHeirarchy.cpp">
+      <Filter>GameEngine\UIManager\UIScreens\SceneHeirarchy</Filter>
     </ClCompile>
+    <ClCompile Include="InspectorScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -314,6 +363,27 @@
     <ClInclude Include="Plane.h">
       <Filter>GameEngine\GraphicsEngine\Primitives\Plane</Filter>
     </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>GameEngine\UIManager</Filter>
+    </ClInclude>
+    <ClInclude Include="AUIScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditsScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens\CreditsScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBarScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens\MenuBarScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorPickerScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens\ColorPickerScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewportScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens\ViewportScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTexture.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\RenderTexture</Filter>
+    </ClInclude>
     <ClInclude Include="Libs\ImGui\imconfig.h">
       <Filter>GameEngine\ImGui</Filter>
     </ClInclude>
@@ -321,6 +391,9 @@
       <Filter>GameEngine\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Libs\ImGui\imgui_impl_dx11.h">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGui\imgui_impl_win32.h">
       <Filter>GameEngine\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Libs\ImGui\imgui_internal.h">
@@ -335,9 +408,10 @@
     <ClInclude Include="Libs\ImGui\imstb_truetype.h">
       <Filter>GameEngine\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Libs\ImGui\imgui_impl_win32.h">
-      <Filter>GameEngine\ImGui</Filter>
+    <ClInclude Include="ObjectHeirarchy.h">
+      <Filter>GameEngine\UIManager\UIScreens\SceneHeirarchy</Filter>
     </ClInclude>
+    <ClInclude Include="InspectorScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelGizmoShader.hlsl">

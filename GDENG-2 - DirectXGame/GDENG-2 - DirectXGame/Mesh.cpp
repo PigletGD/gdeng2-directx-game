@@ -113,7 +113,7 @@ void Mesh::draw(int width, int height, VertexShaderPtr vertexShader, PixelShader
 
 
 	cc.m_time = m_ticks * m_speed;
-	
+
 	if (m_delta_pos > 1.0f)  m_delta_pos = 0.0f;
 	else m_delta_pos += m_delta_time * 0.1f;
 
