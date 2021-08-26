@@ -39,6 +39,8 @@ private:
 	IDXGIFactory* m_dxgi_factory;
 	ID3D11DeviceContext* m_imm_context;
 
+
+	// Private members of Rendering System Class
 	ID3D11RasterizerState* m_rs_solid;
 	ID3D11RasterizerState* m_rs_wireframe;
 

@@ -9,14 +9,10 @@
 #include <iostream>
 #include <string>
 
-Camera::Camera(float width, float height) : AGameObject("Camera")
+Camera::Camera(float width, float height)
+	: AGameObject("Camera")
 {
 	setPosition(Vector3D(0, 1, -4));
-
-	/*m_gizmo_icon = new Quad({Vector3D(-0.05f,-0.05f, 0.0f), Vector2D(1, 1)},
-							{Vector3D(-0.05f, 0.05f, 0.0f), Vector2D(1, 0)},
-							{Vector3D( 0.05f, 0.05f, 0.0f), Vector2D(0, 0)},
-							{Vector3D( 0.05f,-0.05f, 0.0f), Vector2D(0, 1)});*/
 
 	updateWindowSize(width, height);
 }
@@ -116,34 +112,70 @@ void Camera::setPerspectiveView()
 
 void Camera::setToNormalViewMode()
 {
-	// revert back to previous view maybe?
+	if (!m_is_in_direction_view) return;
+
+	m_is_in_direction_view = false;
+
+	setPosition(m_retained_pos);
+	setRotation(m_retained_rot);
+
+	updateWorldAndViewMatrix();
+
+	m_is_perspective = true;
 }
 
 void Camera::setToTopDownViewMode()
 {
+	if (!m_is_in_direction_view) {
+		m_is_in_direction_view = true;
+
+		m_retained_pos = getLocalPosition();
+		m_retained_rot = getLocalRotation();
+	}
+
 	setRotation(MathUtils::DegToRad(90), 0, 0);
 
 	setPosition(0, getLocalPosition().magnitude(), 0);
 
 	updateWorldAndViewMatrix();
+
+	m_is_perspective = false;
 }
 
 void Camera::setToFrontViewMode()
 {
+	if (!m_is_in_direction_view) {
+		m_is_in_direction_view = true;
+
+		m_retained_pos = getLocalPosition();
+		m_retained_rot = getLocalRotation();
+	}
+
 	setRotation(0, 0, 0);
 
 	setPosition(0, 0, -getLocalPosition().magnitude());
 
 	updateWorldAndViewMatrix();
+
+	m_is_perspective = false;
 }
 
 void Camera::setToRighViewMode()
 {
+	if (!m_is_in_direction_view) {
+		m_is_in_direction_view = true;
+
+		m_retained_pos = getLocalPosition();
+		m_retained_rot = getLocalRotation();
+	}
+
 	setRotation(0, MathUtils::DegToRad(-90), 0);
 
 	setPosition(getLocalPosition().magnitude(), 0, 0);
 
 	updateWorldAndViewMatrix();
+
+	m_is_perspective = false;
 }
 
 Matrix4x4 Camera::getWorldMatrix()

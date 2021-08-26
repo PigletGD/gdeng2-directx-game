@@ -40,6 +40,9 @@ private:
 	Matrix4x4 m_view_cam;
 	Matrix4x4 m_proj_cam;
 
+	Vector3D m_retained_pos;
+	Vector3D m_retained_rot;
+
 	float m_window_width;
 	float m_window_height;
 
@@ -56,6 +59,7 @@ private:
 	ConstantBufferPtr m_cb;
 
 	bool m_is_active;
+	bool m_is_in_direction_view = false;
 
 	friend class CameraSystem;
 };

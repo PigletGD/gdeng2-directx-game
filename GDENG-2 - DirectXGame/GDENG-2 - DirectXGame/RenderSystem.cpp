@@ -48,6 +48,8 @@ RenderSystem::RenderSystem()
 	m_dxgi_device->GetParent(__uuidof(IDXGIAdapter), (void**)&m_dxgi_adapter);
 	m_dxgi_adapter->GetParent(__uuidof(IDXGIFactory), (void**)&m_dxgi_factory);
 
+
+	// Creating rasterizer states in constructor Rendering System Constructor
 	D3D11_RASTERIZER_DESC rast_desc;
 	ZeroMemory(&rast_desc, sizeof(D3D11_RASTERIZER_DESC));
 	rast_desc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;

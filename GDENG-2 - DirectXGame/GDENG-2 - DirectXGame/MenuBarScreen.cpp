@@ -45,7 +45,7 @@ void MenuBarScreen::drawUI()
 
 			if (ImGui::BeginMenu("Viewmode"))
 			{
-				if (ImGui::MenuItem("Normal")) { std::cout << "idk yet" << std::endl; }
+				if (ImGui::MenuItem("Normal")) { camera->setToNormalViewMode(); ImGui::SetWindowFocus(nullptr); }
 				if (ImGui::MenuItem("Topdown")) { camera->setToTopDownViewMode(); ImGui::SetWindowFocus(nullptr); }
 				if (ImGui::MenuItem("Front")) { camera->setToFrontViewMode(); ImGui::SetWindowFocus(nullptr); }
 				if (ImGui::MenuItem("Right")) { camera->setToRighViewMode(); ImGui::SetWindowFocus(nullptr); }

@@ -37,7 +37,6 @@ public:
 	void drawGizmos(constant cc);
 
 	void setHoverViewportState(bool value);
-	void lockSettingWindowFocus();
 	void incrementFocusCount();
 	void decrementFocusCount();
 	void updateInputListener();
