@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <string>
-
 InputSystem* InputSystem::m_system = nullptr;
 
 InputSystem::InputSystem()

@@ -29,8 +29,3 @@ Texture::~Texture()
 	m_shader_res_view->Release();
 	m_texture->Release();
 }
-
-ID3D11ShaderResourceView* Texture::getTexture()
-{
-	return m_shader_res_view;
-}

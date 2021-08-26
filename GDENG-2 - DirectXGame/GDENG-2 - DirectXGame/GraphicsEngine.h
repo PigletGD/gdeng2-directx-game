@@ -1,14 +1,9 @@
 #pragma once
-#include <d3d11.h>
-
 #include "RenderSystem.h"
 #include "CameraSystem.h"
 #include "TextureManager.h"
 #include "MeshManager.h"
-
 #include "Prerequisites.h"
-
-#include <d3d11.h>
 
 class GraphicsEngine
 {
@@ -17,6 +12,7 @@ private:
 	~GraphicsEngine();
 	GraphicsEngine(GraphicsEngine const&) {};
 	GraphicsEngine& operator=(GraphicsEngine const&) {};
+
 public:
 	RenderSystem* getRenderSystem();
 	CameraSystem* getCameraSystem();

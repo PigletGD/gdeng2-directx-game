@@ -2,7 +2,7 @@
 
 EngineTime* EngineTime::sharedInstance = NULL;
 
-void EngineTime::initialize()
+void EngineTime::create()
 {
     sharedInstance = new EngineTime();
 }

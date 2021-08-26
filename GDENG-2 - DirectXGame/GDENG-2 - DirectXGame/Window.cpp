@@ -1,26 +1,23 @@
 #include "Window.h"
 #include "EngineTime.h"
+#include "GraphicsEngine.h"
+#include "RenderSystem.h"
 #include "imgui.h"
-#include "UIManager.h"
-#include <iostream>
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
 #include <exception>
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
 		return true;
-
+	
 	switch (msg)
 	{
 	case WM_CREATE: {
 		break; // Event fired when the window is created
-	}
-	case WM_SIZE: {
-		Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-		if (window) window->onSize();
-		break; // Event fired when the window is resized
 	}
 	case WM_SETFOCUS: {
 		Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
@@ -38,7 +35,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		::PostQuitMessage(0);
 		break; // Event fired when the window is destroyed
 	}
-	default: return ::DefWindowProc(hwnd, msg, wparam, lparam);
+	default: {
+		return ::DefWindowProc(hwnd, msg, wparam, lparam);
+	}
 	}
 
 	return NULL;
@@ -68,15 +67,27 @@ Window::Window()
 
 	if (!m_HWND) throw std::exception("Window not created successfully");
 
-	::ShowWindow(m_HWND, SW_SHOW);
-	::UpdateWindow(m_HWND);
+	// ImGui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	ImGui_ImplWin32_Init(m_HWND);
+	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
+	ImGui_ImplDX11_Init(render_system->m_d3d_device, render_system->m_imm_context);
+	ImGui::StyleColorsDark();
+	ImGuiStyle& style = ImGui::GetStyle();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+	
+	ShowWindow(m_HWND, SW_SHOW);
+	UpdateWindow(m_HWND);
 
 	m_isRun = true;
-}
-
-Window::~Window()
-{
-	UIManager::destroy();
 }
 
 bool Window::broadcast()
@@ -144,6 +155,8 @@ void Window::onKillFocus()
 
 }
 
-void Window::onSize()
+Window::~Window()
 {
+	ImGui::DestroyContext();
+	ImGui_ImplDX11_Shutdown();
 }
