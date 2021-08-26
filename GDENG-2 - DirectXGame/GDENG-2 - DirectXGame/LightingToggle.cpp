@@ -30,11 +30,11 @@ void LightingToggle::drawUI()
 	ImGui::Checkbox("Toggle", &isLit);
 
 	if (isLit) {
-		this->cc.isLit = 1;
+		//this->cc.isLit = 1.0f;
 	}
 
 	else if (!isLit) {
-		this->cc.isLit = 2;
+		//this->cc.isLit = 2.0f;
 	}
 	std::cout << this->cc.isLit << std::endl;
 	ImGui::End();

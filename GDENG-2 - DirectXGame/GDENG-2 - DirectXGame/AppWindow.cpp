@@ -260,7 +260,7 @@ void AppWindow::drawToRenderTarget(Camera* camera, UINT width, UINT height)
 	cc.m_world = camera->getWorldMatrix();
 	cc.m_view = camera->getViewMatrix();
 	cc.m_proj = camera->getProjectionMatrix();
-	cc.isLit = 1;
+	cc.isLit = 2.0f;
 
 	m_cb->update(device_context, &cc);
 
@@ -337,7 +337,9 @@ void AppWindow::onUpdate()
 	cc.m_world = camera_system->getCurrentCameraWorldMatrix();;
 	cc.m_view = camera_system->getCurrentCameraViewMatrix();
 	cc.m_proj = camera_system->getCurrentCameraProjectionMatrix();
+	cc.isLit = 1.0f;
 
+	std::cout << cc.isLit << std::endl;
 	m_cb->update(device_context, &cc);
 
 	device_context->setConstantBuffer(m_vs, m_cb);

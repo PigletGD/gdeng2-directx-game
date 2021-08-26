@@ -16,14 +16,13 @@ cbuffer constant: register(b0)
 	row_major float4x4 m_proj;
 	float m_time;
 	float m_lerp_speed;
+	float isLit;
 	float4 m_light_direction;
 	float4 m_camera_position;
-	int isLit;
 };
 
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
-
 	//ambient reeflection
 	float ka = 0.1;
 	float3 ia = float3(1.0, 1.0, 1.0);
@@ -53,15 +52,15 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	//return (Texture.Sample(TextureSampler , input.texcoord * 0.5) * float4(final_light,1.0));// lit
 
 
-	if (isLit == 1) {
+	if (isLit == 1.0f) {
 		return (Texture.Sample(TextureSampler , input.texcoord * 0.5) * float4(final_light,1.0));
 	}
 	
-	else if (isLit == 2) {
+	else if (isLit == 2.0f) {
 		return Texture.Sample(TextureSampler , input.texcoord * 0.5);
 	}
-
+	
 	else {
-		return float4(final_light, 1.0);
+		return float4(0, 0, 0, 1.0);
 	}
 }
