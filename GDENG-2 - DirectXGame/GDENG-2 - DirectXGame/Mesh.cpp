@@ -135,6 +135,20 @@ void Mesh::draw(int width, int height, VertexShaderPtr vertexShader, PixelShader
 	allMatrix *= translationMatrix;
 	cc.m_world = allMatrix;
 
+	/*
+	Matrix4x4 m_light_rot_matrix;
+	m_light_rot_matrix.setIdentity();
+	static float rotation2 = 0;
+
+	//rotation += 0.707f * EngineTime::getDeltaTime(); // delete me
+	m_light_rot_matrix.setRotationY(rotation2);
+	Vector3D lightPos = {};
+	lightPos.m_x = 0;
+	lightPos.m_y = 1;
+	lightPos.m_z = 0;
+	m_light_rot_matrix.setTranslation(lightPos);
+	cc.m_light_direction = m_light_rot_matrix.getZDirection();
+	*/
 	m_cb->update(deviceContext, &cc);
 	deviceContext->setConstantBuffer(vertexShader, m_cb);
 	deviceContext->setConstantBuffer(pixelShader, m_cb);

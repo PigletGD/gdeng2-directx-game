@@ -7,8 +7,8 @@ struct VS_INPUT {
 struct VS_OUTPUT {
 	float4 position: SV_POSITION;
 	float2 texcoord: TEXCOORD0;
-	float3 normal: NORMAL1;//TEXCOORD1
-	float3 direction_to_camera: NORMAL2;//TEXCOORD1
+	float3 normal: NORMAL0;//TEXCOORD1
+	float3 direction_to_camera: TEXCOORD1;//TEXCOORD1
 };
 
 cbuffer constant: register(b0) {

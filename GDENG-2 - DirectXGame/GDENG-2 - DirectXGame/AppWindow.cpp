@@ -247,6 +247,11 @@ void AppWindow::drawToRenderTarget(Camera* camera, UINT width, UINT height)
 
 	//rotation += 0.707f * EngineTime::getDeltaTime(); // delete me
 	m_light_rot_matrix.setRotationY(rotation);
+	Vector3D lightPos = {};
+	lightPos.m_x = 0;
+	lightPos.m_y = 1;
+	lightPos.m_z = 0;
+	m_light_rot_matrix.setTranslation(lightPos);
 	cc.m_light_direction = m_light_rot_matrix.getZDirection();
 
 	cc.m_time = m_time_linear;
@@ -315,6 +320,11 @@ void AppWindow::onUpdate()
 
 	//rotation += 0.707f * EngineTime::getDeltaTime(); // delete me
 	m_light_rot_matrix.setRotationY(rotation);
+	Vector3D lightPos = {};
+	lightPos.m_x = 0;
+	lightPos.m_y = 1;
+	lightPos.m_z = 0;
+	m_light_rot_matrix.setTranslation(lightPos);
 	cc.m_light_direction = m_light_rot_matrix.getZDirection();
 
 	cc.m_time = m_time_linear;

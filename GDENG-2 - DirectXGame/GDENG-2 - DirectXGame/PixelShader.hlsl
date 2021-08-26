@@ -5,8 +5,8 @@ struct PS_INPUT
 {
 	float4 position: SV_POSITION;
 	float2 texcoord: TEXCOORD0;
-	float3 normal: NORMAL1;//TEXCOORD1
-	float3 direction_to_camera: NORMAL2;//TEXCOORD1
+	float3 normal: NORMAL0;//TEXCOORD1
+	float3 direction_to_camera: TEXCOORD1;//TEXCOORD1
 };
 
 cbuffer constant: register(b0)
@@ -17,14 +17,14 @@ cbuffer constant: register(b0)
 	float m_time;
 	float m_lerp_speed;
 	float4 m_light_direction;
-	float4 m_camera_position;
+	//float4 m_camera_position;
 };
 
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
 
 	//ambient reeflection
-	float ka = 0.2;//0.1
+	float ka = 0.1;//0.1
 	float3 ia = float3(1.0, 1.0, 1.0);
 	float3 ambient_light = ka * ia;
 
