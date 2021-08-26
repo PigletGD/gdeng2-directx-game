@@ -270,6 +270,7 @@ void AppWindow::drawToRenderTarget(Camera* camera, UINT width, UINT height)
 		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
 	}
 	*/
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, m_wood_tex);
 	for (int i = 0; i < objectListSharedPtr.size(); i++) {
 		objectListSharedPtr[i]->update(EngineTime::getDeltaTime());
 		objectListSharedPtr[i]->draw(width, height, m_vs, m_ps, cc);
@@ -347,6 +348,7 @@ void AppWindow::onUpdate()
 		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
 	}
 	*/
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, m_wood_tex);
 	for (int i = 0; i < objectListSharedPtr.size(); i++) {
 		objectListSharedPtr[i]->update(EngineTime::getDeltaTime());
 		objectListSharedPtr[i]->draw(width, height, m_vs, m_ps, cc);
