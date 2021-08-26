@@ -161,34 +161,44 @@ void AppWindow::initializeEngine()
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
 
-	render_system->compileVertexShader(L"VertexTransitionColorShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
+	render_system->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);//VertexTransitionColorShader
 	m_vs = render_system->createVertexShader(shader_byte_code, size_shader);
+	
+	m_wood_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\brick.png");
+	m_mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\scene.obj");
+	InputSystem::get()->addListener(m_mesh.get());
+	objectListSharedPtr.push_back(m_mesh);
 
-	// PLANE OBJECT: renders first
-	Plane* plane_object = new Plane("Plane 0", shader_byte_code, size_shader);
-	plane_object->setScale(7, 7, 1);
-	plane_object->setPosition(0.0f, -0.5f, 0.0f);
-	m_object_list.push_back(plane_object);
+	/*
+	{
+		// PLANE OBJECT: renders first
+		Plane* plane_object = new Plane("Plane 0", shader_byte_code, size_shader);
+		plane_object->setScale(7, 7, 1);
+		plane_object->setPosition(0.0f, -0.5f, 0.0f);
+		m_object_list.push_back(plane_object);
 
-	/* CUBE OBJECT: renders second, will render entirely in front of plane without depth stencil buffer
-	for (int i = 0; i < 0; i++) {
-		Cube* cube_object = new Cube("Cube " + std::to_string(i), shader_byte_code, size_shader);
+
+		/* CUBE OBJECT: renders second, will render entirely in front of plane without depth stencil buffer
+		for (int i = 0; i < 0; i++) {
+			Cube* cube_object = new Cube("Cube " + std::to_string(i), shader_byte_code, size_shader);
+			cube_object->setAnimSpeed(MathUtils::randomFloat(-3.75f, 3.75f));
+			cube_object->setPosition(MathUtils::randomFloat(-6.9f, 6.9f), MathUtils::randomFloat(-6.9f, 6.9f), MathUtils::randomFloat(-6.9f, 6.9f));
+			cube_object->setScale(1.0f, 1.0f, 1.0f);
+			InputSystem::get()->addListener(cube_object);
+			m_object_list.push_back(cube_object);
+		}
+
+		Cube* cube_object = new Cube("Cube 0", shader_byte_code, size_shader);
 		cube_object->setAnimSpeed(MathUtils::randomFloat(-3.75f, 3.75f));
-		cube_object->setPosition(MathUtils::randomFloat(-6.9f, 6.9f), MathUtils::randomFloat(-6.9f, 6.9f), MathUtils::randomFloat(-6.9f, 6.9f));
-		cube_object->setScale(1.0f, 1.0f, 1.0f);
+		cube_object->setPosition(0.0f, 0.0f, 0.0f);
 		InputSystem::get()->addListener(cube_object);
 		m_object_list.push_back(cube_object);
-	}*/
 
-	Cube* cube_object = new Cube("Cube 0", shader_byte_code, size_shader);
-	cube_object->setAnimSpeed(MathUtils::randomFloat(-3.75f, 3.75f));
-	cube_object->setPosition(0.0f, 0.0f, 0.0f);
-	InputSystem::get()->addListener(cube_object);
-	m_object_list.push_back(cube_object);
-
+	}
+	*/
 	render_system->releaseCompiledShader();
 
-	render_system->compilePixelShader(L"PixelTransitionColorShader.hlsl", "psmain", &shader_byte_code, &size_shader);
+	render_system->compilePixelShader(L"PixelShader.hlsl", "psmain", &shader_byte_code, &size_shader);//PixelTransitionColorShader
 	m_ps = render_system->createPixelShader(shader_byte_code, size_shader);
 	render_system->releaseCompiledShader();
 
@@ -231,9 +241,17 @@ void AppWindow::drawToRenderTarget(Camera* camera, UINT width, UINT height)
 	DeviceContextPtr device_context = render_system->getImmediateDeviceContext();
 
 	constant cc;
+	Matrix4x4 m_light_rot_matrix;
+	m_light_rot_matrix.setIdentity();
+	static float rotation = 0;
+
+	//rotation += 0.707f * EngineTime::getDeltaTime(); // delete me
+	m_light_rot_matrix.setRotationY(rotation);
+	cc.m_light_direction = m_light_rot_matrix.getZDirection();
+
 	cc.m_time = m_time_linear;
 	cc.m_lerp_speed = 1.0f;
-
+	cc.m_camera_position = camera->getWorldMatrix().getTranslation();
 	cc.m_world = camera->getWorldMatrix();
 	cc.m_view = camera->getViewMatrix();
 	cc.m_proj = camera->getProjectionMatrix();
@@ -246,9 +264,16 @@ void AppWindow::drawToRenderTarget(Camera* camera, UINT width, UINT height)
 	device_context->setVertexShader(m_vs);
 	device_context->setPixelShader(m_ps);
 
+	/*
 	for (int i = 0; i < m_object_list.size(); i++) {
 		m_object_list[i]->update(EngineTime::getDeltaTime());
 		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
+	}
+	*/
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, m_wood_tex);
+	for (int i = 0; i < objectListSharedPtr.size(); i++) {
+		objectListSharedPtr[i]->update(EngineTime::getDeltaTime());
+		objectListSharedPtr[i]->draw(width, height, m_vs, m_ps, cc);
 	}
 
 	//camera_system->drawGizmos(cc);
@@ -283,11 +308,21 @@ void AppWindow::onUpdate()
 	device_context->setRasterizerState(m_rs);
 
 	constant cc;
+	//lighting update
+	Matrix4x4 m_light_rot_matrix;
+	m_light_rot_matrix.setIdentity();
+	static float rotation = 0;
+
+	//rotation += 0.707f * EngineTime::getDeltaTime(); // delete me
+	m_light_rot_matrix.setRotationY(rotation);
+	cc.m_light_direction = m_light_rot_matrix.getZDirection();
+
 	cc.m_time = m_time_linear;
 	cc.m_lerp_speed = 1.0f;
 
 	camera_system->updateCurrentCamera();
 
+	cc.m_camera_position = camera_system->getCurrentCameraWorldMatrix().getTranslation();
 	cc.m_world = camera_system->getCurrentCameraWorldMatrix();;
 	cc.m_view = camera_system->getCurrentCameraViewMatrix();
 	cc.m_proj = camera_system->getCurrentCameraProjectionMatrix();
@@ -307,9 +342,16 @@ void AppWindow::onUpdate()
 
 	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_mesh->getIndexBuffer()->getSizeIndexList(), 0, 0);
 
+	/*
 	for (int i = 0; i < m_object_list.size(); i++) {
 		m_object_list[i]->update(EngineTime::getDeltaTime());
 		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
+	}
+	*/
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, m_wood_tex);
+	for (int i = 0; i < objectListSharedPtr.size(); i++) {
+		objectListSharedPtr[i]->update(EngineTime::getDeltaTime());
+		objectListSharedPtr[i]->draw(width, height, m_vs, m_ps, cc);
 	}
 
 	//camera_system->drawGizmos(cc);

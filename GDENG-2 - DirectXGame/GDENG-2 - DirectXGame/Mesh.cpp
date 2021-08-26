@@ -1,4 +1,12 @@
 #include "Mesh.h"
+#include "DeviceContext.h"
+#include "InputSystem.h"
+#include "SwapChain.h"
+#include "Vertex.h"
+#include "ConstantData.h"
+#include "ConstantBuffer.h"
+#include "DeviceContext.h"
+#include "MathUtils.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
@@ -9,7 +17,7 @@
 #include "GraphicsEngine.h"
 #include "VertexMesh.h"
 
-Mesh::Mesh(const wchar_t* full_path) : Resource(full_path)
+Mesh::Mesh(const wchar_t* full_path) : Resource(full_path), AGameObject("")
 {
 	tinyobj::attrib_t attribs;
 	std::vector<tinyobj::shape_t> shapes;
@@ -56,7 +64,12 @@ Mesh::Mesh(const wchar_t* full_path) : Resource(full_path)
 				tinyobj::real_t tx = attribs.texcoords[index.texcoord_index * 2 + 0];
 				tinyobj::real_t ty = attribs.texcoords[index.texcoord_index * 2 + 1];
 
-				VertexMesh vertex(Vector3D(vx, vy, vz), Vector2D(tx, ty));
+				//Normals
+				tinyobj::real_t nx = attribs.normals[index.normal_index * 3 + 0];
+				tinyobj::real_t ny = attribs.normals[index.normal_index * 3 + 1];
+				tinyobj::real_t nz = attribs.normals[index.normal_index * 3 + 2];
+
+				VertexMesh vertex(Vector3D(vx, vy, vz), Vector2D(tx, ty), Vector3D(nx, ny, nz));
 				list_vertices.push_back(vertex);
 
 				list_indices.push_back((unsigned int)index_offset + v);
@@ -75,10 +88,61 @@ Mesh::Mesh(const wchar_t* full_path) : Resource(full_path)
 		(UINT)list_vertices.size(), shader_byte_code, (UINT)size_shader);
 
 	m_index_buffer = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&list_indices[0], (UINT)list_indices.size());
+
+	constant cc;
+	cc.m_time = 0;
+
+	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
+
 }
 
 Mesh::~Mesh()
 {
+}
+
+void Mesh::update(float deltaTime)
+{
+	m_delta_time = deltaTime;
+}
+
+static float rotation = 0.f;
+void Mesh::draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader, constant cc)
+{
+	GraphicsEngine* graphEngine = GraphicsEngine::get();
+	DeviceContextPtr deviceContext = graphEngine->getRenderSystem()->getImmediateDeviceContext();
+
+
+	cc.m_time = m_ticks * m_speed;
+
+	if (m_delta_pos > 1.0f)  m_delta_pos = 0.0f;
+	else m_delta_pos += m_delta_time * 0.1f;
+
+	Matrix4x4 allMatrix; allMatrix.setIdentity();
+	Matrix4x4 translationMatrix; translationMatrix.setIdentity(); translationMatrix.setTranslation(getLocalPosition());
+	Matrix4x4 scaleMatrix; scaleMatrix.setIdentity(); scaleMatrix.setScale(getLocalScale());
+	Vector3D rotation = getLocalRotation();
+	Matrix4x4 zMatrix; zMatrix.setIdentity(); zMatrix.setRotationZ(rotation.m_z);
+	Matrix4x4 xMatrix; xMatrix.setIdentity(); xMatrix.setRotationX(rotation.m_x);
+	Matrix4x4 yMatrix; yMatrix.setIdentity(); yMatrix.setRotationY(rotation.m_y);
+
+	// multiply scale to rotation, then product to translation
+	Matrix4x4 rotMatrix; rotMatrix.setIdentity();
+	yMatrix *= zMatrix;
+	xMatrix *= yMatrix;
+	rotMatrix *= xMatrix;
+	scaleMatrix *= rotMatrix;
+	allMatrix *= scaleMatrix;
+	allMatrix *= translationMatrix;
+	cc.m_world = allMatrix;
+
+	m_cb->update(deviceContext, &cc);
+	deviceContext->setConstantBuffer(vertexShader, m_cb);
+	deviceContext->setConstantBuffer(pixelShader, m_cb);
+
+	deviceContext->setIndexBuffer(m_index_buffer);
+	deviceContext->setVertexBuffer(m_vertex_buffer);
+
+	deviceContext->drawIndexedTriangleList(m_index_buffer->getSizeIndexList(), 0, 0);
 }
 
 const VertexBufferPtr& Mesh::getVertexBuffer()
@@ -89,4 +153,33 @@ const VertexBufferPtr& Mesh::getVertexBuffer()
 const IndexBufferPtr& Mesh::getIndexBuffer()
 {
 	return m_index_buffer;
+}
+
+void Mesh::onKeyDown(int key)
+{
+	//std::cout << "SHEESH" << std::endl;
+}
+
+void Mesh::onKeyUp(int key)
+{
+}
+
+void Mesh::onMouseMove(const Point& mouse_pos)
+{
+}
+
+void Mesh::onLeftMouseDown(const Point& mouse_pos)
+{
+}
+
+void Mesh::onLeftMouseUp(const Point& mouse_pos)
+{
+}
+
+void Mesh::onRightMouseDown(const Point& mouse_pos)
+{
+}
+
+void Mesh::onRightMouseUp(const Point& mouse_pos)
+{
 }

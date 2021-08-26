@@ -17,7 +17,6 @@
 #include "Plane.h"
 #include "Vertex.h"
 #include "Camera.h"
-
 #include <vector>
 
 class AppWindow : public Window
@@ -54,6 +53,7 @@ public:
 
 private:
 	std::vector<AGameObject*> m_object_list;
+	std::vector<AGameObjectPtr> objectListSharedPtr;
 
 	SwapChainPtr m_swap_chain;
 	
