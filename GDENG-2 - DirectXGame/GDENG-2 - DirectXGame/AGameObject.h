@@ -27,6 +27,8 @@ public:
 	void setScale(Vector3D pos);
 	Vector3D getLocalScale();
 
+	std::string getName();
+
 private:
 	std::string m_name;
 	Vector3D m_local_position;

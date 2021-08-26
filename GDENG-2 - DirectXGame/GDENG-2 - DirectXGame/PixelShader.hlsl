@@ -24,7 +24,7 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 {
 
 	//ambient reeflection
-	float ka = 0.1;
+	float ka = 0.2;//0.1
 	float3 ia = float3(1.0, 1.0, 1.0);
 	float3 ambient_light = ka * ia;
 
@@ -49,6 +49,6 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	//return float4(final_light, 1.0);
 
 
-	//return Texture.Sample(TextureSampler , input.texcoord * 0.5);
-	return (Texture.Sample(TextureSampler , input.texcoord * 0.5) * float4(final_light,1.0));//
+	//return Texture.Sample(TextureSampler , input.texcoord * 0.5);//unlit
+	return (Texture.Sample(TextureSampler , input.texcoord * 0.5) * float4(final_light,1.0));//lit
 }

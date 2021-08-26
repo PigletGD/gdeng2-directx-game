@@ -64,3 +64,8 @@ Vector3D AGameObject::getLocalScale()
 {
 	return m_local_scale;
 }
+
+std::string AGameObject::getName()
+{
+	return this->m_name;
+}

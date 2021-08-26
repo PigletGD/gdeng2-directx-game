@@ -25,28 +25,35 @@ void InspectorScreen::drawUI()
 	}
 
 	AppWindow* app = AppWindow::get();
-
 	ImGui::Begin("Inspector Screen");
-	if (ImGui::TreeNode("Transform")) {
+	for (int i = 0; i < app->objectListSharedPtr.size(); i++) {
+	
+		if (ImGui::TreeNode("Transform")) {
 
-		static float f1 = 1.00f, f2 = 0.0067f;
-		static float arr[3] = {0,0,0};
-		arr[0] = app->m_object_list[1]->getLocalPosition().m_x;
-		arr[1] = app->m_object_list[1]->getLocalPosition().m_y;
-		arr[2] = app->m_object_list[1]->getLocalPosition().m_z;
-		ImGui::DragFloat3("Position",arr);
+			static float f1 = 1.00f, f2 = 0.0067f;
+			static float arr[3] = { 0,0,0 };
+			arr[0] = app->objectListSharedPtr[i]->getLocalPosition().m_x;
+			arr[1] = app->objectListSharedPtr[i]->getLocalPosition().m_y;
+			arr[2] = app->objectListSharedPtr[i]->getLocalPosition().m_z;
+			ImGui::DragFloat3("Position", arr);
 
-		arr[0] = app->m_object_list[1]->getLocalRotation().m_x;
-		arr[1] = app->m_object_list[1]->getLocalRotation().m_y;
-		arr[2] = app->m_object_list[1]->getLocalRotation().m_z;
-		ImGui::DragFloat3("Rotation", arr);
+			arr[0] = app->objectListSharedPtr[i]->getLocalRotation().m_x;
+			arr[1] = app->objectListSharedPtr[i]->getLocalRotation().m_y;
+			arr[2] = app->objectListSharedPtr[i]->getLocalRotation().m_z;
+			ImGui::DragFloat3("Rotation", arr);
 
-		arr[0] = app->m_object_list[1]->getLocalScale().m_x;
-		arr[1] = app->m_object_list[1]->getLocalScale().m_y;
-		arr[2] = app->m_object_list[1]->getLocalScale().m_z;
-		ImGui::DragFloat3("Scale", arr);
+			arr[0] = app->objectListSharedPtr[i]->getLocalScale().m_x;
+			arr[1] = app->objectListSharedPtr[i]->getLocalScale().m_y;
+			arr[2] = app->objectListSharedPtr[i]->getLocalScale().m_z;
+			ImGui::DragFloat3("Scale", arr);
 
-		//ImGui::DragFloat("drag float", &f1, 0.005f);
+			ImGui::TreePop();
+		}
+		
+	}
+	ImGui::End();
+}
+//ImGui::DragFloat("drag float", &f1, 0.005f);
 		//ImGui::DragFloat("drag small float", &f2, 0.0001f, 0.0f, 0.0f, "%.06f ns");
 
 		/*
@@ -62,10 +69,3 @@ void InspectorScreen::drawUI()
 			ImGui::Text("nice");
 		}
 		*/
-
-
-
-		ImGui::TreePop();
-	}
-	ImGui::End();
-}
