@@ -246,7 +246,7 @@ void CameraSystem::initializeInitialCamera()
 
 void CameraSystem::drawGizmos(constant cc)
 {
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_gizmo_ps, m_gizmo_icon);
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_gizmo_icon);
 
 	for (int i = 0; i < cameraList.size(); i++) {
 		if (i != m_view_camera_index)

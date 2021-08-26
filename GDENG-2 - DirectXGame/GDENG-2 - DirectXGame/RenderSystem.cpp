@@ -2,7 +2,8 @@
 #include "SwapChain.h"
 #include "DeviceContext.h"
 #include "VertexBuffer.h"
-#include "VertexColorBuffer.h"
+#include "LerpVertexBuffer.h"
+#include "TexturedVertexBuffer.h"
 #include "IndexBuffer.h"
 #include "ConstantBuffer.h"
 #include "VertexShader.h"
@@ -90,21 +91,31 @@ DeviceContextPtr RenderSystem::getImmediateDeviceContext()
 	return this->m_imm_device_context;
 }
 
-VertexBufferPtr RenderSystem::createVertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader)
+VertexBufferPtr RenderSystem::createVertexBuffer()
 {
 	VertexBufferPtr vb = nullptr;
 	try {
-		vb = std::make_shared<VertexBuffer>(list_vertices, size_vertex, size_list, shader_byte_code, size_byte_shader, this);
+		vb = std::make_shared<VertexBuffer>();
 	}
 	catch (...) {}
 	return vb;
 }
 
-VertexColorBufferPtr RenderSystem::createVertexColorBuffer(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader)
+LerpVertexBufferPtr RenderSystem::createLerpVertexBuffer()
 {
-	VertexColorBufferPtr vb = nullptr;
+	LerpVertexBufferPtr vb = nullptr;
 	try {
-		vb = std::make_shared<VertexColorBuffer>(list_vertices, size_vertex, size_list, shader_byte_code, size_byte_shader, this);
+		vb = std::make_shared<LerpVertexBuffer>();
+	}
+	catch (...) {}
+	return vb;
+}
+
+TexturedVertexBufferPtr RenderSystem::createTexturedVertexBuffer()
+{
+	TexturedVertexBufferPtr vb = nullptr;
+	try {
+		vb = std::make_shared<TexturedVertexBuffer>();
 	}
 	catch (...) {}
 	return vb;

@@ -1,7 +1,6 @@
 #include "DeviceContext.h"
 #include "SwapChain.h"
 #include "VertexBuffer.h"
-#include "VertexColorBuffer.h"
 #include "IndexBuffer.h"
 #include "ConstantBuffer.h"
 #include "VertexShader.h"
@@ -40,15 +39,6 @@ void DeviceContext::setRasterizerState(ID3D11RasterizerState* rs)
 }
 
 void DeviceContext::setVertexBuffer(const VertexBufferPtr& vertex_buffer)
-{
-	UINT stride = vertex_buffer->m_size_vertex;
-	UINT offset = 0;
-
-	m_device_context->IASetVertexBuffers(0, 1, &vertex_buffer->m_buffer, &stride, &offset);
-	m_device_context->IASetInputLayout(vertex_buffer->m_layout);
-}
-
-void DeviceContext::setVertexBuffer(const VertexColorBufferPtr& vertex_buffer)
 {
 	UINT stride = vertex_buffer->m_size_vertex;
 	UINT offset = 0;
@@ -109,23 +99,21 @@ void DeviceContext::setAlphaBlendState(const AlphaBlendStatePtr& alpha_blend_sta
 	m_device_context->OMSetBlendState(alpha_blend_state->m_blend_state, nullptr, 0xFFFFFFFF);
 }
 
-void DeviceContext::setTexture(const VertexShaderPtr& vertex_shader, const TexturePtr& texture)
+void DeviceContext::setTexture(const TexturePtr& texture)
 {
 	m_device_context->VSSetShaderResources(0, 1, &texture->m_shader_res_view);
-}
-
-void DeviceContext::setTexture(const PixelShaderPtr& pixel_shader, const TexturePtr& texture)
-{
 	m_device_context->PSSetShaderResources(0, 1, &texture->m_shader_res_view);
 }
 
-void DeviceContext::setConstantBuffer(const VertexShaderPtr& vertex_shader, const ConstantBufferPtr& buffer)
+void DeviceContext::setRenderConfig(const VertexShaderPtr& vertex_shader, const PixelShaderPtr& pixel_shader)
 {
-	m_device_context->VSSetConstantBuffers(0, 1, &buffer->m_buffer);
+	m_device_context->VSSetShader(vertex_shader->m_vs, NULL, 0);
+	m_device_context->PSSetShader(pixel_shader->m_ps, NULL, 0);
 }
 
-void DeviceContext::setConstantBuffer(const PixelShaderPtr& pixel_shader, const ConstantBufferPtr& buffer)
+void DeviceContext::setConstantBuffer(const ConstantBufferPtr& buffer)
 {
+	m_device_context->VSSetConstantBuffers(0, 1, &buffer->m_buffer);
 	m_device_context->PSSetConstantBuffers(0, 1, &buffer->m_buffer);
 }
 

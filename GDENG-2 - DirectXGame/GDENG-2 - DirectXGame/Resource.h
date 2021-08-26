@@ -4,9 +4,11 @@
 class Resource
 {
 public:
+	typedef std::wstring String;
+
 	Resource(const wchar_t* full_path);
 	virtual ~Resource();
 
 protected:
-	std::wstring m_full_path;
+	String m_full_path;
 };

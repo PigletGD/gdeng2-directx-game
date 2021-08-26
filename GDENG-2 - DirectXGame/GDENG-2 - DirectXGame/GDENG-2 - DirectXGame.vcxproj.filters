@@ -43,12 +43,6 @@
     <Filter Include="GameEngine\GraphicsEngine\RenderSystem\DeviceContext">
       <UniqueIdentifier>{bd779c70-5544-44d0-b749-f696f86b3504}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\Primitives">
-      <UniqueIdentifier>{f540809c-322e-4a27-8fab-c61db25471f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\Primitives\Quad">
-      <UniqueIdentifier>{8aad9299-0ac8-4412-ba30-021b67fd3195}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameEngine\GraphicsEngine\ResourceManager">
       <UniqueIdentifier>{ca0fa7b0-6d39-492b-b391-4bebe00880c7}</UniqueIdentifier>
     </Filter>
@@ -67,20 +61,11 @@
     <Filter Include="GameEngine\GraphicsEngine\EngineTime">
       <UniqueIdentifier>{bb865765-db7d-493e-b5f0-024a69bf0800}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\Primitives\Cube">
-      <UniqueIdentifier>{c3981e5a-879e-4476-a91f-55a24ab2c5b1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameEngine\Utils">
       <UniqueIdentifier>{2dea9940-9810-47d1-ba84-230a137ff840}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameEngine\Utils\MathUtils">
       <UniqueIdentifier>{84963093-1e96-4938-93be-01a74396f7a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameEngine\Shaders">
-      <UniqueIdentifier>{6d098b55-9133-4f50-b4f4-f733c8ed1180}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameEngine\GraphicsEngine\Primitives\Plane">
-      <UniqueIdentifier>{e87e31b5-be1c-4457-86a0-f1c7502e02ab}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameEngine\ImGui">
       <UniqueIdentifier>{d265b733-aa4d-459c-8cee-0fd904944e1d}</UniqueIdentifier>
@@ -105,6 +90,27 @@
     </Filter>
     <Filter Include="GameEngine\GraphicsEngine\RenderSystem\RenderTexture">
       <UniqueIdentifier>{c47dc435-4b90-4353-9051-977b2a9ba841}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\GameObjectManager">
+      <UniqueIdentifier>{f540809c-322e-4a27-8fab-c61db25471f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\GameObjectManager\GameObjects">
+      <UniqueIdentifier>{c81649e7-574b-4044-af7a-00c8c8625128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Cube">
+      <UniqueIdentifier>{c3981e5a-879e-4476-a91f-55a24ab2c5b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Plane">
+      <UniqueIdentifier>{e87e31b5-be1c-4457-86a0-f1c7502e02ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Quad">
+      <UniqueIdentifier>{8aad9299-0ac8-4412-ba30-021b67fd3195}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\ShaderLibrary">
+      <UniqueIdentifier>{6f9839c9-b3bc-461c-ae87-60a7d9a22a9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\ShaderLibrary\Shaders">
+      <UniqueIdentifier>{6d098b55-9133-4f50-b4f4-f733c8ed1180}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -148,7 +154,7 @@
       <Filter>GameEngine\GraphicsEngine\RenderSystem</Filter>
     </ClCompile>
     <ClCompile Include="Quad.cpp">
-      <Filter>GameEngine\GraphicsEngine\Primitives\Quad</Filter>
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Quad</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
       <Filter>GameEngine\GraphicsEngine\ResourceManager</Filter>
@@ -178,25 +184,22 @@
       <Filter>GameEngine\GraphicsEngine\RenderSystem\AlphaBlendState</Filter>
     </ClCompile>
     <ClCompile Include="QuadTransitionColor.cpp">
-      <Filter>GameEngine\GraphicsEngine\Primitives\Quad</Filter>
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Quad</Filter>
     </ClCompile>
-    <ClCompile Include="VertexColorBuffer.cpp">
+    <ClCompile Include="LerpVertexBuffer.cpp">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
     </ClCompile>
     <ClCompile Include="EngineTime.cpp">
       <Filter>GameEngine\GraphicsEngine\EngineTime</Filter>
     </ClCompile>
-    <ClCompile Include="AGameObject.cpp">
-      <Filter>GameEngine\GraphicsEngine\Primitives</Filter>
-    </ClCompile>
     <ClCompile Include="Cube.cpp">
-      <Filter>GameEngine\GraphicsEngine\Primitives\Cube</Filter>
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Cube</Filter>
     </ClCompile>
     <ClCompile Include="MathUtils.cpp">
       <Filter>GameEngine\Utils\MathUtils</Filter>
     </ClCompile>
     <ClCompile Include="Plane.cpp">
-      <Filter>GameEngine\GraphicsEngine\Primitives\Plane</Filter>
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Plane</Filter>
     </ClCompile>
     <ClCompile Include="AUIScreen.cpp">
       <Filter>GameEngine\UIManager\UIScreens</Filter>
@@ -236,6 +239,21 @@
     </ClCompile>
     <ClCompile Include="Libs\ImGui\imgui_widgets.cpp">
       <Filter>GameEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="AGameObject.cpp">
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderLibrary.cpp">
+      <Filter>GameEngine\GraphicsEngine\ShaderLibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="TexturedVertexBuffer.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="TexturedCube.cpp">
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Cube</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -294,7 +312,7 @@
       <Filter>GameEngine\GraphicsEngine</Filter>
     </ClInclude>
     <ClInclude Include="Quad.h">
-      <Filter>GameEngine\GraphicsEngine\Primitives\Quad</Filter>
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Quad</Filter>
     </ClInclude>
     <ClInclude Include="Vertex.h">
       <Filter>GameEngine\Math</Filter>
@@ -336,25 +354,22 @@
       <Filter>GameEngine\GraphicsEngine\RenderSystem\ConstantBuffer</Filter>
     </ClInclude>
     <ClInclude Include="QuadTransitionColor.h">
-      <Filter>GameEngine\GraphicsEngine\Primitives\Quad</Filter>
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Quad</Filter>
     </ClInclude>
-    <ClInclude Include="VertexColorBuffer.h">
+    <ClInclude Include="LerpVertexBuffer.h">
       <Filter>GameEngine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
     </ClInclude>
     <ClInclude Include="EngineTime.h">
       <Filter>GameEngine\GraphicsEngine\EngineTime</Filter>
     </ClInclude>
-    <ClInclude Include="AGameObject.h">
-      <Filter>GameEngine\GraphicsEngine\Primitives</Filter>
-    </ClInclude>
     <ClInclude Include="Cube.h">
-      <Filter>GameEngine\GraphicsEngine\Primitives\Cube</Filter>
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Cube</Filter>
     </ClInclude>
     <ClInclude Include="MathUtils.h">
       <Filter>GameEngine\Utils\MathUtils</Filter>
     </ClInclude>
     <ClInclude Include="Plane.h">
-      <Filter>GameEngine\GraphicsEngine\Primitives\Plane</Filter>
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Plane</Filter>
     </ClInclude>
     <ClInclude Include="UIManager.h">
       <Filter>GameEngine\UIManager</Filter>
@@ -401,25 +416,52 @@
     <ClInclude Include="Libs\ImGui\imstb_truetype.h">
       <Filter>GameEngine\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="AGameObject.h">
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderLibrary.h">
+      <Filter>GameEngine\GraphicsEngine\ShaderLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturedVertexBuffer.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturedCube.h">
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Cube</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelGizmoShader.hlsl">
-      <Filter>GameEngine\Shaders</Filter>
+      <Filter>GameEngine\GraphicsEngine\ShaderLibrary\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="PixelShader.hlsl">
-      <Filter>GameEngine\Shaders</Filter>
+      <Filter>GameEngine\GraphicsEngine\ShaderLibrary\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="PixelTransitionColorShader.hlsl">
-      <Filter>GameEngine\Shaders</Filter>
+      <Filter>GameEngine\GraphicsEngine\ShaderLibrary\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="VertexMeshLayoutShader.hlsl">
-      <Filter>GameEngine\Shaders</Filter>
+      <Filter>GameEngine\GraphicsEngine\ShaderLibrary\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="VertexShader.hlsl">
-      <Filter>GameEngine\Shaders</Filter>
+      <Filter>GameEngine\GraphicsEngine\ShaderLibrary\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="VertexTransitionColorShader.hlsl">
-      <Filter>GameEngine\Shaders</Filter>
+      <Filter>GameEngine\GraphicsEngine\ShaderLibrary\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="LerpVertexShader.hlsl">
+      <Filter>GameEngine\GraphicsEngine\ShaderLibrary\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="LerpPixelShader.hlsl">
+      <Filter>GameEngine\GraphicsEngine\ShaderLibrary\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="TexturedPixelShader.hlsl">
+      <Filter>GameEngine\GraphicsEngine\ShaderLibrary\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="TexturedVertexShader.hlsl">
+      <Filter>GameEngine\GraphicsEngine\ShaderLibrary\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

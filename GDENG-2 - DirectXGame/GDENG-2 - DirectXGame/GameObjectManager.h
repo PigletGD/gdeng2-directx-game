@@ -1,0 +1,57 @@
+#pragma once
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_map>
+
+#include "AGameObject.h"
+
+class GameObjectManager
+{
+public:
+	typedef std::string String;
+	typedef std::vector<AGameObject*> List;
+	typedef std::unordered_map<String, AGameObject*> HashTable;
+
+	enum PrimitiveType {
+		TEXTURED_CUBE,
+		CUBE,
+		PLANE,
+		SPHERE
+	};
+
+	static GameObjectManager* getInstance();
+	static void initialize();
+	static void destroy();
+
+	AGameObject* findObjectByName(String name);
+	List getAllObjects();
+
+	int activeObjects();
+	
+	void updateAll();
+	void renderAll(int viewport_width, int viewport_height);
+	
+	void addObject(AGameObject* game_object);
+	void createObject(PrimitiveType type);
+	
+	void deleteObject(AGameObject* game_object);
+	void deleteObjectByName(String name);
+	
+	void setSelectedObject(String name);
+	void setSelectedObject(AGameObject* game_object);
+	AGameObject* getSelectedObject();
+
+private:
+	GameObjectManager();
+	~GameObjectManager();
+	GameObjectManager(GameObjectManager const&) {};             // copy constructor is private
+	GameObjectManager& operator=(GameObjectManager const&) {};  // assignment operator is private*/
+	static GameObjectManager* m_shared_instance;
+
+	HashTable m_game_object_map;
+	List m_game_object_list;
+
+	AGameObject* m_selected_object = NULL;
+};

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <unordered_map>
 #include <string>
 
@@ -9,6 +10,9 @@
 class ResourceManager
 {
 public:
+	typedef std::wstring String;
+	typedef std::unordered_map<String, ResourcePtr> HashTable;
+
 	ResourceManager();
 	virtual ~ResourceManager();
 
@@ -18,5 +22,5 @@ protected:
 	virtual Resource* createResourceFromFileConcrete(const wchar_t* file_path) = 0;
 
 private:
-	std::unordered_map<std::wstring, ResourcePtr> m_map_resources;
+	HashTable m_map_resources;
 };

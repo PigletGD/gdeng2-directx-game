@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VertexColorBuffer.h"
+#include "LerpVertexBuffer.h"
 #include "IndexBuffer.h"
 #include "Vertex.h"
 
@@ -9,18 +9,18 @@
 class QuadTransitionColor
 {
 public:
-	QuadTransitionColor(vertex_color v1, vertex_color v2, vertex_color v3, vertex_color v4);
+	QuadTransitionColor(lerp_vertex v1, lerp_vertex v2, lerp_vertex v3, lerp_vertex v4);
 	~QuadTransitionColor();
 
 	void createBuffers(void* shader_byte_code, UINT size_byte_shader);
 
 	void draw();
 private:
-	VertexColorBufferPtr m_vcb;
+	LerpVertexBufferPtr m_lvb;
 	IndexBufferPtr m_ib;
 	ConstantBufferPtr m_cb;
 
-	vertex_color vertex_list[4];
+	lerp_vertex vertex_list[4];
 	UINT size_vertex_list;
 
 	unsigned int index_list[6];

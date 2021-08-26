@@ -4,26 +4,33 @@
 #include "GraphicsEngine.h"
 #include "ConstantBuffer.h"
 #include "DeviceContext.h"
-#include "VertexColorBuffer.h"
 #include "MathUtils.h"
+#include "ShaderLibrary.h"
 
-Plane::Plane(std::string name, void* shaderByteCode, size_t sizeShader) : AGameObject(name)
+Plane::Plane(std::string name, bool skip_init) : AGameObject(name)
 {
-	vertex_color quad[] = {
-		{Vector3D(-0.5f,-0.5f, 0.0f), Vector3D(-0.5f,-0.5f, 0.0f), Vector3D(1, 1, 1), Vector3D(1, 1, 1)},
-		{Vector3D(-0.5f, 0.5f, 0.0f), Vector3D(-0.5f, 0.5f, 0.0f), Vector3D(1, 1, 1), Vector3D(1, 1, 1)},
-		{Vector3D( 0.5f,-0.5f, 0.0f), Vector3D( 0.5f,-0.5f, 0.0f), Vector3D(1, 1, 1), Vector3D(1, 1, 1)},
-		{Vector3D( 0.5f, 0.5f, 0.0f), Vector3D( 0.5f, 0.5f, 0.0f), Vector3D(1, 1, 1), Vector3D(1, 1, 1)}
+	if (skip_init) return;
+
+	ShaderNames shader_names;
+	void* shader_byte_code = NULL;
+	size_t size_shader = 0;
+
+	ShaderLibrary::getInstance()->requestVertexShaderData(shader_names.BASE_VERTEX_SHADER_NAME, &shader_byte_code, &size_shader);
+
+	vertex quad_list[] = {
+		{Vector3D(-0.5f,-0.5f, 0.0f), Vector3D(1, 1, 1)},
+		{Vector3D(-0.5f, 0.5f, 0.0f), Vector3D(1, 1, 1)},
+		{Vector3D( 0.5f,-0.5f, 0.0f), Vector3D(1, 1, 1)},
+		{Vector3D( 0.5f, 0.5f, 0.0f), Vector3D(1, 1, 1)}
 	};
 
-	m_vcb = GraphicsEngine::get()->getRenderSystem()->createVertexColorBuffer(quad, sizeof(vertex_color), ARRAYSIZE(quad), shaderByteCode, sizeShader);
+	m_vb = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer();
+	m_vb->load(quad_list, sizeof(vertex), ARRAYSIZE(quad_list), shader_byte_code, size_shader, GraphicsEngine::get()->getRenderSystem());
 
 	constant cc;
 	cc.m_time = 0;
 
 	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
-
-	setRotation(MathUtils::DegToRad(90), 0, 0);
 }
 
 Plane::~Plane()
@@ -34,10 +41,15 @@ void Plane::update(float deltaTime)
 {
 }
 
-void Plane::draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader, constant cc)
+void Plane::draw(int width, int height)
 {
-	GraphicsEngine* graphEngine = GraphicsEngine::get();
-	DeviceContextPtr deviceContext = graphEngine->getRenderSystem()->getImmediateDeviceContext();
+	ShaderNames shader_names;
+	GraphicsEngine* graphics_engine = GraphicsEngine::get();
+	CameraSystem* camera_system = graphics_engine->getCameraSystem();
+	DeviceContextPtr device_context = graphics_engine->getRenderSystem()->getImmediateDeviceContext();
+	device_context->setRenderConfig(ShaderLibrary::getInstance()->getVertexShader(shader_names.BASE_VERTEX_SHADER_NAME), ShaderLibrary::getInstance()->getPixelShader(shader_names.BASE_PIXEL_SHADER_NAME));
+
+	constant cc = {};
 
 	Matrix4x4 allMatrix; allMatrix.setIdentity();
 	Matrix4x4 translationMatrix; translationMatrix.setIdentity(); translationMatrix.setTranslation(getLocalPosition());
@@ -55,13 +67,17 @@ void Plane::draw(int width, int height, VertexShaderPtr vertexShader, PixelShade
 	scaleMatrix *= rotMatrix;
 	allMatrix *= scaleMatrix;
 	allMatrix *= translationMatrix;
+
+	// have to adjust for multiple viewports later
 	cc.m_world = allMatrix;
+	cc.m_view = camera_system->getCurrentCameraViewMatrix();
+	cc.m_proj = camera_system->getCurrentCameraProjectionMatrix();
 
-	m_cb->update(deviceContext, &cc);
-	deviceContext->setConstantBuffer(vertexShader, m_cb);
-	deviceContext->setConstantBuffer(pixelShader, m_cb);
+	m_cb->update(device_context, &cc);
 
-	deviceContext->setVertexBuffer(m_vcb);
+	device_context->setConstantBuffer(m_cb);
 
-	deviceContext->drawTriangleStrip(m_vcb->getSizeVertexList(), 0);
+	device_context->setVertexBuffer(m_vb);
+
+	device_context->drawTriangleStrip(m_vb->getListSize(), 0);
 }

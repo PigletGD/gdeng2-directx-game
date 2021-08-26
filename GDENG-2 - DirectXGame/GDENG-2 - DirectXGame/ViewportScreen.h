@@ -30,3 +30,4 @@ private:
 
 	friend class MenuBarScreen;
 };
+

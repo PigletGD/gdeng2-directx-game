@@ -5,7 +5,7 @@
 
 #include "ConstantData.h"
 
-Quad::Quad(vertex v1, vertex v2, vertex v3, vertex v4)
+Quad::Quad(textured_vertex v1, textured_vertex v2, textured_vertex v3, textured_vertex v4)
 {
 	vertex_list[0] = v1;
 	vertex_list[1] = v2;
@@ -28,7 +28,9 @@ Quad::~Quad()
 
 void Quad::createBuffers(void* shader_byte_code, UINT size_shader)
 {
-	m_vb = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(vertex_list, sizeof(vertex), size_vertex_list, shader_byte_code, size_shader);
+	m_vb = GraphicsEngine::get()->getRenderSystem()->createTexturedVertexBuffer();
+	m_vb->load(vertex_list, sizeof(textured_vertex), size_vertex_list, shader_byte_code, size_shader, GraphicsEngine::get()->getRenderSystem());
+
 	m_ib = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(index_list, size_index_list);
 }
 

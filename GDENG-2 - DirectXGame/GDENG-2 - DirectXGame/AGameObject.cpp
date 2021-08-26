@@ -1,6 +1,6 @@
 #include "AGameObject.h"
 
-AGameObject::AGameObject(std::string name)
+AGameObject::AGameObject(String name)
 {
 	m_name = name;
 	m_local_position = Vector3D::zero();
@@ -16,7 +16,7 @@ void AGameObject::update(float deltaTime)
 {
 }
 
-void AGameObject::draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader, constant cc)
+void AGameObject::draw(int width, int height)
 {
 }
 
@@ -63,4 +63,24 @@ void AGameObject::setScale(Vector3D scale)
 Vector3D AGameObject::getLocalScale()
 {
 	return m_local_scale;
+}
+
+bool AGameObject::isEnabled()
+{
+	return m_enabled;
+}
+
+void AGameObject::setEnabled(bool flag)
+{
+	m_enabled = flag;
+}
+
+AGameObject::String AGameObject::getName()
+{
+	return m_name;
+}
+
+void AGameObject::setName(String name)
+{
+	m_name = name;
 }

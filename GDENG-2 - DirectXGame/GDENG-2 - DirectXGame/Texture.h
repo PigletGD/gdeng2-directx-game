@@ -11,6 +11,7 @@ public:
 	Texture(const wchar_t* full_path);
 	~Texture();
 
+	Resource::String getPath();
 	ID3D11ShaderResourceView* getTexture();
 
 private:

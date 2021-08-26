@@ -15,6 +15,8 @@ ResourceManager::ResourceManager()
 
 ResourceManager::~ResourceManager()
 {
+    if (m_map_resources.size() != 0)
+        m_map_resources.clear();
 }
 
 ResourcePtr ResourceManager::createResourceFromFile(const wchar_t* file_path)
@@ -26,7 +28,6 @@ ResourcePtr ResourceManager::createResourceFromFile(const wchar_t* file_path)
 #if _MSC_VER >= 1920 && __cplusplus > 201402L 
     std::wstring full_path = std::filesystem::absolute(file_path);
 #endif
-
 
     auto it = m_map_resources.find(full_path);
 

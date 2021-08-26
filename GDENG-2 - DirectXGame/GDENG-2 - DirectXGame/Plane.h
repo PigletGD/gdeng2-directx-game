@@ -6,14 +6,16 @@
 class Plane : public AGameObject
 {
 public:
-	Plane(std::string name, void* shaderByteCode, size_t sizeShader);
+	Plane(std::string name, bool skip_init = false);
 	~Plane();
 
 	void update(float deltaTime) override;
-	void draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader, constant cc) override;
+	void draw(int width, int height) override;
 
 private:
-	VertexColorBufferPtr m_vcb;
+	VertexBufferPtr m_vb;
 	IndexBufferPtr m_ib;
 	ConstantBufferPtr m_cb;
+
+	float m_ticks = 0.0f;
 };

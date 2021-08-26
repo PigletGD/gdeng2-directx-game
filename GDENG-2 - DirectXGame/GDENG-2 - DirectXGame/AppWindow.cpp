@@ -10,6 +10,8 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 #include "UIManager.h"
+#include "ShaderLibrary.h"
+#include "GameObjectManager.h"
 
 AppWindow* AppWindow::sharedInstance = nullptr;
 
@@ -42,19 +44,21 @@ void AppWindow::initializeEngine()
 
 	GraphicsEngine::create();
 	InputSystem::create();
+	ShaderLibrary::initialize();
 
 	GraphicsEngine::get()->getCameraSystem()->incrementFocusCount();
-	//InputSystem::get()->addListener(GraphicsEngine::get()->getCameraSystem());
 
 	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
 	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
 
-	camera_system->initializeGizmoTexture();
+	//camera_system->initializeGizmoTexture();
 
 	RECT rc = this->getClientWindowRect();
 	m_swap_chain = render_system->createSwapChain(this->m_HWND, rc.right - rc.left, rc.bottom - rc.top);
 
 	m_world_cam.setTranslation(Vector3D(0, 0, -2));
+
+	
 
 	/*
 	m_wood_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\brick.png");
@@ -158,17 +162,19 @@ void AppWindow::initializeEngine()
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 	*/
 
+	/*
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
 
 	render_system->compileVertexShader(L"VertexTransitionColorShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 	m_vs = render_system->createVertexShader(shader_byte_code, size_shader);
-
+	*/
+	
 	// PLANE OBJECT: renders first
-	Plane* plane_object = new Plane("Plane 0", shader_byte_code, size_shader);
+	/*Plane* plane_object = new Plane("Plane 0", shader_byte_code, size_shader);
 	plane_object->setScale(7, 7, 1);
 	plane_object->setPosition(0.0f, -0.5f, 0.0f);
-	m_object_list.push_back(plane_object);
+	m_object_list.push_back(plane_object);*/
 
 	/* CUBE OBJECT: renders second, will render entirely in front of plane without depth stencil buffer
 	for (int i = 0; i < 0; i++) {
@@ -180,6 +186,7 @@ void AppWindow::initializeEngine()
 		m_object_list.push_back(cube_object);
 	}*/
 
+	/*
 	Cube* cube_object = new Cube("Cube 0", shader_byte_code, size_shader);
 	cube_object->setAnimSpeed(MathUtils::randomFloat(-3.75f, 3.75f));
 	cube_object->setPosition(0.0f, 0.0f, 0.0f);
@@ -191,6 +198,7 @@ void AppWindow::initializeEngine()
 	render_system->compilePixelShader(L"PixelTransitionColorShader.hlsl", "psmain", &shader_byte_code, &size_shader);
 	m_ps = render_system->createPixelShader(shader_byte_code, size_shader);
 	render_system->releaseCompiledShader();
+	*/
 
 	constant cc;
 	cc.m_time = 0;
@@ -201,7 +209,12 @@ void AppWindow::initializeEngine()
 
 	m_rs = render_system->m_rs_solid;
 
+	GameObjectManager::initialize();
 	camera_system->initializeInitialCamera();
+
+	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::TEXTURED_CUBE);
+	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::CUBE);
+	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::PLANE);
 }
 
 void AppWindow::createInterface()
@@ -226,6 +239,7 @@ void AppWindow::updateTimeWave()
 
 void AppWindow::drawToRenderTarget(Camera* camera, UINT width, UINT height)
 {
+	/*
 	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
 	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
 	DeviceContextPtr device_context = render_system->getImmediateDeviceContext();
@@ -250,7 +264,7 @@ void AppWindow::drawToRenderTarget(Camera* camera, UINT width, UINT height)
 		m_object_list[i]->update(EngineTime::getDeltaTime());
 		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
 	}
-
+	*/
 	//camera_system->drawGizmos(cc);
 }
 
@@ -267,6 +281,9 @@ void AppWindow::onUpdate()
 	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
 	DeviceContextPtr device_context = render_system->getImmediateDeviceContext();
 
+	updateTimeLinear();
+	updateTimeWave();
+
 	camera_system->updateInputListener();
 
 	InputSystem::get()->update();
@@ -282,23 +299,23 @@ void AppWindow::onUpdate()
 
 	device_context->setRasterizerState(m_rs);
 
-	constant cc;
+	/*constant cc;
 	cc.m_time = m_time_linear;
-	cc.m_lerp_speed = 1.0f;
+	cc.m_lerp_speed = 1.0f;*/
 
 	camera_system->updateCurrentCamera();
 
-	cc.m_world = camera_system->getCurrentCameraWorldMatrix();;
+	/*cc.m_world = camera_system->getCurrentCameraWorldMatrix();;
 	cc.m_view = camera_system->getCurrentCameraViewMatrix();
 	cc.m_proj = camera_system->getCurrentCameraProjectionMatrix();
 
-	m_cb->update(device_context, &cc);
+	m_cb->update(device_context, &cc);*/
 
-	device_context->setConstantBuffer(m_vs, m_cb);
+	/*device_context->setConstantBuffer(m_vs, m_cb);
 	device_context->setConstantBuffer(m_ps, m_cb);
 
 	device_context->setVertexShader(m_vs);
-	device_context->setPixelShader(m_ps);
+	device_context->setPixelShader(m_ps);*/
 
 	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, m_wood_tex);
 
@@ -307,25 +324,28 @@ void AppWindow::onUpdate()
 
 	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_mesh->getIndexBuffer()->getSizeIndexList(), 0, 0);
 
-	for (int i = 0; i < m_object_list.size(); i++) {
+	/*for (int i = 0; i < m_object_list.size(); i++) {
 		m_object_list[i]->update(EngineTime::getDeltaTime());
 		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
-	}
+	}*/
 
 	//camera_system->drawGizmos(cc);
+
+	GameObjectManager::getInstance()->updateAll();
+	GameObjectManager::getInstance()->renderAll(width, height);
 
 	UIManager::getInstance()->drawAllUI();
 
 	device_context->setRenderTarget(m_swap_chain);
 
 	m_swap_chain->present(true);
-
-	updateTimeLinear();
-	updateTimeWave();
 }
 
 void AppWindow::onDestroy()
 {
+	GameObjectManager::destroy();
+	ShaderLibrary::destroy();
+
 	Window::onDestroy();
 }
 

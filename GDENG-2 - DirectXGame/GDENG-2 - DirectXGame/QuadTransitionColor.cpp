@@ -5,7 +5,7 @@
 
 #include "ConstantData.h"
 
-QuadTransitionColor::QuadTransitionColor(vertex_color v1, vertex_color v2, vertex_color v3, vertex_color v4)
+QuadTransitionColor::QuadTransitionColor(lerp_vertex v1, lerp_vertex v2, lerp_vertex v3, lerp_vertex v4)
 {
 	vertex_list[0] = v1;
 	vertex_list[1] = v2;
@@ -28,14 +28,16 @@ QuadTransitionColor::~QuadTransitionColor()
 
 void QuadTransitionColor::createBuffers(void* shader_byte_code, UINT size_byte_shader)
 {
-	m_vcb = GraphicsEngine::get()->getRenderSystem()->createVertexColorBuffer(vertex_list, sizeof(vertex_color), size_vertex_list, shader_byte_code, size_byte_shader);
+	m_lvb = GraphicsEngine::get()->getRenderSystem()->createLerpVertexBuffer();
+	m_lvb->load(vertex_list, sizeof(lerp_vertex), size_vertex_list, shader_byte_code, size_byte_shader, GraphicsEngine::get()->getRenderSystem());
+	
 	m_ib = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(index_list, size_index_list);
 }
 
 void QuadTransitionColor::draw()
 {
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(m_vcb);
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(m_lvb);
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
 
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawTriangleStrip(m_vcb->getSizeVertexList(), 0);
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawTriangleStrip(m_lvb->getListSize(), 0);
 }

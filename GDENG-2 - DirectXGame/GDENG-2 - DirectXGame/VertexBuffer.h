@@ -6,12 +6,18 @@
 class VertexBuffer
 {
 public:
-	VertexBuffer(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader, RenderSystem* system);
+	VertexBuffer();
 	~VertexBuffer();
 
-	UINT getSizeVertexList();
+	virtual void load(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader, RenderSystem* system);
+	void release();
 
-private:
+	ID3D11Buffer* getBuffer();
+	ID3D11InputLayout* getInputLayout();
+	UINT getVertexSize();
+	UINT getListSize();
+
+protected:
 	UINT m_size_vertex;
 	UINT m_size_list;
 
@@ -20,5 +26,6 @@ private:
 
 	RenderSystem* m_system = nullptr;
 
+private:
 	friend class DeviceContext;
 };

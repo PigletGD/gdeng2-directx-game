@@ -16,7 +16,6 @@ public:
 	void setRasterizerState(ID3D11RasterizerState* rs);
 	
 	void setVertexBuffer(const VertexBufferPtr& vertex_buffer);
-	void setVertexBuffer(const VertexColorBufferPtr& vertex_buffer);
 	void setIndexBuffer(const IndexBufferPtr& index_buffer);
 
 	void drawTriangleList(UINT vertex_count, UINT start_vertex_index);
@@ -30,11 +29,11 @@ public:
 
 	void setAlphaBlendState(const AlphaBlendStatePtr& alpha_blend_state);
 
-	void setTexture(const VertexShaderPtr& vertex_shader, const TexturePtr& texture);
-	void setTexture(const PixelShaderPtr& pixel_shader, const TexturePtr& texture);
+	void setTexture(const TexturePtr& texture);
 
-	void setConstantBuffer(const VertexShaderPtr& vertex_shader, const ConstantBufferPtr& buffer);
-	void setConstantBuffer(const PixelShaderPtr& pixel_shader, const ConstantBufferPtr& buffer);
+	void setRenderConfig(const VertexShaderPtr& vertex_shader, const PixelShaderPtr& pixel_shader);
+
+	void setConstantBuffer(const ConstantBufferPtr& buffer);
 
 	ID3D11DeviceContext* getContext();
 

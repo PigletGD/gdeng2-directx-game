@@ -1,13 +1,14 @@
 #include "Cube.h"
 #include "GraphicsEngine.h"
-#include "InputSystem.h"
 #include "SwapChain.h"
 #include "Vertex.h"
 #include "ConstantData.h"
 #include "ConstantBuffer.h"
 #include "DeviceContext.h"
 #include "MathUtils.h"
+#include "ShaderLibrary.h"
 
+/*
 Cube::Cube(std::string name, void* shaderByteCode, size_t sizeShader) : AGameObject(name)
 {
 	// random color
@@ -68,26 +69,97 @@ Cube::Cube(std::string name, void* shaderByteCode, size_t sizeShader) : AGameObj
 
 	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
 }
+*/
+
+Cube::Cube(std::string name, bool skip_init) :
+	AGameObject(name)
+{
+	if (skip_init) return;
+
+	ShaderNames shader_names;
+	void* shader_byte_code = NULL;
+	size_t size_shader = 0;
+
+	ShaderLibrary::getInstance()->requestVertexShaderData(shader_names.BASE_VERTEX_SHADER_NAME, &shader_byte_code, &size_shader);
+
+	//create buffers for drawing. vertex data that needs to be drawn are temporarily placed here.
+	vertex quad_list[] = {
+		//X, Y, Z
+		//FRONT FACE
+		{Vector3D(-0.5f,-0.5f,-0.5f),    Vector3D(1,0,0) },
+		{Vector3D(-0.5f,0.5f,-0.5f),    Vector3D(1,1,0) },
+		{Vector3D(0.5f,0.5f,-0.5f),   Vector3D(1,1,0) },
+		{Vector3D(0.5f,-0.5f,-0.5f),     Vector3D(1,0,0) },
+
+		//BACK FACE
+		{Vector3D(0.5f,-0.5f,0.5f),    Vector3D(0,1,0) },
+		{Vector3D(0.5f,0.5f,0.5f),    Vector3D(0,1,1) },
+		{Vector3D(-0.5f,0.5f,0.5f),   Vector3D(0,1,1) },
+		{Vector3D(-0.5f,-0.5f,0.5f),     Vector3D(0,1,0) },
+	};
+
+	m_vb = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer();
+	m_vb->load(quad_list, sizeof(vertex), ARRAYSIZE(quad_list), shader_byte_code, size_shader, GraphicsEngine::get()->getRenderSystem());
+
+	unsigned int index_list[] =
+	{
+		//FRONT SIDE
+		0,1,2,  //FIRST TRIANGLE
+		2,3,0,  //SECOND TRIANGLE
+		//BACK SIDE
+		4,5,6,
+		6,7,4,
+		//TOP SIDE
+		1,6,5,
+		5,2,1,
+		//BOTTOM SIDE
+		7,0,3,
+		3,4,7,
+		//RIGHT SIDE
+		3,2,5,
+		5,4,3,
+		//LEFT SIDE
+		7,6,1,
+		1,0,7
+	};
+	//this->indexBuffer = GraphicsEngine::getInstance()->createIndexBuffer();
+	//this->indexBuffer->load(indexList, ARRAYSIZE(indexList));
+
+	m_ib = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(index_list, ARRAYSIZE(index_list));
+
+	constant cc;
+	cc.m_time = 0;
+
+	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
+
+	//create constant buffer
+	//CBData cbData = {};
+	//cbData.time = 0;
+	//this->constantBuffer = GraphicsEngine::getInstance()->createConstantBuffer();
+	//this->constantBuffer->load(&cbData, sizeof(CBData));
+}
 
 Cube::~Cube()
 {
+	AGameObject::~AGameObject();
 }
 
-void Cube::update(float deltaTime)
+void Cube::update(float delta_time)
 {
-	m_delta_time = deltaTime;
+	
 }
 
-void Cube::draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader, constant cc)
+void Cube::draw(int width, int height)
 {
-	GraphicsEngine* graphEngine = GraphicsEngine::get();
-	DeviceContextPtr deviceContext = graphEngine->getRenderSystem()->getImmediateDeviceContext();
+	ShaderNames shader_names;
+	GraphicsEngine* graphics_engine = GraphicsEngine::get();
+	CameraSystem* camera_system = graphics_engine->getCameraSystem();
+	DeviceContextPtr device_context = graphics_engine->getRenderSystem()->getImmediateDeviceContext();
+	device_context->setRenderConfig(ShaderLibrary::getInstance()->getVertexShader(shader_names.BASE_VERTEX_SHADER_NAME), ShaderLibrary::getInstance()->getPixelShader(shader_names.BASE_PIXEL_SHADER_NAME));
 
-	cc.m_time = m_ticks * m_speed;
+	constant cc = {};
 
-	if (m_delta_pos > 1.0f)  m_delta_pos = 0.0f;
-	else m_delta_pos += m_delta_time * 0.1f;
-
+	// prepare matrices
 	Matrix4x4 allMatrix; allMatrix.setIdentity();
 	Matrix4x4 translationMatrix; translationMatrix.setIdentity(); translationMatrix.setTranslation(getLocalPosition());
 	Matrix4x4 scaleMatrix; scaleMatrix.setIdentity(); scaleMatrix.setScale(getLocalScale());
@@ -104,79 +176,18 @@ void Cube::draw(int width, int height, VertexShaderPtr vertexShader, PixelShader
 	scaleMatrix *= rotMatrix;
 	allMatrix *= scaleMatrix;
 	allMatrix *= translationMatrix;
+	
+	// have to adjust for multiple viewports later
 	cc.m_world = allMatrix;
+	cc.m_view = camera_system->getCurrentCameraViewMatrix();
+	cc.m_proj = camera_system->getCurrentCameraProjectionMatrix();
 
-	m_cb->update(deviceContext, &cc);
+	m_cb->update(device_context, &cc);
 
-	deviceContext->setConstantBuffer(vertexShader, m_cb);
-	deviceContext->setConstantBuffer(pixelShader, m_cb);
+	device_context->setConstantBuffer(m_cb);
 
-	deviceContext->setIndexBuffer(m_ib);
-	deviceContext->setVertexBuffer(m_vcb);
+	device_context->setIndexBuffer(m_ib);
+	device_context->setVertexBuffer(m_vb);
 
-	deviceContext->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
-}
-
-void Cube::setAnimSpeed(float speed)
-{
-	m_speed = speed;
-}
-
-void Cube::onKeyDown(int key)
-{
-	if (key == 'R') {
-		m_ticks += m_delta_time;
-
-		float rotSpeed = m_ticks * m_speed;
-		this->setRotation(rotSpeed, rotSpeed, rotSpeed);
-
-		// Lerp
-		//float delta = (sin(m_ticks) + 1.0f) * 0.5f;
-		
-		//float pos = (-1.0f * (1.0f - delta)) + (1.0f * delta);
-		//float scale = (1.0f * (1.0f - delta)) + (0.25f * delta);
-
-		//setPosition(pos, pos, 0);
-		//setScale(scale, scale, scale);
-
-	}
-	else if (key == 'F') {
-		m_ticks -= m_delta_time;
-
-		float rotSpeed = m_ticks * m_speed;
-		this->setRotation(rotSpeed, rotSpeed, rotSpeed);
-
-		// Lerp
-		//float delta = (sin(m_ticks) + 1.0f) * 0.5f;
-
-		//float pos = (-1.0f * (1.0f - delta)) + (1.0f * delta);
-		//float scale = (1.0f * (1.0f - delta)) + (0.25f * delta);
-
-		//setPosition(pos, pos, 0);
-		//setScale(scale, scale, scale);
-	}
-}
-
-void Cube::onKeyUp(int key)
-{
-}
-
-void Cube::onMouseMove(const Point& mouse_pos)
-{
-}
-
-void Cube::onLeftMouseDown(const Point& mouse_pos)
-{
-}
-
-void Cube::onLeftMouseUp(const Point& mouse_pos)
-{
-}
-
-void Cube::onRightMouseDown(const Point& mouse_pos)
-{
-}
-
-void Cube::onRightMouseUp(const Point& mouse_pos)
-{
+	device_context->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
 }

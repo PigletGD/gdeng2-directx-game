@@ -1,22 +1,19 @@
-#include "VertexBuffer.h"
+#include "TexturedVertexBuffer.h"
 #include "RenderSystem.h"
 
-#include <exception>
 #include <iostream>
 
-VertexBuffer::VertexBuffer()
+TexturedVertexBuffer::TexturedVertexBuffer() : VertexBuffer()
 {
 	m_buffer = 0;
 	m_layout = 0;
 }
 
-VertexBuffer::~VertexBuffer()
+TexturedVertexBuffer::~TexturedVertexBuffer()
 {
-	m_layout->Release();
-	m_buffer->Release();
 }
 
-void VertexBuffer::load(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader, RenderSystem* system)
+void TexturedVertexBuffer::load(void* list_vertices, UINT size_vertex, UINT size_list, void* shader_byte_code, UINT size_byte_shader, RenderSystem* system)
 {
 	//if (m_buffer != NULL) m_buffer->Release();
 	//if (m_layout != NULL) m_layout->Release();
@@ -38,45 +35,16 @@ void VertexBuffer::load(void* list_vertices, UINT size_vertex, UINT size_list, v
 
 	HRESULT res = m_system->getDevice()->CreateBuffer(&buff_desc, &init_data, &m_buffer);
 
-	if (FAILED(res)) throw std::exception("Vertex Buffer not created successfully");
+	if (FAILED(res)) { std::cout << "wow"; throw std::exception("Vertex Buffer not created successfully"); }
 
 	D3D11_INPUT_ELEMENT_DESC layout[] = {
 		//SEMANTIC NAME - SEMANTIC INDEX - FORMAT - INPUT SLOT - ALIGNED BYTE OFFSET - INPUT SLOT CLASS - INSTANCE DATA STEP RATE
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
 	UINT size_layout = ARRAYSIZE(layout);
 
 	res = m_system->getDevice()->CreateInputLayout(layout, size_layout, shader_byte_code, size_byte_shader, &m_layout);
 
-	if (FAILED(res)) { std::cout << "failure\n"; throw std::exception("Vertex Buffer not created successfully"); }
-}
-
-void VertexBuffer::release()
-{
-	if (this != NULL) {
-		m_layout->Release();
-		m_buffer->Release();
-		delete this;
-	}
-}
-
-ID3D11Buffer* VertexBuffer::getBuffer()
-{
-	return m_buffer;
-}
-
-ID3D11InputLayout* VertexBuffer::getInputLayout()
-{
-	return m_layout;
-}
-
-UINT VertexBuffer::getVertexSize()
-{
-	return m_size_vertex;
-}
-
-UINT VertexBuffer::getListSize()
-{
-	return m_size_list;
+	if (FAILED(res)) { std::cout << "wow2"; throw std::exception("Vertex Buffer not created successfully"); }
 }

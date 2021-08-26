@@ -13,10 +13,10 @@ Camera::Camera(float width, float height) : AGameObject("Camera")
 {
 	setPosition(Vector3D(0, 1, -4));
 
-	m_gizmo_icon = new Quad({Vector3D(-0.05f,-0.05f, 0.0f), Vector2D(1, 1)},
+	/*m_gizmo_icon = new Quad({Vector3D(-0.05f,-0.05f, 0.0f), Vector2D(1, 1)},
 							{Vector3D(-0.05f, 0.05f, 0.0f), Vector2D(1, 0)},
 							{Vector3D( 0.05f, 0.05f, 0.0f), Vector2D(0, 0)},
-							{Vector3D( 0.05f,-0.05f, 0.0f), Vector2D(0, 1)});
+							{Vector3D( 0.05f,-0.05f, 0.0f), Vector2D(0, 1)});*/
 
 	updateWindowSize(width, height);
 }
@@ -174,7 +174,7 @@ void Camera::createBuffersAndShaders()
 
 	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 	m_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
-	m_gizmo_icon->createBuffers(shader_byte_code, size_shader);
+	//m_gizmo_icon->createBuffers(shader_byte_code, size_shader);
 
 	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
 	
@@ -200,8 +200,7 @@ void Camera::drawGizmoIcon(constant cc)
 
 	m_cb->update(dc, &cc);
 
-	dc->setConstantBuffer(m_vs, m_cb);
-	dc->setConstantBuffer(m_ps, m_cb);
+	dc->setConstantBuffer(m_cb);
 
 	dc->setVertexShader(m_vs);
 	dc->setPixelShader(m_ps);

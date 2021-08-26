@@ -11,17 +11,17 @@ RenderTexture::RenderTexture(UINT width, UINT height)
 
 RenderTexture::~RenderTexture()
 {
-	if (m_shader_resource_view) {
-		m_shader_resource_view->Release();
-		m_shader_resource_view = 0;
+	if (m_srv) {
+		m_srv->Release();
+		m_srv = 0;
 	}
-	if (m_render_target_view) {
-		m_render_target_view->Release();
-		m_render_target_texture = 0;
+	if (m_rtv) {
+		m_rtv->Release();
+		m_rtv = 0;
 	}
-	if (m_render_target_texture) {
-		m_render_target_texture->Release();
-		m_render_target_texture = 0;
+	if (m_rtt) {
+		m_rtt->Release();
+		m_rtt = 0;
 	}
 }
 
@@ -44,17 +44,17 @@ void RenderTexture::resize(UINT width, UINT height)
 		m_dsv->Release();
 		m_dsv = 0;
 	}
-	if (m_shader_resource_view) {
-		m_shader_resource_view->Release();
-		m_shader_resource_view = 0;
+	if (m_srv) {
+		m_srv->Release();
+		m_srv = 0;
 	}
-	if (m_render_target_view) {
-		m_render_target_view->Release();
-		m_render_target_texture = 0;
+	if (m_rtv) {
+		m_rtv->Release();
+		m_rtv = 0;
 	}
-	if (m_render_target_texture) {
-		m_render_target_texture->Release();
-		m_render_target_texture = 0;
+	if (m_rtt) {
+		m_rtt->Release();
+		m_rtt = 0;
 	}
 
 	reloadBuffers(width, height);
@@ -81,26 +81,26 @@ void RenderTexture::reloadBuffers(UINT width, UINT height)
 	textureDesc.CPUAccessFlags = 0;
 	textureDesc.MiscFlags = 0;
 
-	HRESULT hr = device->CreateTexture2D(&textureDesc, NULL, &m_render_target_texture);
+	HRESULT hr = device->CreateTexture2D(&textureDesc, NULL, &m_rtt);
 
-	if (FAILED(hr)) { std::cout << "Failed to create render target texture\n"; throw std::exception("Render Texture not created successfully"); }
+	if (FAILED(hr)) throw std::exception("Render Texture not created successfully");
 
 	renderTargetViewDesc.Format = textureDesc.Format;
 	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 	renderTargetViewDesc.Texture2D.MipSlice = 0;
 
-	hr = device->CreateRenderTargetView(m_render_target_texture, &renderTargetViewDesc, &m_render_target_view);
+	hr = device->CreateRenderTargetView(m_rtt, &renderTargetViewDesc, &m_rtv);
 
-	if (FAILED(hr)) { std::cout << "Failed to create render target view\n"; throw std::exception("Render Texture not created successfully"); }
+	if (FAILED(hr)) throw std::exception("Render Texture not created successfully");
 
 	shaderResourceViewDesc.Format = textureDesc.Format;
 	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
 	shaderResourceViewDesc.Texture2D.MipLevels = 1;
 
-	hr = device->CreateShaderResourceView(m_render_target_texture, &shaderResourceViewDesc, &m_shader_resource_view);
+	hr = device->CreateShaderResourceView(m_rtt, &shaderResourceViewDesc, &m_srv);
 
-	if (FAILED(hr)) { std::cout << "Failed to create shader resource\n"; throw std::exception("Render Texture not created successfully"); }
+	if (FAILED(hr)) throw std::exception("Render Texture not created successfully");
 
 	ID3D11Texture2D* buffer;
 	D3D11_TEXTURE2D_DESC tex_desc = {};
@@ -118,27 +118,20 @@ void RenderTexture::reloadBuffers(UINT width, UINT height)
 
 	hr = device->CreateTexture2D(&tex_desc, nullptr, &buffer);
 
-	if (FAILED(hr)) { std::cout << "Failed to create texture for depth stencil view\n"; throw std::exception("Render Texture not created successfully"); }
+	if (FAILED(hr)) throw std::exception("Render Texture not created successfully");
 
 	hr = device->CreateDepthStencilView(buffer, NULL, &m_dsv);
 
-	if (FAILED(hr)) { std::cout << "Failed to create depth stencil view\n"; throw std::exception("Render Texture not created successfully"); }
+	if (FAILED(hr)) throw std::exception("Render Texture not created successfully");
 }
 
-void RenderTexture::setRenderTarget(const DeviceContextPtr& device_context, const SwapChainPtr& swap_chain)
-{
-	ID3D11DeviceContext* context = device_context->getContext();
-
-	context->OMSetRenderTargets(1, &m_render_target_view, m_dsv);
-}
-
-void RenderTexture::clearRenderTarget(const DeviceContextPtr& device_context, const SwapChainPtr& swap_chain, float r, float g, float b, float a)
+void RenderTexture::clearRenderTarget(const DeviceContextPtr& device_context, float r, float g, float b, float a)
 {
 	ID3D11DeviceContext* context = device_context->getContext();
 
 	FLOAT clear_color[] = { r, g, b, a };
-	context->ClearRenderTargetView(m_render_target_view, clear_color);
+	context->ClearRenderTargetView(m_rtv, clear_color);
 	context->ClearDepthStencilView(m_dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
-	context->OMSetRenderTargets(1, &m_render_target_view, m_dsv);
+	context->OMSetRenderTargets(1, &m_rtv, m_dsv);
 
 }

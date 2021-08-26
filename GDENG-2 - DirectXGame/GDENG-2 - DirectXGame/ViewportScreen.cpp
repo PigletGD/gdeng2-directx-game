@@ -30,6 +30,7 @@ ViewportScreen::~ViewportScreen()
 
 void ViewportScreen::drawUI()
 {
+	// Window closing Behaviour
 	if (!m_is_open)
 	{
 		GraphicsEngine::get()->getCameraSystem()->removeCamera(m_camera);
@@ -41,13 +42,16 @@ void ViewportScreen::drawUI()
 		return;
 	}
 
-	DeviceContextPtr device_context = GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext();
+	DeviceContextPtr device_context = GraphicsEngine::get()->
+		getRenderSystem()->getImmediateDeviceContext();
 	SwapChainPtr swap_chain = AppWindow::get()->m_swap_chain;
 
+	// Sets view mode to either solid or wireframe
 	device_context->setRasterizerState(m_rs);
 
+	// Initializes Window
 	if (ImGui::Begin(m_window_name.c_str(), &m_is_open, ImGuiWindowFlags_MenuBar)) {
-
+		// Checks if window was resized
 		ImVec2 new_size = ImGui::GetContentRegionAvail();
 
 		if (new_size.x != m_old_size.x || new_size.y != m_old_size.y) {
@@ -58,15 +62,15 @@ void ViewportScreen::drawUI()
 		}
 
 		//Ask Render Texture to Update//
-		m_rt->clearRenderTarget(device_context, swap_chain, 0.4f, 0.4f, 1.0f, 1.0f);
+		m_rt->clearRenderTarget(device_context, 0.4f, 0.4f, 1.0f, 1.0f);
 		m_rt->setViewportSize(device_context, new_size.x, new_size.y);
 		AppWindow::get()->drawToRenderTarget(m_camera, new_size.x, new_size.y);
 
+		// Menu bar that holds buttons that control viewport view modes
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("Viewmode"))
 			{
-				if (ImGui::MenuItem("Normal")) { std::cout << "idk yet" << std::endl; }
 				if (ImGui::MenuItem("Topdown")) { m_camera->setToTopDownViewMode(); }
 				if (ImGui::MenuItem("Front")) { m_camera->setToFrontViewMode(); }
 				if (ImGui::MenuItem("Right")) { m_camera->setToRighViewMode(); }
@@ -89,8 +93,9 @@ void ViewportScreen::drawUI()
 		}
 
 		//Load Image
-		ImGui::Image((void*)m_rt->m_shader_resource_view, new_size);
+		ImGui::Image((void*)m_rt->m_srv, new_size);
 
+		// Handles Viewport Focus and Selection
 		if (ImGui::IsWindowHovered()) {
 			
 			if (ImGui::IsItemClicked(1)) ImGui::SetWindowFocus();
@@ -106,7 +111,6 @@ void ViewportScreen::drawUI()
 				m_is_hovered = false;
 			}
 		}
-
 		if (ImGui::IsWindowFocused()) {
 			if (!m_is_focused) {
 				CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();

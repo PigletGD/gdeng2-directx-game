@@ -4,7 +4,7 @@
 #include "SwapChain.h"
 #include "DeviceContext.h"
 #include "VertexBuffer.h"
-#include "VertexColorBuffer.h"
+#include "TexturedVertexBuffer.h"
 #include "IndexBuffer.h"
 #include "ConstantBuffer.h"
 #include "VertexShader.h"
@@ -58,7 +58,7 @@ private:
 	SwapChainPtr m_swap_chain;
 	
 	VertexBufferPtr m_vb;
-	VertexColorBufferPtr m_vcb;
+	//VertexColorBufferPtr m_vcb;
 	IndexBufferPtr m_ib;
 	ConstantBufferPtr m_cb;
 	
