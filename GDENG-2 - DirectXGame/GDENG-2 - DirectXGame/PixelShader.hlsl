@@ -18,6 +18,7 @@ cbuffer constant: register(b0)
 	float m_lerp_speed;
 	float4 m_light_direction;
 	float4 m_camera_position;
+	int isLit;
 };
 
 float4 psmain(PS_INPUT input) : SV_TARGET
@@ -48,7 +49,19 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 
 	//return float4(final_light, 1.0);
 
+	//return Texture.Sample(TextureSampler , input.texcoord * 0.5); // unlit
+	//return (Texture.Sample(TextureSampler , input.texcoord * 0.5) * float4(final_light,1.0));// lit
 
-	//return Texture.Sample(TextureSampler , input.texcoord * 0.5);
-	return (Texture.Sample(TextureSampler , input.texcoord * 0.5) * float4(final_light,1.0));//
+
+	if (isLit == 1) {
+		return (Texture.Sample(TextureSampler , input.texcoord * 0.5) * float4(final_light,1.0));
+	}
+	
+	else if (isLit == 2) {
+		return Texture.Sample(TextureSampler , input.texcoord * 0.5);
+	}
+
+	else {
+		return float4(final_light, 1.0);
+	}
 }

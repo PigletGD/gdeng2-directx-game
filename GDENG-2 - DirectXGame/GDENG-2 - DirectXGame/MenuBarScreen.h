@@ -11,6 +11,7 @@ private:
 	void onCreateCreditsScreen();
 	void onCreateColorPickerScreen();
 	void onCreateViewportScreen();
+	void onCreateLightingToggle();
 
 	// Initialize as -1 for no viewport limit
 	int m_viewport_limit = 3;

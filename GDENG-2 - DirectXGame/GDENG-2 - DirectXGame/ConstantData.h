@@ -12,4 +12,5 @@ struct constant
 	float m_lerp_speed;
 	Vector4D m_light_direction;
 	Vector4D m_camera_position;
+	int isLit;
 };
