@@ -19,6 +19,7 @@ cbuffer constant: register(b0) {
 	float m_lerp_speed;
 	float4 m_light_direction;
 	float4 m_camera_position;
+	int isLit;
 };
 
 VS_OUTPUT vsmain(VS_INPUT input)

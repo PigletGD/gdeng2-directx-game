@@ -9,6 +9,7 @@
 #include "CreditsScreen.h"
 #include "ColorPickerScreen.h"
 #include "ViewportScreen.h"
+#include "LightingToggle.h"
 #include "UIManager.h"
 #include "GraphicsEngine.h"
 #include "DeviceContext.h"
@@ -45,7 +46,7 @@ void MenuBarScreen::drawUI()
 
 			if (ImGui::BeginMenu("Viewmode"))
 			{
-				if (ImGui::MenuItem("Normal")) { std::cout << "idk yet" << std::endl; }
+				if (ImGui::MenuItem("Normal")) { onCreateLightingToggle(); ImGui::SetWindowFocus(nullptr); } // onCreateLightingToggle()
 				if (ImGui::MenuItem("Topdown")) { camera->setToTopDownViewMode(); ImGui::SetWindowFocus(nullptr); }
 				if (ImGui::MenuItem("Front")) { camera->setToFrontViewMode(); ImGui::SetWindowFocus(nullptr); }
 				if (ImGui::MenuItem("Right")) { camera->setToRighViewMode(); ImGui::SetWindowFocus(nullptr); }
@@ -126,3 +127,20 @@ void MenuBarScreen::onCreateViewportScreen()
 	}
 	else std::cout << "Maximum Viewport Screens Already Reached" << std::endl;
 }
+
+void MenuBarScreen::onCreateLightingToggle()
+{
+	UIManager* uiManager = UIManager::getInstance();
+	UINames uiNames;
+
+	if (uiManager->uiTable[uiNames.LIGHTING_TOGGLE] == nullptr) {
+		LightingToggle* lightingToggle = new LightingToggle();
+		uiManager->uiTable[uiNames.LIGHTING_TOGGLE] = lightingToggle;
+		uiManager->uiList.push_back(lightingToggle);
+
+		std::cout << "Created Lighting Toggle" << std::endl;
+	}
+	else std::cout << "Lighting Toggle Already Created" << std::endl;
+}
+
+

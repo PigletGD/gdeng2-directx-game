@@ -109,6 +109,9 @@
     <Filter Include="GameEngine\UIManager\UIScreens\SceneHeirarchy">
       <UniqueIdentifier>{b06f2d3b-8c96-44ff-9a4e-807a32fcf3ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens\LightingToggle">
+      <UniqueIdentifier>{bc26ab48-aa24-4c91-ab50-bc6e852df323}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -244,6 +247,9 @@
       <Filter>GameEngine\UIManager\UIScreens\SceneHeirarchy</Filter>
     </ClCompile>
     <ClCompile Include="InspectorScreen.cpp" />
+    <ClCompile Include="LightingToggle.cpp">
+      <Filter>GameEngine\UIManager\UIScreens\LightingToggle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -412,6 +418,9 @@
       <Filter>GameEngine\UIManager\UIScreens\SceneHeirarchy</Filter>
     </ClInclude>
     <ClInclude Include="InspectorScreen.h" />
+    <ClInclude Include="LightingToggle.h">
+      <Filter>GameEngine\UIManager\UIScreens\LightingToggle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelGizmoShader.hlsl">

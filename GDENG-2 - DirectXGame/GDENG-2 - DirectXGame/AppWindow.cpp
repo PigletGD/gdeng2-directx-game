@@ -38,7 +38,7 @@ void AppWindow::destroy()
 
 void AppWindow::initializeEngine()
 {
-	EngineTime::initialize();
+	EngineTime::create();
 
 	GraphicsEngine::create();
 	InputSystem::create();
@@ -260,6 +260,7 @@ void AppWindow::drawToRenderTarget(Camera* camera, UINT width, UINT height)
 	cc.m_world = camera->getWorldMatrix();
 	cc.m_view = camera->getViewMatrix();
 	cc.m_proj = camera->getProjectionMatrix();
+	cc.isLit = 1;
 
 	m_cb->update(device_context, &cc);
 
