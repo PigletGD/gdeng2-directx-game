@@ -203,7 +203,6 @@ void AppWindow::initializeEngine()
 	render_system->releaseCompiledShader();
 
 	constant cc;
-	cc.m_time = 0;
 
 	m_cb = render_system->createConstantBuffer(&cc, sizeof(constant));
 
@@ -249,13 +248,11 @@ void AppWindow::drawToRenderTarget(Camera* camera, UINT width, UINT height)
 	m_light_rot_matrix.setRotationY(rotation);
 	cc.m_light_direction = m_light_rot_matrix.getZDirection();
 
-	cc.m_time = m_time_linear;
-	cc.m_lerp_speed = 1.0f;
 	cc.m_camera_position = camera->getWorldMatrix().getTranslation();
 	cc.m_world = camera->getWorldMatrix();
 	cc.m_view = camera->getViewMatrix();
 	cc.m_proj = camera->getProjectionMatrix();
-	cc.isLit = 2.0f;
+	cc.isLit = camera->getEnableLighting();
 
 	m_cb->update(device_context, &cc);
 
@@ -318,8 +315,6 @@ void AppWindow::onUpdate()
 	m_light_rot_matrix.setRotationY(rotation);
 	cc.m_light_direction = m_light_rot_matrix.getZDirection();
 
-	cc.m_time = m_time_linear;
-	cc.m_lerp_speed = 1.0f;
 
 	camera_system->updateCurrentCamera();
 
@@ -327,7 +322,7 @@ void AppWindow::onUpdate()
 	cc.m_world = camera_system->getCurrentCameraWorldMatrix();;
 	cc.m_view = camera_system->getCurrentCameraViewMatrix();
 	cc.m_proj = camera_system->getCurrentCameraProjectionMatrix();
-	cc.isLit = 1.0f;
+	cc.isLit = camera_system->getCurrentCameraEnableLight();
 
 	std::cout << cc.isLit << std::endl;
 	m_cb->update(device_context, &cc);

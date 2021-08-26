@@ -27,6 +27,9 @@ public:
 	void setToTopDownViewMode();
 	void setToFrontViewMode();
 	void setToRighViewMode();
+	
+	void setEnableLighting(bool isEnabled);
+	bool getEnableLighting();
 
 	Matrix4x4 getWorldMatrix();
 	Matrix4x4 getViewMatrix();
@@ -40,10 +43,15 @@ private:
 	Matrix4x4 m_view_cam;
 	Matrix4x4 m_proj_cam;
 
+	Vector3D m_retained_pos;
+	Vector3D m_retained_rot;
+
 	float m_window_width;
 	float m_window_height;
 
 	bool m_is_perspective = true;
+	bool m_enabled_lighting = true;
+	bool m_is_in_direction_view = false;
 
 	float m_field_of_view = 1.57f;
 	float m_near_clip_plane = 0.1f;

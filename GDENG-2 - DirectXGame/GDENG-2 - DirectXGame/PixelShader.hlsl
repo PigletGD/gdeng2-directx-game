@@ -5,8 +5,8 @@ struct PS_INPUT
 {
 	float4 position: SV_POSITION;
 	float2 texcoord: TEXCOORD0;
-	float3 normal: NORMAL1;//TEXCOORD1
-	float3 direction_to_camera: NORMAL2;//TEXCOORD1
+	float3 normal: NORMAL0;//TEXCOORD1
+	float3 direction_to_camera: TEXCOORD1;//TEXCOORD1
 };
 
 cbuffer constant: register(b0)
@@ -14,11 +14,8 @@ cbuffer constant: register(b0)
 	row_major float4x4 m_world;
 	row_major float4x4 m_view;
 	row_major float4x4 m_proj;
-	float m_time;
-	float m_lerp_speed;
 	float isLit;
 	float4 m_light_direction;
-	float4 m_camera_position;
 };
 
 float4 psmain(PS_INPUT input) : SV_TARGET
@@ -52,11 +49,11 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	//return (Texture.Sample(TextureSampler , input.texcoord * 0.5) * float4(final_light,1.0));// lit
 
 
-	if (isLit == 1.0f) {
+	if (isLit == 1) {
 		return (Texture.Sample(TextureSampler , input.texcoord * 0.5) * float4(final_light,1.0));
 	}
 	
-	else if (isLit == 2.0f) {
+	else if (isLit == 0) {
 		return Texture.Sample(TextureSampler , input.texcoord * 0.5);
 	}
 	

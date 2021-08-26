@@ -66,7 +66,7 @@ void ViewportScreen::drawUI()
 		{
 			if (ImGui::BeginMenu("Viewmode"))
 			{
-				if (ImGui::MenuItem("Normal")) { std::cout << "idk yet" << std::endl; }
+				if (ImGui::MenuItem("Normal")) { m_camera->setToNormalViewMode(); }
 				if (ImGui::MenuItem("Topdown")) { m_camera->setToTopDownViewMode(); }
 				if (ImGui::MenuItem("Front")) { m_camera->setToFrontViewMode(); }
 				if (ImGui::MenuItem("Right")) { m_camera->setToRighViewMode(); }
@@ -78,10 +78,11 @@ void ViewportScreen::drawUI()
 				if (ImGui::MenuItem("Orthographic")) { m_camera->setToPerspectiveMode(false); }
 				ImGui::EndMenu();
 			}
-			if (ImGui::BeginMenu("Fill"))
+			if (ImGui::BeginMenu("Render"))
 			{
-				if (ImGui::MenuItem("Solid")) { m_rs = GraphicsEngine::get()->getRenderSystem()->m_rs_solid; }
-				if (ImGui::MenuItem("Wireframe")) { m_rs = GraphicsEngine::get()->getRenderSystem()->m_rs_wireframe; }
+				if (ImGui::MenuItem("Lit")) { m_rs = GraphicsEngine::get()->getRenderSystem()->m_rs_solid; m_camera->setEnableLighting(true); }
+				if (ImGui::MenuItem("Unlit")) { m_rs = GraphicsEngine::get()->getRenderSystem()->m_rs_solid; m_camera->setEnableLighting(false); }
+				if (ImGui::MenuItem("Wireframe")) { m_rs = GraphicsEngine::get()->getRenderSystem()->m_rs_wireframe; m_camera->setEnableLighting(false); }
 				ImGui::EndMenu();
 			}
 

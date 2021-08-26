@@ -42,6 +42,8 @@ public:
 	void decrementFocusCount();
 	void updateInputListener();
 
+	bool getCurrentCameraEnableLight();
+
 	virtual void onKeyDown(int key) override;
 	virtual void onKeyUp(int key) override;
 

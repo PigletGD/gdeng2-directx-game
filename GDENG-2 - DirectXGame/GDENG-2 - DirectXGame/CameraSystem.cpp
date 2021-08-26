@@ -288,6 +288,11 @@ void CameraSystem::updateInputListener()
 	}
 }
 
+bool CameraSystem::getCurrentCameraEnableLight()
+{
+	return cameraList[m_view_camera_index]->getEnableLighting();
+}
+
 void CameraSystem::onKeyDown(int key)
 {
 	if (key == 'W') m_forward = 1.0f;

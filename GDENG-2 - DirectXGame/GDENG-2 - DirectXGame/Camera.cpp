@@ -116,34 +116,80 @@ void Camera::setPerspectiveView()
 
 void Camera::setToNormalViewMode()
 {
-	// revert back to previous view maybe?
+	if (!m_is_in_direction_view) return;
+
+	m_is_in_direction_view = false;
+
+	setPosition(m_retained_pos);
+	setRotation(m_retained_rot);
+
+	updateWorldAndViewMatrix();
+
+	m_is_perspective = true;
 }
 
 void Camera::setToTopDownViewMode()
 {
+	if (!m_is_in_direction_view) {
+		m_is_in_direction_view = true;
+
+		m_retained_pos = getLocalPosition();
+		m_retained_rot = getLocalRotation();
+	}
+
 	setRotation(MathUtils::DegToRad(90), 0, 0);
 
 	setPosition(0, getLocalPosition().magnitude(), 0);
 
 	updateWorldAndViewMatrix();
+
+	m_is_perspective = false;
 }
 
 void Camera::setToFrontViewMode()
 {
+	if (!m_is_in_direction_view) {
+		m_is_in_direction_view = true;
+
+		m_retained_pos = getLocalPosition();
+		m_retained_rot = getLocalRotation();
+	}
+
 	setRotation(0, 0, 0);
 
 	setPosition(0, 0, -getLocalPosition().magnitude());
 
 	updateWorldAndViewMatrix();
+
+	m_is_perspective = false;
 }
 
 void Camera::setToRighViewMode()
 {
+	if (!m_is_in_direction_view) {
+		m_is_in_direction_view = true;
+
+		m_retained_pos = getLocalPosition();
+		m_retained_rot = getLocalRotation();
+	}
+
 	setRotation(0, MathUtils::DegToRad(-90), 0);
 
 	setPosition(getLocalPosition().magnitude(), 0, 0);
 
 	updateWorldAndViewMatrix();
+
+	m_is_perspective = false;
+}
+
+void Camera::setEnableLighting(bool isEnabled)
+{
+	m_enabled_lighting = isEnabled;
+}
+
+bool Camera::getEnableLighting()
+{
+	return m_enabled_lighting;
 }
 
 Matrix4x4 Camera::getWorldMatrix()
@@ -170,7 +216,6 @@ void Camera::createBuffersAndShaders()
 	size_t size_shader = 0;
 
 	constant cc;
-	cc.m_time = 0;
 
 	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 	m_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
@@ -192,7 +237,6 @@ void Camera::drawGizmoIcon(constant cc)
 	Matrix4x4 temp;
 	temp.inverse();
 
-	cc.m_time = 0;
 	cc.m_world.flipZBasisVector();
 	cc.m_world.setTranslation(m_world_cam.getTranslation());
 

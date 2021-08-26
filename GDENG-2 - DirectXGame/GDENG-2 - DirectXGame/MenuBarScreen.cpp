@@ -46,7 +46,7 @@ void MenuBarScreen::drawUI()
 
 			if (ImGui::BeginMenu("Viewmode"))
 			{
-				if (ImGui::MenuItem("Normal")) { onCreateLightingToggle(); ImGui::SetWindowFocus(nullptr); } // onCreateLightingToggle()
+				if (ImGui::MenuItem("Normal")) { camera->setToNormalViewMode(); ImGui::SetWindowFocus(nullptr); } 
 				if (ImGui::MenuItem("Topdown")) { camera->setToTopDownViewMode(); ImGui::SetWindowFocus(nullptr); }
 				if (ImGui::MenuItem("Front")) { camera->setToFrontViewMode(); ImGui::SetWindowFocus(nullptr); }
 				if (ImGui::MenuItem("Right")) { camera->setToRighViewMode(); ImGui::SetWindowFocus(nullptr); }
@@ -58,10 +58,11 @@ void MenuBarScreen::drawUI()
 				if (ImGui::MenuItem("Orthographic")) { camera->setToPerspectiveMode(false); ImGui::SetWindowFocus(nullptr); }
 				ImGui::EndMenu();
 			}
-			if (ImGui::BeginMenu("Fill"))
+			if (ImGui::BeginMenu("Render"))
 			{
-				if (ImGui::MenuItem("Solid")) { AppWindow::get()->m_rs = rs->m_rs_solid; ImGui::SetWindowFocus(nullptr); }
-				if (ImGui::MenuItem("Wireframe")) { AppWindow::get()->m_rs = rs->m_rs_wireframe; ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Lit")) { AppWindow::get()->m_rs = rs->m_rs_solid; camera->setEnableLighting(true); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Unlit")) { AppWindow::get()->m_rs = rs->m_rs_solid; camera->setEnableLighting(false); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Wireframe")) { AppWindow::get()->m_rs = rs->m_rs_wireframe; camera->setEnableLighting(false); ImGui::SetWindowFocus(nullptr); }
 				ImGui::EndMenu();
 			}
 

@@ -64,7 +64,6 @@ Cube::Cube(std::string name, void* shaderByteCode, size_t sizeShader) : AGameObj
 	m_ib = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(index_list, ARRAYSIZE(index_list));
 
 	constant cc;
-	cc.m_time = 0;
 
 	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
 }
@@ -91,7 +90,6 @@ void Cube::draw(int width, int height, VertexShaderPtr vertexShader, PixelShader
 	GraphicsEngine* graphEngine = GraphicsEngine::get();
 	DeviceContextPtr deviceContext = graphEngine->getRenderSystem()->getImmediateDeviceContext();
 
-	cc.m_time = m_ticks * m_speed;
 
 	if (m_delta_pos > 1.0f)  m_delta_pos = 0.0f;
 	else m_delta_pos += m_delta_time * 0.1f;
