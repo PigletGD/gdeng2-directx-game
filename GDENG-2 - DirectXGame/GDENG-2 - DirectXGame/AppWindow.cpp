@@ -38,7 +38,7 @@ void AppWindow::destroy()
 
 void AppWindow::initializeEngine()
 {
-	EngineTime::initialize();
+	EngineTime::create();
 
 	GraphicsEngine::create();
 	InputSystem::create();
