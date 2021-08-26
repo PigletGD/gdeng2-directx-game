@@ -1,25 +1,24 @@
 #include "AppWindow.h"
-#include "EngineTime.h"
-#include "InputSystem.h"
-#include "CameraSystem.h"
-#include "GraphicsEngine.h"
-#include "DeviceContext.h"
-#include "SwapChain.h"
-#include "ConstantBuffer.h"
-#include "ConstantData.h"
-#include "Matrix4x4.h"
-#include "MathUtils.h"
-#include "Plane.h"
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
 #include <Windows.h>
+#include "Matrix4x4.h"
+#include "InputSystem.h"
+#include "Mesh.h"
+#include "ConstantData.h"
+#include "EngineTime.h"
+#include "MathUtils.h"
+#include "imgui.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_win32.h"
+#include "UIManager.h"
 
 AppWindow* AppWindow::sharedInstance = nullptr;
 
 AppWindow::AppWindow()
 {
-	
+}
+
+AppWindow::~AppWindow()
+{
 }
 
 AppWindow* AppWindow::get()
@@ -27,7 +26,7 @@ AppWindow* AppWindow::get()
 	return sharedInstance;
 }
 
-void AppWindow::create()
+void AppWindow::intialize()
 {
 	sharedInstance = new AppWindow();
 }
@@ -37,9 +36,15 @@ void AppWindow::destroy()
 	delete sharedInstance;
 }
 
-void AppWindow::initialize()
+void AppWindow::initializeEngine()
 {
-	InputSystem::get()->addListener(GraphicsEngine::get()->getCameraSystem());
+	EngineTime::initialize();
+
+	GraphicsEngine::create();
+	InputSystem::create();
+
+	GraphicsEngine::get()->getCameraSystem()->incrementFocusCount();
+	//InputSystem::get()->addListener(GraphicsEngine::get()->getCameraSystem());
 
 	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
 	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
@@ -162,6 +167,7 @@ void AppWindow::initialize()
 	// PLANE OBJECT: renders first
 	Plane* plane_object = new Plane("Plane 0", shader_byte_code, size_shader);
 	plane_object->setScale(7, 7, 1);
+	plane_object->setPosition(0.0f, -0.5f, 0.0f);
 	m_object_list.push_back(plane_object);
 
 	/* CUBE OBJECT: renders second, will render entirely in front of plane without depth stencil buffer
@@ -176,8 +182,7 @@ void AppWindow::initialize()
 
 	Cube* cube_object = new Cube("Cube 0", shader_byte_code, size_shader);
 	cube_object->setAnimSpeed(MathUtils::randomFloat(-3.75f, 3.75f));
-	cube_object->setScale(1.0f, 1.0f, 1.0f);
-	cube_object->setPosition(0.0f, 0.0f, 2.0f);
+	cube_object->setPosition(0.0f, 0.0f, 0.0f);
 	InputSystem::get()->addListener(cube_object);
 	m_object_list.push_back(cube_object);
 
@@ -194,7 +199,14 @@ void AppWindow::initialize()
 
 	m_abs = render_system->createAlphaBlendState();
 
+	m_rs = render_system->m_rs_solid;
+
 	camera_system->initializeInitialCamera();
+}
+
+void AppWindow::createInterface()
+{
+	UIManager::initialize(m_HWND);
 }
 
 float AppWindow::getDeltaTime()
@@ -212,6 +224,36 @@ void AppWindow::updateTimeWave()
 	m_time_wave += EngineTime::getDeltaTime() * ((sin(m_time_linear) + 1.0f) / 2.0f) * 10.0f; // delta * sin wave time * max speed
 }
 
+void AppWindow::drawToRenderTarget(Camera* camera, UINT width, UINT height)
+{
+	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
+	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
+	DeviceContextPtr device_context = render_system->getImmediateDeviceContext();
+
+	constant cc;
+	cc.m_time = m_time_linear;
+	cc.m_lerp_speed = 1.0f;
+
+	cc.m_world = camera->getWorldMatrix();
+	cc.m_view = camera->getViewMatrix();
+	cc.m_proj = camera->getProjectionMatrix();
+
+	m_cb->update(device_context, &cc);
+
+	device_context->setConstantBuffer(m_vs, m_cb);
+	device_context->setConstantBuffer(m_ps, m_cb);
+
+	device_context->setVertexShader(m_vs);
+	device_context->setPixelShader(m_ps);
+
+	for (int i = 0; i < m_object_list.size(); i++) {
+		m_object_list[i]->update(EngineTime::getDeltaTime());
+		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
+	}
+
+	//camera_system->drawGizmos(cc);
+}
+
 void AppWindow::onCreate()
 {
 	Window::onCreate();
@@ -225,46 +267,20 @@ void AppWindow::onUpdate()
 	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
 	DeviceContextPtr device_context = render_system->getImmediateDeviceContext();
 
+	camera_system->updateInputListener();
+
 	InputSystem::get()->update();
 
-	// Clear
 	device_context->setAlphaBlendState(m_abs);
+
 	device_context->clearRenderTargetColor(m_swap_chain, 1.0f, 0.4f, 0.4f, 1);
 
-	// ImGui
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
-	// Create the docking environment
-	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
-		ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
-		ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus |
-		ImGuiWindowFlags_NoBackground;
-
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(viewport->Pos);
-	ImGui::SetNextWindowSize(viewport->Size);
-	ImGui::SetNextWindowViewport(viewport->ID);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-
-	ImGui::Begin("InvisibleWindow", nullptr, windowFlags);
-	ImGui::PopStyleVar(3);
-	ImGuiID dockSpaceId = ImGui::GetID("InvisibleWindowDockSpace");
-	ImGui::DockSpace(dockSpaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
-	ImGui::End();
-
-	ImGui::Begin("Test");
-	ImGui::Text("Hello world");
-	ImGui::End();
-	
 	RECT rc = getClientWindowRect();
 	int width = rc.right - rc.left;
 	int height = rc.bottom - rc.top;
-	
 	device_context->setViewportSize(width, height);
+
+	device_context->setRasterizerState(m_rs);
 
 	constant cc;
 	cc.m_time = m_time_linear;
@@ -291,26 +307,17 @@ void AppWindow::onUpdate()
 
 	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_mesh->getIndexBuffer()->getSizeIndexList(), 0, 0);
 
-	GraphicsEngine::get()->getRenderSystem()->setSolidRasterizerState();
-	
-	for (int i = 0; i < m_object_list.size(); i++)
-	{
+	for (int i = 0; i < m_object_list.size(); i++) {
 		m_object_list[i]->update(EngineTime::getDeltaTime());
 		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
 	}
 
-	camera_system->drawGizmos(cc);
+	//camera_system->drawGizmos(cc);
 
-	// Render UI
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	UIManager::getInstance()->drawAllUI();
 
-	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-	}
-	
+	device_context->setRenderTarget(m_swap_chain);
+
 	m_swap_chain->present(true);
 
 	updateTimeLinear();
@@ -324,15 +331,21 @@ void AppWindow::onDestroy()
 
 void AppWindow::onFocus()
 {
-	InputSystem::get()->addListener(GraphicsEngine::get()->getCameraSystem());
+	GraphicsEngine::get()->getCameraSystem()->incrementFocusCount();
 }
 
 void AppWindow::onKillFocus()
 {
-	InputSystem::get()->removeListener(GraphicsEngine::get()->getCameraSystem());
+	GraphicsEngine::get()->getCameraSystem()->decrementFocusCount();
 }
 
-AppWindow::~AppWindow()
+void AppWindow::onSize()
 {
+	RECT rc = getClientWindowRect();
 
+	m_swap_chain->resize(rc.right - rc.left, rc.bottom - rc.top);
+
+	GraphicsEngine::get()->getCameraSystem()->updateCurrentCameraWindowSize(rc.right - rc.left, rc.bottom - rc.top);
+
+	onUpdate();
 }

@@ -76,6 +76,14 @@ Cube::~Cube()
 void Cube::update(float deltaTime)
 {
 	m_delta_time = deltaTime;
+
+	Vector3D currentRotation = this->getLocalRotation();
+	Vector3D newRotation = {};
+	newRotation.m_x = currentRotation.m_x + 1;
+	newRotation.m_y = currentRotation.m_y + 1;
+	newRotation.m_z = currentRotation.m_z + 1;
+	currentRotation = Vector3D::lerp(currentRotation, newRotation, deltaTime);
+	this->setRotation(currentRotation);
 }
 
 void Cube::draw(int width, int height, VertexShaderPtr vertexShader, PixelShaderPtr pixelShader, constant cc)
@@ -107,6 +115,7 @@ void Cube::draw(int width, int height, VertexShaderPtr vertexShader, PixelShader
 	cc.m_world = allMatrix;
 
 	m_cb->update(deviceContext, &cc);
+
 	deviceContext->setConstantBuffer(vertexShader, m_cb);
 	deviceContext->setConstantBuffer(pixelShader, m_cb);
 

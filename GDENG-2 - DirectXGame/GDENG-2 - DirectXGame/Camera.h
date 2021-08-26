@@ -9,17 +9,24 @@
 class Camera : public AGameObject
 {
 public:
-	Camera();
+	Camera(float width, float height);
 	~Camera();
 
 	void updatePosition(float speed, float forward, float rightward);
 	void updateRotation(float delta_rot_x, float delta_rot_y);
 
 	void updateWorldAndViewMatrix();
+	void updateWindowSize(float width, float height);
 
+	void setToPerspectiveMode(bool value);
 	void switchProjectionMode();
 	void setOrthographicView();
 	void setPerspectiveView();
+
+	void setToNormalViewMode();
+	void setToTopDownViewMode();
+	void setToFrontViewMode();
+	void setToRighViewMode();
 
 	Matrix4x4 getWorldMatrix();
 	Matrix4x4 getViewMatrix();
@@ -33,6 +40,9 @@ private:
 	Matrix4x4 m_view_cam;
 	Matrix4x4 m_proj_cam;
 
+	float m_window_width;
+	float m_window_height;
+
 	bool m_is_perspective = true;
 
 	float m_field_of_view = 1.57f;
@@ -44,4 +54,8 @@ private:
 	VertexShaderPtr m_vs;
 	PixelShaderPtr m_ps;
 	ConstantBufferPtr m_cb;
+
+	bool m_is_active;
+
+	friend class CameraSystem;
 };
