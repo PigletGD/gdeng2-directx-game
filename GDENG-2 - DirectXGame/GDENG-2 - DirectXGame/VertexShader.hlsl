@@ -17,9 +17,9 @@ cbuffer constant: register(b0) {
 	row_major float4x4 m_proj;
 	float m_time;
 	float m_lerp_speed;
+	float isLit;
 	float4 m_light_direction;
 	float4 m_camera_position;
-	int isLit;
 };
 
 VS_OUTPUT vsmain(VS_INPUT input)
@@ -33,6 +33,8 @@ VS_OUTPUT vsmain(VS_INPUT input)
 	output.position = mul(output.position, m_view);
 	// Screen Space
 	output.position = mul(output.position, m_proj);
+
+
 
 	output.texcoord = input.texcoord;
 	output.normal = input.normal;

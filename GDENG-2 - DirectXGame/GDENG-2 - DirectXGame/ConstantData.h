@@ -10,7 +10,7 @@ struct constant
 	Matrix4x4 m_proj;
 	float m_time;
 	float m_lerp_speed;
+	float isLit;
 	Vector4D m_light_direction;
 	Vector4D m_camera_position;
-	int isLit;
 };
