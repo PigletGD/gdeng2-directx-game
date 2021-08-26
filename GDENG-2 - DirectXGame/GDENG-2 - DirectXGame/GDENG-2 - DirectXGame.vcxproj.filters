@@ -106,6 +106,9 @@
     <Filter Include="GameEngine\GraphicsEngine\RenderSystem\RenderTexture">
       <UniqueIdentifier>{c47dc435-4b90-4353-9051-977b2a9ba841}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens\SceneHeirarchy">
+      <UniqueIdentifier>{b06f2d3b-8c96-44ff-9a4e-807a32fcf3ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -237,6 +240,10 @@
     <ClCompile Include="Libs\ImGui\imgui_widgets.cpp">
       <Filter>GameEngine\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectHeirarchy.cpp">
+      <Filter>GameEngine\UIManager\UIScreens\SceneHeirarchy</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectorScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -401,6 +408,10 @@
     <ClInclude Include="Libs\ImGui\imstb_truetype.h">
       <Filter>GameEngine\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="ObjectHeirarchy.h">
+      <Filter>GameEngine\UIManager\UIScreens\SceneHeirarchy</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectorScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelGizmoShader.hlsl">

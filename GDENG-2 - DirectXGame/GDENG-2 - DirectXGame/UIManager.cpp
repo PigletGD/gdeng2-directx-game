@@ -5,6 +5,7 @@
 #include "MenuBarScreen.h"
 #include "AppWindow.h"
 #include "SwapChain.h"
+#include "ObjectHeirarchy.h"
 
 UIManager* UIManager::sharedInstance = NULL;
 
@@ -31,6 +32,10 @@ UIManager::UIManager(HWND windowHandle)
 	MenuBarScreen* menuBarScreen = new MenuBarScreen();
 	uiTable[uiNames.MENU_BAR_SCREEN] = menuBarScreen;
 	uiList.push_back(menuBarScreen);
+
+	ObjectHeirarchy* objectHeirarchyScreen = new ObjectHeirarchy(uiNames.OBJECT_HEIRARCHY_SCREEN);
+	uiTable[uiNames.OBJECT_HEIRARCHY_SCREEN] = objectHeirarchyScreen;
+	uiList.push_back(objectHeirarchyScreen);
 }
 
 UIManager::~UIManager()

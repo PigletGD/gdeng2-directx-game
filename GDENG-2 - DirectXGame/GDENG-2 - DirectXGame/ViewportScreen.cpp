@@ -50,7 +50,7 @@ void ViewportScreen::drawUI()
 
 		ImVec2 new_size = ImGui::GetContentRegionAvail();
 
-		if (new_size.x != m_old_size.x || new_size.y != m_old_size.y) {
+		if (new_size.x != m_old_size.x || new_size.y != m_old_size.y) {//
 			m_rt->resize(new_size.x, new_size.y);
 			m_camera->updateWindowSize(new_size.x, new_size.y);
 
@@ -86,8 +86,9 @@ void ViewportScreen::drawUI()
 			}
 
 			ImGui::EndMenuBar();
-		}
 
+		}
+		
 		//Load Image
 		ImGui::Image((void*)m_rt->m_shader_resource_view, new_size);
 
@@ -126,4 +127,6 @@ void ViewportScreen::drawUI()
 
 		ImGui::End();
 	}
+
+	
 }

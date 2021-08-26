@@ -69,6 +69,8 @@ void MenuBarScreen::drawUI()
 
 		ImGui::EndMainMenuBar();
 	}
+
+	
 }
 
 void MenuBarScreen::onCreateCreditsScreen()

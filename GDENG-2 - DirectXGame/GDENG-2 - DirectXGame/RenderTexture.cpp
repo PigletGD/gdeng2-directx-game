@@ -140,5 +140,4 @@ void RenderTexture::clearRenderTarget(const DeviceContextPtr& device_context, co
 	context->ClearRenderTargetView(m_render_target_view, clear_color);
 	context->ClearDepthStencilView(m_dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 	context->OMSetRenderTargets(1, &m_render_target_view, m_dsv);
-
 }

@@ -158,6 +158,7 @@
     <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="InspectorScreen.cpp" />
     <ClCompile Include="Libs\ImGui\imgui.cpp" />
     <ClCompile Include="Libs\ImGui\imgui_draw.cpp" />
     <ClCompile Include="Libs\ImGui\imgui_impl_dx11.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="MenuBarScreen.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshManager.cpp" />
+    <ClCompile Include="ObjectHeirarchy.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Quad.cpp" />
@@ -205,6 +207,7 @@
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="InputListener.h" />
     <ClInclude Include="InputSystem.h" />
+    <ClInclude Include="InspectorScreen.h" />
     <ClInclude Include="Libs\ImGui\imconfig.h" />
     <ClInclude Include="Libs\ImGui\imgui.h" />
     <ClInclude Include="Libs\ImGui\imgui_impl_dx11.h" />
@@ -218,6 +221,7 @@
     <ClInclude Include="MenuBarScreen.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshManager.h" />
+    <ClInclude Include="ObjectHeirarchy.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Point.h" />

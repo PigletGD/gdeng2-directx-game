@@ -77,4 +77,5 @@ private:
 	friend class UIManager;
 	friend class ViewportScreen;
 	friend class MenuBarScreen;
+	friend class InspectorScreen;
 };

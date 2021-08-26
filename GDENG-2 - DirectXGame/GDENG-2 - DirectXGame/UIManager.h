@@ -15,6 +15,8 @@ public:
 	const String CREDITS_SCREEN = "CREDITS_SCREEN";
 	const String COLOR_PICKER_SCREEN = "COLOR_PICKER_SCREEN";
 	const String VIEWPORT_SCREEN = "VIEWPORT_SCREEN";
+	const String OBJECT_HEIRARCHY_SCREEN = "OBJECT_HEIRARCHY_SCREEN";
+	const String INSPECTOR_SCREEN = "INSPECTOR_SCREEN";
 };
 
 class UIManager
@@ -44,4 +46,5 @@ private:
 
 	friend class MenuBarScreen;
 	friend class AUIScreen;
+	friend class ObjectHeirarchy;
 };
