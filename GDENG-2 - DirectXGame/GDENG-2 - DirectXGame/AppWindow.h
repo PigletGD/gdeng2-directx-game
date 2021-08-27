@@ -48,8 +48,7 @@ public:
 	virtual void onKillFocus() override;
 	virtual void onSize() override;
 
-	TexturePtr m_wood_tex;
-	MeshPtr m_mesh;
+
 
 private:
 	std::vector<AGameObject*> m_object_list;
@@ -58,7 +57,7 @@ private:
 	SwapChainPtr m_swap_chain;
 	
 	VertexBufferPtr m_vb;
-	VertexColorBufferPtr m_vcb;
+	//VertexColorBufferPtr m_vcb;
 	IndexBufferPtr m_ib;
 	ConstantBufferPtr m_cb;
 	
@@ -68,6 +67,9 @@ private:
 	AlphaBlendStatePtr m_abs;
 
 	ID3D11RasterizerState* m_rs;
+
+	TexturePtr m_wood_tex;
+	MeshPtr m_mesh;
 
 	float m_time_linear;
 	float m_time_wave;

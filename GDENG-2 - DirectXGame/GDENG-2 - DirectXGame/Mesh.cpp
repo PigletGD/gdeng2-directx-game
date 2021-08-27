@@ -90,7 +90,7 @@ Mesh::Mesh(const wchar_t* full_path) : Resource(full_path), AGameObject("")
 	m_index_buffer = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&list_indices[0], (UINT)list_indices.size());
 
 	constant cc;
-	cc.m_time = 0;
+	//cc.m_time = 0;
 
 	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
 
@@ -112,7 +112,7 @@ void Mesh::draw(int width, int height, VertexShaderPtr vertexShader, PixelShader
 	DeviceContextPtr deviceContext = graphEngine->getRenderSystem()->getImmediateDeviceContext();
 
 
-	cc.m_time = m_ticks * m_speed;
+	//cc.m_time = m_ticks * m_speed;
 
 	if (m_delta_pos > 1.0f)  m_delta_pos = 0.0f;
 	else m_delta_pos += m_delta_time * 0.1f;
@@ -149,6 +149,7 @@ void Mesh::draw(int width, int height, VertexShaderPtr vertexShader, PixelShader
 	m_light_rot_matrix.setTranslation(lightPos);
 	cc.m_light_direction = m_light_rot_matrix.getZDirection();
 	*/
+
 	m_cb->update(deviceContext, &cc);
 	deviceContext->setConstantBuffer(vertexShader, m_cb);
 	deviceContext->setConstantBuffer(pixelShader, m_cb);

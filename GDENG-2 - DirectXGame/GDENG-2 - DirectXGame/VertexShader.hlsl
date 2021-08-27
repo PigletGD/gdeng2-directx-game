@@ -7,19 +7,20 @@ struct VS_INPUT {
 struct VS_OUTPUT {
 	float4 position: SV_POSITION;
 	float2 texcoord: TEXCOORD0;
-	float3 normal: NORMAL0;//TEXCOORD1
-	float3 direction_to_camera: TEXCOORD1;//TEXCOORD1
+	float3 normal: NORMAL1;//TEXCOORD1
+	float3 direction_to_camera: NORMAL2;//TEXCOORD1
 };
 
 cbuffer constant: register(b0) {
 	row_major float4x4 m_world;
 	row_major float4x4 m_view;
 	row_major float4x4 m_proj;
-	float m_time;
-	float m_lerp_speed;
+	//float m_time;
+	//float m_lerp_speed;
 	float isLit;
-	float4 m_light_direction;
+	//float4 m_light_direction;
 	float4 m_camera_position;
+	
 };
 
 VS_OUTPUT vsmain(VS_INPUT input)

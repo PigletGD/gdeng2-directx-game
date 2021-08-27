@@ -158,16 +158,18 @@ void AppWindow::initializeEngine()
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 	*/
 
-	void* shader_byte_code = nullptr;
-	size_t size_shader = 0;
 
-	render_system->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);//VertexTransitionColorShader
-	m_vs = render_system->createVertexShader(shader_byte_code, size_shader);
-	
+
 	m_wood_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\brick.png");
 	m_mesh = GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\scene.obj");
 	InputSystem::get()->addListener(m_mesh.get());
 	objectListSharedPtr.push_back(m_mesh);
+
+
+	void* shader_byte_code = nullptr;
+	size_t size_shader = 0;
+	render_system->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);//VertexTransitionColorShader
+	m_vs = render_system->createVertexShader(shader_byte_code, size_shader);
 
 	/*
 	{
@@ -203,7 +205,7 @@ void AppWindow::initializeEngine()
 	render_system->releaseCompiledShader();
 
 	constant cc;
-	cc.m_time = 0;
+	//cc.m_time = 0;
 
 	m_cb = render_system->createConstantBuffer(&cc, sizeof(constant));
 
@@ -249,18 +251,20 @@ void AppWindow::drawToRenderTarget(Camera* camera, UINT width, UINT height)
 	m_light_rot_matrix.setRotationY(rotation);
 	Vector3D lightPos = {};
 	lightPos.m_x = 0;
-	lightPos.m_y = 1;
-	lightPos.m_z = 0;
-	m_light_rot_matrix.setTranslation(lightPos);
+	lightPos.m_y = 2;
+	lightPos.m_z = -1;
+	//m_light_rot_matrix.setTranslation(lightPos);
 	cc.m_light_direction = m_light_rot_matrix.getZDirection();
 
-	cc.m_time = m_time_linear;
-	cc.m_lerp_speed = 1.0f;
-	cc.m_camera_position = camera->getWorldMatrix().getTranslation();
+	//cc.m_time = m_time_linear;
+	//cc.m_lerp_speed = 1.0f;
+	cc.isLit = 2.0f;
+	cc.m_camera_position = camera->getWorldMatrix().getTranslation() ;//camera->getWorldMatrix().getTranslation();
+
 	cc.m_world = camera->getWorldMatrix();
 	cc.m_view = camera->getViewMatrix();
 	cc.m_proj = camera->getProjectionMatrix();
-	cc.isLit = 2.0f;
+	
 
 	m_cb->update(device_context, &cc);
 
@@ -317,29 +321,27 @@ void AppWindow::onUpdate()
 	//lighting update
 	Matrix4x4 m_light_rot_matrix;
 	m_light_rot_matrix.setIdentity();
-	static float rotation = 0;
+	//static float rotation = 0;
 
 	//rotation += 0.707f * EngineTime::getDeltaTime(); // delete me
-	m_light_rot_matrix.setRotationY(rotation);
+	m_light_rot_matrix.setRotationY(0);
 	Vector3D lightPos = {};
 	lightPos.m_x = 0;
-	lightPos.m_y = 1;
-	lightPos.m_z = 0;
-	m_light_rot_matrix.setTranslation(lightPos);
+	lightPos.m_y = 2;
+	lightPos.m_z = -1;
+	//m_light_rot_matrix.setTranslation(lightPos);
 	cc.m_light_direction = m_light_rot_matrix.getZDirection();
 
-	cc.m_time = m_time_linear;
-	cc.m_lerp_speed = 1.0f;
-
+	//cc.m_time = m_time_linear;
+	//cc.m_lerp_speed = 1.0f;
+	cc.isLit = 1.0f;
 	camera_system->updateCurrentCamera();
-
 	cc.m_camera_position = camera_system->getCurrentCameraWorldMatrix().getTranslation();
 	cc.m_world = camera_system->getCurrentCameraWorldMatrix();;
 	cc.m_view = camera_system->getCurrentCameraViewMatrix();
 	cc.m_proj = camera_system->getCurrentCameraProjectionMatrix();
-	cc.isLit = 1.0f;
+	
 
-	std::cout << cc.isLit << std::endl;
 	m_cb->update(device_context, &cc);
 
 	device_context->setConstantBuffer(m_vs, m_cb);
@@ -347,20 +349,21 @@ void AppWindow::onUpdate()
 
 	device_context->setVertexShader(m_vs);
 	device_context->setPixelShader(m_ps);
+	{
+		//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, m_wood_tex);
 
-	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, m_wood_tex);
+		//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(m_mesh->getVertexBuffer());
+		//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_mesh->getIndexBuffer());
 
-	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(m_mesh->getVertexBuffer());
-	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_mesh->getIndexBuffer());
+		//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_mesh->getIndexBuffer()->getSizeIndexList(), 0, 0);
 
-	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(m_mesh->getIndexBuffer()->getSizeIndexList(), 0, 0);
-
-	/*
-	for (int i = 0; i < m_object_list.size(); i++) {
-		m_object_list[i]->update(EngineTime::getDeltaTime());
-		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
+		/*
+		for (int i = 0; i < m_object_list.size(); i++) {
+			m_object_list[i]->update(EngineTime::getDeltaTime());
+			m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
+		}
+		*/
 	}
-	*/
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture(m_ps, m_wood_tex);
 	for (int i = 0; i < objectListSharedPtr.size(); i++) {
 		objectListSharedPtr[i]->update(EngineTime::getDeltaTime());

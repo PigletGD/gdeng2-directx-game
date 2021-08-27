@@ -19,7 +19,7 @@ Plane::Plane(std::string name, void* shaderByteCode, size_t sizeShader) : AGameO
 	m_vcb = GraphicsEngine::get()->getRenderSystem()->createVertexColorBuffer(quad, sizeof(vertex_color), ARRAYSIZE(quad), shaderByteCode, sizeShader);
 
 	constant cc;
-	cc.m_time = 0;
+	//cc.m_time = 0;
 
 	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
 

@@ -170,7 +170,7 @@ void Camera::createBuffersAndShaders()
 	size_t size_shader = 0;
 
 	constant cc;
-	cc.m_time = 0;
+	//cc.m_time = 0;
 
 	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shader_byte_code, &size_shader);
 	m_vs = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
@@ -192,7 +192,7 @@ void Camera::drawGizmoIcon(constant cc)
 	Matrix4x4 temp;
 	temp.inverse();
 
-	cc.m_time = 0;
+	//cc.m_time = 0;
 	cc.m_world.flipZBasisVector();
 	cc.m_world.setTranslation(m_world_cam.getTranslation());
 
