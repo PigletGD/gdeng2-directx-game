@@ -4,9 +4,9 @@
 #include "AppWindow.h"
 #include "SwapChain.h"
 
-#include "CreditsScreen.h"
 #include "MenuBarScreen.h"
 #include "HierarchyScreen.h"
+#include "InspectorScreen.h"
 
 UIManager* UIManager::sharedInstance = NULL;
 
@@ -27,17 +27,17 @@ UIManager::UIManager(HWND windowHandle)
 	ImGui_ImplDX11_Init(GraphicsEngine::get()->getRenderSystem()->getDevice(), GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->getContext());
 
 	UINames ui_names;
-	//MenuBarScreen* menu_bar_screen = new MenuBarScreen();
-	//uiTable[ui_names.MENU_BAR_SCREEN] = menu_bar_screen;
-	//uiList.push_back(menu_bar_screen);
+	MenuBarScreen* menu_bar_screen = new MenuBarScreen();
+	uiTable[ui_names.MENU_BAR_SCREEN] = menu_bar_screen;
+	uiList.push_back(menu_bar_screen);
 
-	CreditsScreen* cs = new CreditsScreen();
-	uiTable[ui_names.CREDITS_SCREEN] = cs;
-	uiList.push_back(cs);
-
-	/*HierarchyScreen* hierarchy_screen = new HierarchyScreen();
+	HierarchyScreen* hierarchy_screen = new HierarchyScreen();
 	uiTable[ui_names.HIERARCHY_SCREEN] = hierarchy_screen;
-	uiList.push_back(hierarchy_screen);*/
+	uiList.push_back(hierarchy_screen);
+
+	InspectorScreen* inspector_screen = new InspectorScreen();
+	uiTable[ui_names.INSPECTOR_SCREEN] = inspector_screen;
+	uiList.push_back(inspector_screen);
 }
 
 UIManager::~UIManager()
@@ -68,9 +68,11 @@ void UIManager::drawAllUI()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	for (int i = uiList.size() - 1; i >= 0; i--) {
+	for (int i = 0; i < uiList.size(); i++) {
 		uiList[i]->drawUI();
 	}
+
+	//dImGui::ShowDemoWindow();
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRenderTarget(AppWindow::get()->m_swap_chain);
 

@@ -29,6 +29,8 @@ public:
 
 	void setAlphaBlendState(const AlphaBlendStatePtr& alpha_blend_state);
 
+	void setSamplerState(const SamplerStatePtr& sampler_state);
+
 	void setTexture(const TexturePtr& texture);
 
 	void setRenderConfig(const VertexShaderPtr& vertex_shader, const PixelShaderPtr& pixel_shader);

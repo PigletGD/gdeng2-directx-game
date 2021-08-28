@@ -6,6 +6,7 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "AlphaBlendState.h"
+#include "SamplerState.h"
 #include "Texture.h"
 
 #include <exception>
@@ -97,6 +98,11 @@ void DeviceContext::setPixelShader(const PixelShaderPtr& pixel_shader)
 void DeviceContext::setAlphaBlendState(const AlphaBlendStatePtr& alpha_blend_state)
 {
 	m_device_context->OMSetBlendState(alpha_blend_state->m_blend_state, nullptr, 0xFFFFFFFF);
+}
+
+void DeviceContext::setSamplerState(const SamplerStatePtr& sampler_state)
+{
+	m_device_context->PSSetSamplers(0, 1, &(sampler_state->m_sampler_state));
 }
 
 void DeviceContext::setTexture(const TexturePtr& texture)

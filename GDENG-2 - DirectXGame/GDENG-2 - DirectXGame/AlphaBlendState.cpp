@@ -7,7 +7,6 @@
 AlphaBlendState::AlphaBlendState(RenderSystem* system) :
 	m_system(system)
 {
-	ID3D11BlendState* d3dBlendState;
 	D3D11_BLEND_DESC blend_desc = {};
 
 	auto& rend_target_desc = blend_desc.RenderTarget[0];
@@ -20,10 +19,9 @@ AlphaBlendState::AlphaBlendState(RenderSystem* system) :
 	rend_target_desc.BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	rend_target_desc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-	HRESULT res;
-	res = m_system->m_d3d_device->CreateBlendState(&blend_desc, &m_blend_state);
+	HRESULT	res = m_system->m_d3d_device->CreateBlendState(&blend_desc, &m_blend_state);
 
-	if (FAILED(res)) throw std::exception("AlphaBlendState not created successfully");
+	if (FAILED(res)) throw std::exception("Alpha Blend State not created successfully");
 }
 
 AlphaBlendState::~AlphaBlendState()

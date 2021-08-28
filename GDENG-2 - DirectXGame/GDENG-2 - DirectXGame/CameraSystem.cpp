@@ -13,6 +13,7 @@ CameraSystem::CameraSystem()
 
 	cameraList.push_back(new Camera(width, height));
 	cameraList[0]->m_is_active = true;
+	m_main_view_camera_index = 0;
 }
 
 CameraSystem::~CameraSystem()
@@ -177,6 +178,7 @@ void CameraSystem::switchToPreviousCamera()
 		cameraList[old_index]->m_is_active = false;
 		cameraList[m_control_camera_index]->m_is_active = true;
 		m_view_camera_index = m_control_camera_index;
+		m_main_view_camera_index = m_control_camera_index;
 	}
 
 	std::cout << " to " << std::to_string(m_control_camera_index) << std::endl;
@@ -195,6 +197,7 @@ void CameraSystem::switchToNextCamera()
 		cameraList[old_index]->m_is_active = false;
 		cameraList[m_control_camera_index]->m_is_active = true;
 		m_view_camera_index = m_control_camera_index;
+		m_main_view_camera_index = m_control_camera_index;
 	}
 
 	std::cout << " to " << std::to_string(m_control_camera_index) << std::endl;
@@ -210,6 +213,21 @@ void CameraSystem::updateCurrentCamera()
 void CameraSystem::updateCurrentCameraWindowSize(float width, float height)
 {
 	cameraList[m_view_camera_index]->updateWindowSize(width, height);
+}
+
+void CameraSystem::setCurrentCamera(Camera* camera)
+{
+	// Find camera to remove in camera list
+	auto itr = std::find(cameraList.begin(), cameraList.end(), camera);
+	int camera_index = std::distance(cameraList.begin(), itr);
+
+	if (itr != cameraList.end()) m_view_camera_index = camera_index;
+	else std::cout << "Could not switch camera" << std::endl;
+}
+
+void CameraSystem::setCurrentToMainViewCamera()
+{
+	m_view_camera_index = m_main_view_camera_index;
 }
 
 Matrix4x4 CameraSystem::getCurrentCameraWorldMatrix()

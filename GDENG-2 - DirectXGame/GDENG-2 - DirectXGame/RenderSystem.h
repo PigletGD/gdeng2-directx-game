@@ -19,6 +19,7 @@ public:
 	IndexBufferPtr createIndexBuffer(void* list_indices, UINT size_list);
 	ConstantBufferPtr createConstantBuffer(void* buffer, UINT size_buffer);
 	AlphaBlendStatePtr createAlphaBlendState();
+	SamplerStatePtr createSamplerState();
 
 	VertexShaderPtr createVertexShader(const void* shader_byte_code, size_t byte_code_size);
 	bool compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
@@ -60,6 +61,7 @@ private:
 	friend class VertexShader;
 	friend class PixelShader;
 	friend class AlphaBlendState;
+	friend class SamplerState;
 	friend class Texture;
 	friend class ViewportScreen;
 	friend class MenuBarScreen;

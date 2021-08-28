@@ -35,6 +35,7 @@ public:
 	
 	void addObject(AGameObject* game_object);
 	void createObject(PrimitiveType type);
+	void createObject(std::wstring mesh_path, std::wstring texture_path = L"");
 	
 	void deleteObject(AGameObject* game_object);
 	void deleteObjectByName(String name);

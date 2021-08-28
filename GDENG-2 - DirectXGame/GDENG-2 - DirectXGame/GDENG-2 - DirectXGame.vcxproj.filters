@@ -115,6 +115,15 @@
     <Filter Include="GameEngine\UIManager\UIScreens\HierarchyScreen">
       <UniqueIdentifier>{95118bb7-5e62-4725-ae93-402aad3dde3b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\GameObjectManager\GameObjects\MeshObject">
+      <UniqueIdentifier>{39cb2038-b4d9-432f-83e4-1c5b128045f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\RenderSystem\SamplerState">
+      <UniqueIdentifier>{2c7be5f1-c2e0-4336-a33d-3ee14a4e4195}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens\InspectorScreen">
+      <UniqueIdentifier>{8bac60b1-9b3d-4881-a514-4c5a21eb7f49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -260,6 +269,18 @@
     </ClCompile>
     <ClCompile Include="HierarchyScreen.cpp">
       <Filter>GameEngine\UIManager\UIScreens\HierarchyScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="Libs\ImGui\imgui_demo.cpp">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshObject.cpp">
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\MeshObject</Filter>
+    </ClCompile>
+    <ClCompile Include="SamplerState.cpp">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\SamplerState</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectorScreen.cpp">
+      <Filter>GameEngine\UIManager\UIScreens\InspectorScreen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -439,6 +460,15 @@
     </ClInclude>
     <ClInclude Include="HierarchyScreen.h">
       <Filter>GameEngine\UIManager\UIScreens\HierarchyScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshObject.h">
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\MeshObject</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerState.h">
+      <Filter>GameEngine\GraphicsEngine\RenderSystem\SamplerState</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectorScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens\InspectorScreen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

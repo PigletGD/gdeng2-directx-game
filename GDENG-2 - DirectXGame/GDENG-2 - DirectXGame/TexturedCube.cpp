@@ -8,7 +8,8 @@
 #include "MathUtils.h"
 #include "ShaderLibrary.h"
 
-TexturedCube::TexturedCube(String name) : Cube(name, true)
+TexturedCube::TexturedCube(String name, std::wstring path)
+	: Cube(name, true)
 {
 	ShaderNames shaderNames;
 	void* shader_byte_code = NULL;
@@ -107,6 +108,8 @@ TexturedCube::TexturedCube(String name) : Cube(name, true)
 	cc.m_time = 0;
 
 	m_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(constant));
+
+	m_texture = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(path.c_str());
 }
 
 TexturedCube::~TexturedCube()
@@ -120,9 +123,7 @@ void TexturedCube::draw(int width, int height)
 	CameraSystem* camera_system = graphics_engine->getCameraSystem();
 	DeviceContextPtr device_context = graphics_engine->getRenderSystem()->getImmediateDeviceContext();
 
-	TexturePtr wood_tex = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"Assets\\Textures\\wood.jpg");
-
-	device_context->setTexture(wood_tex);
+	if (m_texture != nullptr) device_context->setTexture(m_texture);
 	device_context->setRenderConfig(ShaderLibrary::getInstance()->getVertexShader(shader_names.TEXTURED_VERTEX_SHADER_NAME), ShaderLibrary::getInstance()->getPixelShader(shader_names.TEXTURED_PIXEL_SHADER_NAME));
 
 	constant cc = {};

@@ -5,6 +5,7 @@
 #include "MathUtils.h"
 #include "AGameObject.h"
 #include "TexturedCube.h"
+#include "MeshObject.h"
 #include "ShaderLibrary.h"
 #include "GraphicsEngine.h"
 
@@ -80,24 +81,26 @@ void GameObjectManager::createObject(PrimitiveType type)
 {
     if (type == PrimitiveType::CUBE) {
         Cube* cube = new Cube("Cube");
-        cube->setPosition(0.0f, 0.0f, 0.0f);
-        cube->setScale(1.0f, 1.0f, 1.0f);
-        this->addObject(cube);
+        addObject(cube);
     }
 
     else if (type == PrimitiveType::PLANE) {
         Plane* plane = new Plane("Plane");
         plane->setRotation(MathUtils::DegToRad(90), 0.0f, 0.0f);
         plane->setScale(7.0f, 7.0f, 7.0f);
-        this->addObject(plane);
+        addObject(plane);
     }
 
     else if (type == PrimitiveType::TEXTURED_CUBE) {
-        TexturedCube* cube = new TexturedCube("Cube_Textured");
-        cube->setPosition(2.0f, 2.0f, 2.0f);
-        cube->setScale(1.0f, 1.0f, 1.0f);
-        this->addObject(cube);
+        TexturedCube* cube = new TexturedCube("Cube_Textured", L"Assets\\Textures\\wood.jpg");
+        addObject(cube);
     }
+}
+
+void GameObjectManager::createObject(std::wstring mesh_path, std::wstring texture_path)
+{
+    MeshObject* mesh = new MeshObject("Mesh", mesh_path, texture_path);
+    addObject(mesh);
 }
 
 void GameObjectManager::deleteObject(AGameObject* game_object)

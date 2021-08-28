@@ -58,7 +58,6 @@ private:
 	SwapChainPtr m_swap_chain;
 	
 	VertexBufferPtr m_vb;
-	//VertexColorBufferPtr m_vcb;
 	IndexBufferPtr m_ib;
 	ConstantBufferPtr m_cb;
 	
@@ -66,6 +65,7 @@ private:
 	PixelShaderPtr m_ps;
 
 	AlphaBlendStatePtr m_abs;
+	SamplerStatePtr m_ss;
 
 	ID3D11RasterizerState* m_rs;
 
@@ -77,4 +77,5 @@ private:
 	friend class UIManager;
 	friend class ViewportScreen;
 	friend class MenuBarScreen;
+	friend class MeshObject;
 };

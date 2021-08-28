@@ -9,6 +9,7 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "AlphaBlendState.h"
+#include "SamplerState.h"
 
 #include <d3dcompiler.h>
 #include <exception>
@@ -151,6 +152,16 @@ AlphaBlendStatePtr RenderSystem::createAlphaBlendState()
 	}
 	catch (...) {}
 	return abs;
+}
+
+SamplerStatePtr RenderSystem::createSamplerState()
+{
+	SamplerStatePtr ss = nullptr;
+	try {
+		ss = std::make_shared<SamplerState>(this);
+	}
+	catch (...) {}
+	return ss;
 }
 
 VertexShaderPtr RenderSystem::createVertexShader(const void* shader_byte_code, size_t byte_code_size)

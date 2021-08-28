@@ -8,6 +8,7 @@
 
 #include "GraphicsEngine.h"
 #include "VertexMesh.h"
+#include "ShaderLibrary.h"
 
 Mesh::Mesh(const wchar_t* full_path) : Resource(full_path)
 {
@@ -45,6 +46,9 @@ Mesh::Mesh(const wchar_t* full_path) : Resource(full_path)
 		{
 			unsigned char num_face_verts = shapes[s].mesh.num_face_vertices[f];
 
+			float normalize_x = 1.0f;
+			float normalize_y = 1.0f;
+
 			for (unsigned char v = 0; v < num_face_verts; v++)
 			{
 				tinyobj::index_t index = shapes[s].mesh.indices[index_offset + v];
@@ -53,8 +57,11 @@ Mesh::Mesh(const wchar_t* full_path) : Resource(full_path)
 				tinyobj::real_t vy = attribs.vertices[index.vertex_index * 3 + 1];
 				tinyobj::real_t vz = attribs.vertices[index.vertex_index * 3 + 2];
 
-				tinyobj::real_t tx = attribs.texcoords[index.texcoord_index * 2 + 0];
-				tinyobj::real_t ty = attribs.texcoords[index.texcoord_index * 2 + 1];
+				tinyobj::real_t tx = 0, ty = 0;
+				if (attribs.texcoords.size() > index.texcoord_index * 2 + 1) {
+					tx = attribs.texcoords[index.texcoord_index * 2 + 0];
+					ty = attribs.texcoords[index.texcoord_index * 2 + 1];
+				}
 
 				VertexMesh vertex(Vector3D(vx, vy, vz), Vector2D(tx, ty));
 				list_vertices.push_back(vertex);
@@ -66,12 +73,13 @@ Mesh::Mesh(const wchar_t* full_path) : Resource(full_path)
 		}
 	}
 
-	void* shader_byte_code = nullptr;
+	ShaderNames shader_names;
+	void* shader_byte_code = NULL;
 	size_t size_shader = 0;
 
-	GraphicsEngine::get()->getVertexMeshLayoutShaderByteCodeAndSize(&shader_byte_code, &size_shader);
+	ShaderLibrary::getInstance()->requestVertexShaderData(shader_names.TEXTURED_VERTEX_SHADER_NAME, &shader_byte_code, &size_shader);
 
-	m_vertex_buffer = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer();
+	m_vertex_buffer = GraphicsEngine::get()->getRenderSystem()->createTexturedVertexBuffer();
 	m_vertex_buffer->load(&list_vertices[0], sizeof(VertexMesh), (UINT)list_vertices.size(), shader_byte_code, (UINT)size_shader, GraphicsEngine::get()->getRenderSystem());
 
 	m_index_buffer = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&list_indices[0], (UINT)list_indices.size());

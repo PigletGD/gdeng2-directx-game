@@ -49,6 +49,8 @@ void ViewportScreen::drawUI()
 	// Sets view mode to either solid or wireframe
 	device_context->setRasterizerState(m_rs);
 
+	GraphicsEngine::get()->getCameraSystem()->setCurrentCamera(m_camera);
+
 	// Initializes Window
 	if (ImGui::Begin(m_window_name.c_str(), &m_is_open, ImGuiWindowFlags_MenuBar)) {
 		// Checks if window was resized

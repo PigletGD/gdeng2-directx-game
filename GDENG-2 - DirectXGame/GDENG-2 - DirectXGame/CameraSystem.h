@@ -28,6 +28,9 @@ public:
 	void updateCurrentCamera();
 	void updateCurrentCameraWindowSize(float width, float height);
 
+	void setCurrentCamera(Camera* camera);
+	void setCurrentToMainViewCamera();
+
 	Matrix4x4 getCurrentCameraWorldMatrix();
 	Matrix4x4 getCurrentCameraViewMatrix();
 	Matrix4x4 getCurrentCameraProjectionMatrix();
@@ -52,6 +55,7 @@ public:
 
 private:
 	std::vector<Camera*> cameraList;
+	int m_main_view_camera_index = 0;
 	int m_view_camera_index = 0;
 	int m_control_camera_index = 0;
 
