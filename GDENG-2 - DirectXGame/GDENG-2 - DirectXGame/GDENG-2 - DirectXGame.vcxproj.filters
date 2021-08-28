@@ -112,6 +112,9 @@
     <Filter Include="GameEngine\GraphicsEngine\ShaderLibrary\Shaders">
       <UniqueIdentifier>{6d098b55-9133-4f50-b4f4-f733c8ed1180}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens\HierarchyScreen">
+      <UniqueIdentifier>{95118bb7-5e62-4725-ae93-402aad3dde3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -254,6 +257,9 @@
     </ClCompile>
     <ClCompile Include="TexturedCube.cpp">
       <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="HierarchyScreen.cpp">
+      <Filter>GameEngine\UIManager\UIScreens\HierarchyScreen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -430,6 +436,9 @@
     </ClInclude>
     <ClInclude Include="TexturedCube.h">
       <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="HierarchyScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens\HierarchyScreen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

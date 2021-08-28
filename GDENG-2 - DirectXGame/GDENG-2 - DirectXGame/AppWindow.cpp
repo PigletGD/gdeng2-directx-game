@@ -51,6 +51,8 @@ void AppWindow::initializeEngine()
 	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
 	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
 
+	camera_system->initializeInitialCamera();
+
 	//camera_system->initializeGizmoTexture();
 
 	RECT rc = this->getClientWindowRect();
@@ -210,7 +212,6 @@ void AppWindow::initializeEngine()
 	m_rs = render_system->m_rs_solid;
 
 	GameObjectManager::initialize();
-	camera_system->initializeInitialCamera();
 
 	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::TEXTURED_CUBE);
 	GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::CUBE);
@@ -239,7 +240,6 @@ void AppWindow::updateTimeWave()
 
 void AppWindow::drawToRenderTarget(Camera* camera, UINT width, UINT height)
 {
-	/*
 	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
 	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
 	DeviceContextPtr device_context = render_system->getImmediateDeviceContext();
@@ -254,17 +254,19 @@ void AppWindow::drawToRenderTarget(Camera* camera, UINT width, UINT height)
 
 	m_cb->update(device_context, &cc);
 
-	device_context->setConstantBuffer(m_vs, m_cb);
-	device_context->setConstantBuffer(m_ps, m_cb);
+	//device_context->setConstantBuffer(m_vs, m_cb);
+	//device_context->setConstantBuffer(m_ps, m_cb);
 
-	device_context->setVertexShader(m_vs);
-	device_context->setPixelShader(m_ps);
+	//device_context->setVertexShader(m_vs);
+	//device_context->setPixelShader(m_ps);
 
-	for (int i = 0; i < m_object_list.size(); i++) {
-		m_object_list[i]->update(EngineTime::getDeltaTime());
-		m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
-	}
-	*/
+	//for (int i = 0; i < m_object_list.size(); i++) {
+		//m_object_list[i]->update(EngineTime::getDeltaTime());
+		//m_object_list[i]->draw(width, height, m_vs, m_ps, cc);
+	//}
+
+	GameObjectManager::getInstance()->renderAll(width, height);
+
 	//camera_system->drawGizmos(cc);
 }
 
@@ -335,8 +337,6 @@ void AppWindow::onUpdate()
 	GameObjectManager::getInstance()->renderAll(width, height);
 
 	UIManager::getInstance()->drawAllUI();
-
-	device_context->setRenderTarget(m_swap_chain);
 
 	m_swap_chain->present(true);
 }

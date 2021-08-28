@@ -1,10 +1,12 @@
 #include "UIManager.h"
 #include "GraphicsEngine.h"
 #include "DeviceContext.h"
-#include "CreditsScreen.h"
-#include "MenuBarScreen.h"
 #include "AppWindow.h"
 #include "SwapChain.h"
+
+#include "CreditsScreen.h"
+#include "MenuBarScreen.h"
+#include "HierarchyScreen.h"
 
 UIManager* UIManager::sharedInstance = NULL;
 
@@ -17,9 +19,6 @@ UIManager::UIManager(HWND windowHandle)
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 
@@ -27,10 +26,18 @@ UIManager::UIManager(HWND windowHandle)
 	ImGui_ImplWin32_Init(windowHandle);
 	ImGui_ImplDX11_Init(GraphicsEngine::get()->getRenderSystem()->getDevice(), GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->getContext());
 
-	UINames uiNames;
-	MenuBarScreen* menuBarScreen = new MenuBarScreen();
-	uiTable[uiNames.MENU_BAR_SCREEN] = menuBarScreen;
-	uiList.push_back(menuBarScreen);
+	UINames ui_names;
+	//MenuBarScreen* menu_bar_screen = new MenuBarScreen();
+	//uiTable[ui_names.MENU_BAR_SCREEN] = menu_bar_screen;
+	//uiList.push_back(menu_bar_screen);
+
+	CreditsScreen* cs = new CreditsScreen();
+	uiTable[ui_names.CREDITS_SCREEN] = cs;
+	uiList.push_back(cs);
+
+	/*HierarchyScreen* hierarchy_screen = new HierarchyScreen();
+	uiTable[ui_names.HIERARCHY_SCREEN] = hierarchy_screen;
+	uiList.push_back(hierarchy_screen);*/
 }
 
 UIManager::~UIManager()

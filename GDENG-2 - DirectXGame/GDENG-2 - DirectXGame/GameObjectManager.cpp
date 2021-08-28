@@ -87,7 +87,8 @@ void GameObjectManager::createObject(PrimitiveType type)
 
     else if (type == PrimitiveType::PLANE) {
         Plane* plane = new Plane("Plane");
-        plane->setScale(1.0f, 1.0f, 1.0f);
+        plane->setRotation(MathUtils::DegToRad(90), 0.0f, 0.0f);
+        plane->setScale(7.0f, 7.0f, 7.0f);
         this->addObject(plane);
     }
 
