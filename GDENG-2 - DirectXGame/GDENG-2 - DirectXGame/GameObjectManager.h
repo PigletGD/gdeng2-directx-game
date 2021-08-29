@@ -15,10 +15,12 @@ public:
 	typedef std::unordered_map<String, AGameObject*> HashTable;
 
 	enum PrimitiveType {
-		TEXTURED_CUBE,
 		CUBE,
+		PHYSICS_CUBE,
+		PHYSICS_CUBE_BATCH,
+		TEXTURED_CUBE,
 		PLANE,
-		SPHERE
+		PHYSICS_PLANE,
 	};
 
 	static GameObjectManager* getInstance();

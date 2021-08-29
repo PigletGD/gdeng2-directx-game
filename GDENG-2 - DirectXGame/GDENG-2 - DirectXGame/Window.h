@@ -1,5 +1,6 @@
 #pragma once
 
+#define NOMINAX // to avoid conflict with min and max methods of windows.h
 #include <windows.h>
 
 class Window

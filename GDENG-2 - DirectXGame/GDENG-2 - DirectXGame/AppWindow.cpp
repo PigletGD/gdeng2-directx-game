@@ -12,6 +12,8 @@
 #include "UIManager.h"
 #include "ShaderLibrary.h"
 #include "GameObjectManager.h"
+#include "ComponentSystem.h"
+#include "PhysicsSystem.h"
 
 AppWindow* AppWindow::sharedInstance = nullptr;
 
@@ -72,11 +74,12 @@ void AppWindow::initializeEngine()
 	m_rs = render_system->m_rs_solid;
 
 	GameObjectManager::initialize();
+	ComponentSystem::initialize();
 
 	// Load initial object
 	GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\teapot.obj");
 	GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\bunny.obj");
-	GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\armadillo.obj");
+	//GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\armadillo.obj");
 }
 
 void AppWindow::createInterface()
@@ -156,6 +159,7 @@ void AppWindow::onUpdate()
 	camera_system->updateCurrentCamera();
 	camera_system->setCurrentToMainViewCamera();
 
+	ComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
 	GameObjectManager::getInstance()->updateAll();
 	GameObjectManager::getInstance()->renderAll(width, height);
 
@@ -168,6 +172,7 @@ void AppWindow::onUpdate()
 
 void AppWindow::onDestroy()
 {
+	ComponentSystem::destroy();
 	GameObjectManager::destroy();
 	ShaderLibrary::destroy();
 

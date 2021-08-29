@@ -8,6 +8,8 @@
 #include "MeshObject.h"
 #include "ShaderLibrary.h"
 #include "GraphicsEngine.h"
+#include "PhysicsCube.h"
+#include "PhysicsPlane.h"
 
 GameObjectManager* GameObjectManager::m_shared_instance = NULL;
 
@@ -81,25 +83,46 @@ void GameObjectManager::createObject(PrimitiveType type)
 {
     if (type == PrimitiveType::CUBE) {
         Cube* cube = new Cube("Cube");
+        cube->updateLocalMatrix();
         addObject(cube);
+    }
+
+    else if (type == PrimitiveType::PHYSICS_CUBE) {
+        PhysicsCube* cube = new PhysicsCube("Physics Cube");
+        addObject(cube);
+    }
+
+    else if (type == PrimitiveType::TEXTURED_CUBE) {
+        TexturedCube* cube = new TexturedCube("Cube Textured", L"Assets\\Textures\\wood.jpg");
+        cube->updateLocalMatrix();
+        addObject(cube);
+    }
+
+    else if (type == PrimitiveType::PHYSICS_CUBE_BATCH) {
+        for (int i = 0; i < 20; i++) {
+            PhysicsCube* cube = new PhysicsCube("Physics Cube");
+            addObject(cube);
+        }
     }
 
     else if (type == PrimitiveType::PLANE) {
         Plane* plane = new Plane("Plane");
-        plane->setRotation(MathUtils::DegToRad(90), 0.0f, 0.0f);
-        plane->setScale(7.0f, 7.0f, 7.0f);
+        //plane->setRotation(MathUtils::DegToRad(90), 0.0f, 0.0f);
+        plane->setScale(7.0f, 0.2f, 7.0f);
+        plane->updateLocalMatrix();
         addObject(plane);
     }
 
-    else if (type == PrimitiveType::TEXTURED_CUBE) {
-        TexturedCube* cube = new TexturedCube("Cube_Textured", L"Assets\\Textures\\wood.jpg");
-        addObject(cube);
+    else if (type == PrimitiveType::PHYSICS_PLANE) {
+        PhysicsPlane* plane = new PhysicsPlane("Plane");
+        addObject(plane);
     }
 }
 
 void GameObjectManager::createObject(std::wstring mesh_path, std::wstring texture_path)
 {
     MeshObject* mesh = new MeshObject("Mesh", mesh_path, texture_path);
+    mesh->updateLocalMatrix();
     addObject(mesh);
 }
 

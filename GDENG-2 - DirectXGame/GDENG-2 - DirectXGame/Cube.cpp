@@ -96,26 +96,14 @@ void Cube::draw(int width, int height)
 
 	constant cc = {};
 
-	// prepare matrices
-	Matrix4x4 allMatrix; allMatrix.setIdentity();
-	Matrix4x4 translationMatrix; translationMatrix.setIdentity(); translationMatrix.setTranslation(getLocalPosition());
-	Matrix4x4 scaleMatrix; scaleMatrix.setIdentity(); scaleMatrix.setScale(getLocalScale());
-	Vector3D rotation = getLocalRotation();
-	Matrix4x4 zMatrix; zMatrix.setIdentity(); zMatrix.setRotationZ(rotation.m_z);
-	Matrix4x4 xMatrix; xMatrix.setIdentity(); xMatrix.setRotationX(rotation.m_x);
-	Matrix4x4 yMatrix; yMatrix.setIdentity(); yMatrix.setRotationY(rotation.m_y);
-
-	// multiply scale to rotation, then product to translation
-	Matrix4x4 rotMatrix; rotMatrix.setIdentity();
-	yMatrix *= zMatrix;
-	xMatrix *= yMatrix;
-	rotMatrix *= xMatrix;
-	scaleMatrix *= rotMatrix;
-	allMatrix *= scaleMatrix;
-	allMatrix *= translationMatrix;
+	if (m_override_matrix)
+		cc.m_world = m_local_matrix;
+	else {
+		updateLocalMatrix();
+		cc.m_world = m_local_matrix;
+	}
 	
 	// have to adjust for multiple viewports later
-	cc.m_world = allMatrix;
 	cc.m_view = camera_system->getCurrentCameraViewMatrix();
 	cc.m_proj = camera_system->getCurrentCameraProjectionMatrix();
 

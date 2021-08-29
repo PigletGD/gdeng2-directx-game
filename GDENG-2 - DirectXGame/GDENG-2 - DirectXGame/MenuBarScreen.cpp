@@ -82,10 +82,16 @@ void MenuBarScreen::drawUI()
 		{
 			if (ImGui::BeginMenu("Cubes")) {
 				if (ImGui::MenuItem("Cube")) { GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::CUBE); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Physics Cube")) { GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::PHYSICS_CUBE); ImGui::SetWindowFocus(nullptr); }
 				if (ImGui::MenuItem("Textured Cube")) { GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::TEXTURED_CUBE); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Physics Cube Batch")) { GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::PHYSICS_CUBE_BATCH); ImGui::SetWindowFocus(nullptr); }
 				ImGui::EndMenu();
 			}
-			if (ImGui::MenuItem("Plane")) { GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::PLANE); ImGui::SetWindowFocus(nullptr); }
+			if (ImGui::BeginMenu("Planes")) {
+				if (ImGui::MenuItem("Plane")) { GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::PLANE); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Physics Plane")) { GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::PHYSICS_PLANE); ImGui::SetWindowFocus(nullptr); }
+				ImGui::EndMenu();
+			}
 			if (ImGui::BeginMenu("Meshes")) {
 				if (ImGui::MenuItem("Teapot")) { GameObjectManager::getInstance()->createObject(L"Assets\\Meshes\\teapot.obj", L"Assets\\Textures\\brick.png"); ImGui::SetWindowFocus(nullptr); }
 				if (ImGui::MenuItem("Bunny")) { GameObjectManager::getInstance()->createObject(L"Assets\\Meshes\\bunny.obj", L"Assets\\Textures\\brick.png"); ImGui::SetWindowFocus(nullptr); }
