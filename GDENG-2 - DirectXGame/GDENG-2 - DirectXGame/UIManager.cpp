@@ -7,6 +7,7 @@
 #include "MenuBarScreen.h"
 #include "HierarchyScreen.h"
 #include "InspectorScreen.h"
+#include "CameraSystem.h"
 
 UIManager* UIManager::sharedInstance = NULL;
 
@@ -38,6 +39,8 @@ UIManager::UIManager(HWND windowHandle)
 	InspectorScreen* inspector_screen = new InspectorScreen();
 	uiTable[ui_names.INSPECTOR_SCREEN] = inspector_screen;
 	uiList.push_back(inspector_screen);
+
+	ImGui::SetWindowFocus(nullptr);
 }
 
 UIManager::~UIManager()
@@ -72,17 +75,22 @@ void UIManager::drawAllUI()
 		uiList[i]->drawUI();
 	}
 
-	//dImGui::ShowDemoWindow();
+	if (ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow))
+		GraphicsEngine::get()->getCameraSystem()->setImGuiWindowFocus(true);
+	else GraphicsEngine::get()->getCameraSystem()->setImGuiWindowFocus(false);
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRenderTarget(AppWindow::get()->m_swap_chain);
 
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	
-
 	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
+	}
+
+	if ((ImGui::IsMouseClicked(0) || ImGui::IsMouseClicked(1)) && !(ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) || ImGui::IsAnyItemHovered())) {
+		ImGui::SetWindowFocus(nullptr);
 	}
 }

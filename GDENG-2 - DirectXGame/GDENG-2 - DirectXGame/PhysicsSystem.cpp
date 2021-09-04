@@ -21,7 +21,6 @@ PhysicsSystem::PhysicsSystem()
 
 PhysicsSystem::~PhysicsSystem()
 {
-	delete m_physics_common;
 }
 
 void PhysicsSystem::registerComponent(PhysicsComponent* component)

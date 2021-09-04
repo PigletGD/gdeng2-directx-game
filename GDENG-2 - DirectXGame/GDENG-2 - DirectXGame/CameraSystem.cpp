@@ -4,6 +4,9 @@
 #include "EngineTime.h"
 
 #include <iostream>
+#include "imgui.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_win32.h"
 
 CameraSystem::CameraSystem()
 {
@@ -272,37 +275,28 @@ void CameraSystem::drawGizmos(constant cc)
 	}
 }
 
-void CameraSystem::setHoverViewportState(bool value)
-{
-	m_is_over_viewport = value;
-}
-
-void CameraSystem::incrementFocusCount()
-{
-	m_window_focus_count++;
-
-	std::cout << "Increased focus count: " << std::to_string(m_window_focus_count) << std::endl;
-}
-
-void CameraSystem::decrementFocusCount()
-{
-	if (m_window_focus_count <= 0) return;
-
-	m_window_focus_count--;
-
-	std::cout << "Decreased focus count: " << std::to_string(m_window_focus_count) << std::endl;
-}
-
 void CameraSystem::updateInputListener()
 {
-	if (!m_is_listening && m_window_focus_count > 0) {
+	if (!m_is_listening && (m_main_window_focused || m_imgui_window_focused)) {
 		InputSystem::get()->addListener(this);
 		m_is_listening = true;
+		std::cout << "Focused\n";
 	}
-	else if (m_is_listening && m_window_focus_count <= 0) {
+	else if (m_is_listening && !m_main_window_focused && !m_imgui_window_focused) {
 		InputSystem::get()->removeListener(this);
 		m_is_listening = false;
+		std::cout << "Unfocused\n";
 	}
+}
+
+void CameraSystem::setMainWindowFocus(bool value)
+{
+	m_main_window_focused = value;
+}
+
+void CameraSystem::setImGuiWindowFocus(bool value)
+{
+	m_imgui_window_focused = value;
 }
 
 void CameraSystem::onKeyDown(int key)
@@ -366,11 +360,13 @@ void CameraSystem::onMouseMove(const Point& mouse_pos)
 
 void CameraSystem::onLeftMouseDown(const Point& mouse_pos)
 {
-	if (m_is_over_viewport) return;
+	if (ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow)) return;
+
+	ImGui::SetWindowFocus(nullptr);
 
 	std::cout << "Switched from Camera " << std::to_string(m_control_camera_index);
 
-	m_control_camera_index = m_view_camera_index;
+	m_control_camera_index = m_main_view_camera_index;
 
 	std::cout << " to " << std::to_string(m_control_camera_index) << std::endl;
 }
@@ -381,6 +377,9 @@ void CameraSystem::onLeftMouseUp(const Point& mouse_pos)
 
 void CameraSystem::onRightMouseDown(const Point& mouse_pos)
 {
+	if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+		ImGui::SetWindowFocus(nullptr);
+
 	InputSystem* input_system = InputSystem::get();
 
 	m_old_mouse_pos = input_system->getCursorPosition();

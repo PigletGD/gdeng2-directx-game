@@ -39,10 +39,9 @@ public:
 	void initializeInitialCamera();
 	void drawGizmos(constant cc);
 
-	void setHoverViewportState(bool value);
-	void incrementFocusCount();
-	void decrementFocusCount();
 	void updateInputListener();
+	void setMainWindowFocus(bool value);
+	void setImGuiWindowFocus(bool value);
 
 	virtual void onKeyDown(int key) override;
 	virtual void onKeyUp(int key) override;
@@ -65,6 +64,9 @@ private:
 	bool m_is_listening = false;
 	bool m_is_over_viewport = false;
 	bool m_lock_set_window_focus = false;
+
+	bool m_main_window_focused = false;
+	bool m_imgui_window_focused = false;
 
 	float m_cam_speed = 3.0f;
 

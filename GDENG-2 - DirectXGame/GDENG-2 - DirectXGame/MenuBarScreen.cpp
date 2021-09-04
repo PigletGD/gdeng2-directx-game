@@ -65,6 +65,12 @@ void MenuBarScreen::drawUI()
 		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 	}
 
+	/*if (io.WantCaptureMouse) {
+		GraphicsEngine::get()->getCameraSystem()->setHoverViewportState(true);
+	}
+	else
+		GraphicsEngine::get()->getCameraSystem()->setHoverViewportState(false);*/
+
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("About"))

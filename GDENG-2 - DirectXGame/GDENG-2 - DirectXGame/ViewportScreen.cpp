@@ -102,22 +102,16 @@ void ViewportScreen::drawUI()
 			
 			if (ImGui::IsItemClicked(1)) ImGui::SetWindowFocus();
 
-			GraphicsEngine::get()->getCameraSystem()->setHoverViewportState(true);
-
 			m_is_hovered = true;
 		}
 		else {
 			if (m_is_hovered) {
-				GraphicsEngine::get()->getCameraSystem()->setHoverViewportState(false);
-
 				m_is_hovered = false;
 			}
 		}
 		if (ImGui::IsWindowFocused()) {
 			if (!m_is_focused) {
 				CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
-
-				camera_system->incrementFocusCount();
 				
 				m_is_focused = true;
 
@@ -125,8 +119,6 @@ void ViewportScreen::drawUI()
 			}
 		}
 		else if (m_is_focused) {
-			GraphicsEngine::get()->getCameraSystem()->decrementFocusCount();
-
 			m_is_focused = false;
 		}
 

@@ -48,7 +48,7 @@ void AppWindow::initializeEngine()
 	InputSystem::create();
 	ShaderLibrary::initialize();
 
-	GraphicsEngine::get()->getCameraSystem()->incrementFocusCount();
+	GraphicsEngine::get()->getCameraSystem()->setMainWindowFocus(true);
 
 	RenderSystem* render_system = GraphicsEngine::get()->getRenderSystem();
 	CameraSystem* camera_system = GraphicsEngine::get()->getCameraSystem();
@@ -181,12 +181,18 @@ void AppWindow::onDestroy()
 
 void AppWindow::onFocus()
 {
-	GraphicsEngine::get()->getCameraSystem()->incrementFocusCount();
+	GraphicsEngine::get()->getCameraSystem()->setMainWindowFocus(true);
+	//InputSystem::get()->addListener(GraphicsEngine::get()->getCameraSystem());
+	//GraphicsEngine::get()->getCameraSystem()->incrementFocusCount();
 }
 
 void AppWindow::onKillFocus()
 {
-	GraphicsEngine::get()->getCameraSystem()->decrementFocusCount();
+	//if (ImGui::IsWindowHovered(ImGuiFocusedFlags_AnyWindow)) return;
+
+	GraphicsEngine::get()->getCameraSystem()->setMainWindowFocus(false);
+
+	//InputSystem::get()->removeListener(GraphicsEngine::get()->getCameraSystem());
 }
 
 void AppWindow::onSize()
