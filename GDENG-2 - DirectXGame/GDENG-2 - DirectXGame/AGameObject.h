@@ -12,6 +12,7 @@
 
 class VertexShader;
 class PixelShader;
+class EditorAction;
 
 class AGameObject
 {
@@ -65,6 +66,9 @@ public:
 	float* getRawMatrix();
 	float* getPhysicsLocalMatrix(); //scale is set to 1.0
 
+	virtual void saveEditState();
+	virtual void restoreEditState();
+
 protected:
 	String m_name;
 	Vector3D m_local_position;
@@ -78,6 +82,10 @@ protected:
 
 	bool m_override_matrix = false;
 
+	virtual void awake();
+
 private:
 	bool m_enabled = true;
+
+	EditorAction* m_last_edit_state = NULL;
 };

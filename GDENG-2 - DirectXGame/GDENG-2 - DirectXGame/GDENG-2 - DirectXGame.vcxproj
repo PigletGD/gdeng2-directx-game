@@ -145,6 +145,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AComponent.cpp" />
+    <ClCompile Include="ActionHistory.cpp" />
+    <ClCompile Include="ActionScreen.cpp" />
     <ClCompile Include="AGameObject.cpp" />
     <ClCompile Include="AlphaBlendState.cpp" />
     <ClCompile Include="AppWindow.cpp" />
@@ -157,6 +159,8 @@
     <ClCompile Include="CreditsScreen.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="DeviceContext.cpp" />
+    <ClCompile Include="EditorAction.cpp" />
+    <ClCompile Include="EngineBackend.cpp" />
     <ClCompile Include="EngineTime.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
@@ -183,6 +187,7 @@
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="PlaybackScreen.cpp" />
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="QuadTransitionColor.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
@@ -205,6 +210,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AComponent.h" />
+    <ClInclude Include="ActionHistory.h" />
+    <ClInclude Include="ActionScreen.h" />
     <ClInclude Include="AGameObject.h" />
     <ClInclude Include="AlphaBlendState.h" />
     <ClInclude Include="AppWindow.h" />
@@ -218,6 +225,8 @@
     <ClInclude Include="CreditsScreen.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="DeviceContext.h" />
+    <ClInclude Include="EditorAction.h" />
+    <ClInclude Include="EngineBackend.h" />
     <ClInclude Include="EngineTime.h" />
     <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="GraphicsEngine.h" />
@@ -246,6 +255,7 @@
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="Plane.h" />
+    <ClInclude Include="PlaybackScreen.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Prerequisites.h" />
     <ClInclude Include="Quad.h" />

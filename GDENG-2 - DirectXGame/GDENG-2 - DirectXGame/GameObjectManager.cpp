@@ -10,6 +10,7 @@
 #include "GraphicsEngine.h"
 #include "PhysicsCube.h"
 #include "PhysicsPlane.h"
+#include "EditorAction.h"
 
 GameObjectManager* GameObjectManager::m_shared_instance = NULL;
 
@@ -164,6 +165,30 @@ void GameObjectManager::setSelectedObject(AGameObject* game_object)
 AGameObject* GameObjectManager::getSelectedObject()
 {
     return m_selected_object;
+}
+
+void GameObjectManager::saveEditStates()
+{
+    for (int i = 0; i < m_game_object_list.size(); i++)
+        m_game_object_list[i]->saveEditState();
+}
+
+void GameObjectManager::restoreEditStates()
+{
+    for (int i = 0; i < m_game_object_list.size(); i++)
+        m_game_object_list[i]->restoreEditState();
+}
+
+void GameObjectManager::applyEditorAction(EditorAction* action)
+{
+    AGameObject* object = findObjectByName(action->getOwnerName());
+
+    if (object == NULL) return;
+
+    object->setLocalMatrix(action->getStoredMatrix().getMatrix());
+    object->setPosition(action->getStorePos());
+    object->setRotation(action->getStoredOrientation().x, action->getStoredOrientation().y, action->getStoredOrientation().z);
+    object->setScale(action->getStoredScale());
 }
 
 GameObjectManager::GameObjectManager()

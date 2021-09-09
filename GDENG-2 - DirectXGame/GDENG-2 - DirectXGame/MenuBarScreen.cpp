@@ -7,7 +7,9 @@
 #include "imgui_impl_win32.h"
 
 #include "CreditsScreen.h"
+#include "ActionScreen.h"
 #include "ColorPickerScreen.h"
+#include "PlaybackScreen.h"
 #include "ViewportScreen.h"
 #include "UIManager.h"
 #include "GraphicsEngine.h"
@@ -65,12 +67,6 @@ void MenuBarScreen::drawUI()
 		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 	}
 
-	/*if (io.WantCaptureMouse) {
-		GraphicsEngine::get()->getCameraSystem()->setHoverViewportState(true);
-	}
-	else
-		GraphicsEngine::get()->getCameraSystem()->setHoverViewportState(false);*/
-
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("About"))
@@ -80,7 +76,9 @@ void MenuBarScreen::drawUI()
 		}
 		if (ImGui::BeginMenu("Windows"))
 		{
+			if (ImGui::MenuItem("Action")) { onCreateActionScreen(); ImGui::SetWindowFocus(nullptr); }
 			if (ImGui::MenuItem("Color Picker")) { onCreateColorPickerScreen(); ImGui::SetWindowFocus(nullptr); }
+			if (ImGui::MenuItem("Playback")) { onCreatePlaybackScreen(); ImGui::SetWindowFocus(nullptr); }
 			if (ImGui::MenuItem("Viewport")) { onCreateViewportScreen(); }
 			ImGui::EndMenu();
 		}
@@ -157,6 +155,21 @@ void MenuBarScreen::onCreateCreditsScreen()
 	else std::cout << "Credits Screen Already Created" << std::endl;
 }
 
+void MenuBarScreen::onCreateActionScreen()
+{
+	UIManager* uiManager = UIManager::getInstance();
+	UINames uiNames;
+
+	if (uiManager->uiTable[uiNames.ACTION_SCREEN] == nullptr) {
+		ActionScreen* actionScreen = new ActionScreen();
+		uiManager->uiTable[uiNames.ACTION_SCREEN] = actionScreen;
+		uiManager->uiList.push_back(actionScreen);
+
+		std::cout << "Created Action Screen" << std::endl;
+	}
+	else std::cout << "Action Screen Already Created" << std::endl;
+}
+
 void MenuBarScreen::onCreateColorPickerScreen()
 {
 	UIManager* uiManager = UIManager::getInstance();
@@ -170,6 +183,21 @@ void MenuBarScreen::onCreateColorPickerScreen()
 		std::cout << "Created Color Picker Screen" << std::endl;
 	}
 	else std::cout << "Color Picker Screen Already Created" << std::endl;
+}
+
+void MenuBarScreen::onCreatePlaybackScreen()
+{
+	UIManager* uiManager = UIManager::getInstance();
+	UINames uiNames;
+
+	if (uiManager->uiTable[uiNames.PLAYBACK_SCREEN] == nullptr) {
+		PlaybackScreen* playbackScreen = new PlaybackScreen();
+		uiManager->uiTable[uiNames.PLAYBACK_SCREEN] = playbackScreen;
+		uiManager->uiList.push_back(playbackScreen);
+
+		std::cout << "Created Playback Screen" << std::endl;
+	}
+	else std::cout << "Playback Screen Already Created" << std::endl;
 }
 
 void MenuBarScreen::onCreateViewportScreen()

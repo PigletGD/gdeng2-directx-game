@@ -9,7 +9,9 @@ private:
 
 	virtual void drawUI() override;
 	void onCreateCreditsScreen();
+	void onCreateActionScreen();
 	void onCreateColorPickerScreen();
+	void onCreatePlaybackScreen();
 	void onCreateViewportScreen();
 
 	// Initialize as -1 for no viewport limit

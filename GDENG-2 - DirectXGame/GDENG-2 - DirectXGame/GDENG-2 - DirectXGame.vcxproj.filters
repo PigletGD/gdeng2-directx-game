@@ -136,6 +136,24 @@
     <Filter Include="GameEngine\ComponentSystem\Component">
       <UniqueIdentifier>{790244f3-5938-463f-9f4f-da8257210547}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\EngineStates">
+      <UniqueIdentifier>{3677645c-9ed1-4528-b944-8b5bd9ada0ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\EngineStates\EngineBackend">
+      <UniqueIdentifier>{d9dfb154-a795-448c-a1ef-e3158f6b51a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\EngineStates\EditorActions">
+      <UniqueIdentifier>{a7473cb6-8000-4666-9bac-eabdb5c363b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\EngineStates\ActionHistory">
+      <UniqueIdentifier>{443d4b64-bc64-40cf-9b9c-7478f2d41826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens\ActionScreen">
+      <UniqueIdentifier>{d8d0c135-8756-44c1-bd11-ac70bb2969ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens\PlaybackScreen">
+      <UniqueIdentifier>{f1aca0ad-0bda-4139-bb29-efa75ab8a6aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -311,6 +329,21 @@
     </ClCompile>
     <ClCompile Include="PhysicsCube.cpp">
       <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineBackend.cpp">
+      <Filter>GameEngine\EngineStates\EngineBackend</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorAction.cpp">
+      <Filter>GameEngine\EngineStates\EditorActions</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionHistory.cpp">
+      <Filter>GameEngine\EngineStates\ActionHistory</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionScreen.cpp">
+      <Filter>GameEngine\UIManager\UIScreens\ActionScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaybackScreen.cpp">
+      <Filter>GameEngine\UIManager\UIScreens\PlaybackScreen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -517,6 +550,21 @@
     </ClInclude>
     <ClInclude Include="PhysicsCube.h">
       <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineBackend.h">
+      <Filter>GameEngine\EngineStates\EngineBackend</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorAction.h">
+      <Filter>GameEngine\EngineStates\EditorActions</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionHistory.h">
+      <Filter>GameEngine\EngineStates\ActionHistory</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens\ActionScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaybackScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens\PlaybackScreen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

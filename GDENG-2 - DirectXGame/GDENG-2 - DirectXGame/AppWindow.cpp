@@ -14,6 +14,8 @@
 #include "GameObjectManager.h"
 #include "ComponentSystem.h"
 #include "PhysicsSystem.h"
+#include "EngineBackend.h"
+#include "ActionHistory.h"
 
 AppWindow* AppWindow::sharedInstance = nullptr;
 
@@ -42,6 +44,7 @@ void AppWindow::destroy()
 
 void AppWindow::initializeEngine()
 {
+	EngineBackend::initialize();
 	EngineTime::initialize();
 
 	GraphicsEngine::create();
@@ -75,6 +78,7 @@ void AppWindow::initializeEngine()
 
 	GameObjectManager::initialize();
 	ComponentSystem::initialize();
+	ActionHistory::initialize();
 
 	// Load initial object
 	GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\teapot.obj");
@@ -159,8 +163,23 @@ void AppWindow::onUpdate()
 	camera_system->updateCurrentCamera();
 	camera_system->setCurrentToMainViewCamera();
 
-	ComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
-	GameObjectManager::getInstance()->updateAll();
+	EngineBackend* backend = EngineBackend::getInstance();
+	if (backend->getMode() == EngineBackend::EditorMode::PLAY) {
+		ComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
+		GameObjectManager::getInstance()->updateAll();
+	}
+	else if (backend->getMode() == EngineBackend::EditorMode::EDITOR) {
+		GameObjectManager::getInstance()->updateAll();
+
+	}
+	else if (backend->getMode() == EngineBackend::EditorMode::PAUSED) {
+		if (backend->insideFrameStep()) {
+			ComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
+			GameObjectManager::getInstance()->updateAll();
+			backend->endFrameStep();
+		}
+	}
+
 	GameObjectManager::getInstance()->renderAll(width, height);
 
 	//camera_system->drawGizmos(cc);
@@ -182,17 +201,11 @@ void AppWindow::onDestroy()
 void AppWindow::onFocus()
 {
 	GraphicsEngine::get()->getCameraSystem()->setMainWindowFocus(true);
-	//InputSystem::get()->addListener(GraphicsEngine::get()->getCameraSystem());
-	//GraphicsEngine::get()->getCameraSystem()->incrementFocusCount();
 }
 
 void AppWindow::onKillFocus()
 {
-	//if (ImGui::IsWindowHovered(ImGuiFocusedFlags_AnyWindow)) return;
-
 	GraphicsEngine::get()->getCameraSystem()->setMainWindowFocus(false);
-
-	//InputSystem::get()->removeListener(GraphicsEngine::get()->getCameraSystem());
 }
 
 void AppWindow::onSize()

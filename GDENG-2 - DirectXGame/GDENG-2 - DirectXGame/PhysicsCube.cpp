@@ -11,11 +11,13 @@ PhysicsCube::PhysicsCube(String name, bool skipInit) : Cube(name, skipInit)
 
 	PhysicsComponent* component = (PhysicsComponent*)findComponentOfType(AComponent::ComponentType::Physics, "PhysicsComponent");
 	component->getRigidBody()->setMass(m_mass);
-	//component->getRigidBody()->setType(BodyType::KINEMATIC);
 }
 
 PhysicsCube::~PhysicsCube()
 {
+	detachComponent(m_component_attached);
+	delete m_component_attached;
+	Cube::~Cube();
 }
 
 void PhysicsCube::update(float deltaTime)
@@ -26,4 +28,27 @@ void PhysicsCube::update(float deltaTime)
 void PhysicsCube::draw(int width, int height)
 {
 	Cube::draw(width, height);
+}
+
+void PhysicsCube::awake()
+{
+	AGameObject::awake();
+	m_component_attached = new PhysicsComponent("PhysicsComponent_" + m_name, this);
+	attachComponent(m_component_attached);
+}
+
+void PhysicsCube::saveEditState()
+{
+	AGameObject::saveEditState();
+}
+
+void PhysicsCube::restoreEditState()
+{
+	AGameObject::restoreEditState();
+	detachComponent(m_component_attached);
+	delete m_component_attached;
+
+	//also restore physics by redeclaring component
+	m_component_attached = new PhysicsComponent("PhysicsComponent_" + m_name, this);
+	attachComponent(m_component_attached);
 }

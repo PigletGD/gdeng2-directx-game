@@ -7,6 +7,8 @@
 #include "MenuBarScreen.h"
 #include "HierarchyScreen.h"
 #include "InspectorScreen.h"
+#include "ActionScreen.h"
+#include "PlaybackScreen.h"
 #include "CameraSystem.h"
 
 UIManager* UIManager::sharedInstance = NULL;
@@ -39,6 +41,14 @@ UIManager::UIManager(HWND windowHandle)
 	InspectorScreen* inspector_screen = new InspectorScreen();
 	uiTable[ui_names.INSPECTOR_SCREEN] = inspector_screen;
 	uiList.push_back(inspector_screen);
+
+	ActionScreen* action_screen = new ActionScreen();
+	uiTable[ui_names.ACTION_SCREEN] = action_screen;
+	uiList.push_back(action_screen);
+
+	PlaybackScreen* playback_screen = new PlaybackScreen();
+	uiTable[ui_names.PLAYBACK_SCREEN] = playback_screen;
+	uiList.push_back(playback_screen);
 
 	ImGui::SetWindowFocus(nullptr);
 }

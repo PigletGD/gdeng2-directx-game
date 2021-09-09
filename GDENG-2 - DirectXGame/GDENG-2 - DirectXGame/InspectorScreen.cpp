@@ -8,6 +8,7 @@
 #include "UIManager.h"
 #include "AGameObject.h"
 #include "MathUtils.h"
+#include "ActionHistory.h"
 
 InspectorScreen::InspectorScreen() : AUIScreen("InspectorScreen")
 {
@@ -28,7 +29,12 @@ void InspectorScreen::drawUI()
 		updateTransformText();
 		bool enabled = m_selected_object->isEnabled();
 		if (ImGui::Checkbox("Enabled", &enabled)) { m_selected_object->setEnabled(enabled); }
-		if (ImGui::InputFloat("Drag Speed", &m_snapping));
+		ImGui::SameLine();
+		if (ImGui::Button("Delete")) {
+			GameObjectManager::getInstance()->deleteObject(m_selected_object);
+			GameObjectManager::getInstance()->setSelectedObject(NULL);
+		}
+		if (ImGui::InputFloat("Snap Speed", &m_snapping));
 		if (ImGui::DragFloat3("Position", m_position_display, m_snapping)) { onTransformUpdate(); }
 		if (ImGui::DragFloat3("Rotation", m_rotation_display, m_snapping)) { onTransformUpdate(); }
 		if (ImGui::DragFloat3("Scale", m_scale_display, m_snapping)) { onTransformUpdate(); }
@@ -60,6 +66,8 @@ void InspectorScreen::updateTransformText()
 void InspectorScreen::onTransformUpdate()
 {
 	if (m_selected_object != NULL) {
+		ActionHistory::getInstance()->recordAction(m_selected_object);
+
 		m_selected_object->setPosition(Vector3D(m_position_display[0], m_position_display[1], m_position_display[2]));
 		m_selected_object->setRotation(Vector3D(MathUtils::DegToRad(m_rotation_display[0]), MathUtils::DegToRad(m_rotation_display[1]), MathUtils::DegToRad(m_rotation_display[2])));
 		m_selected_object->setScale(Vector3D(m_scale_display[0], m_scale_display[1], m_scale_display[2]));
