@@ -1,12 +1,13 @@
 #include "AGameObject.h"
-
+#include <algorithm>
+#include <vector>
 #include "EditorAction.h"
 
 AGameObject::AGameObject(String name)
 {
 	m_name = name;
 	m_local_position = Vector3D::zero();
-	m_local_rotation = Vector3D::zero();
+	//m_local_rotation = Vector3D::zero();
 	m_local_scale = Vector3D::one();
 
 	m_local_matrix.setIdentity();
@@ -30,16 +31,46 @@ void AGameObject::draw(int width, int height)
 
 void AGameObject::setPosition(float x, float y, float z)
 {
+	if(this->m_child_list.empty())
+	{
+		m_local_position = Vector3D(x, y, z);
+		m_override_matrix = false;
+		return;
+	}
+
+	Vector3D prevPosition = this->m_local_position;
 	m_local_position = Vector3D(x, y, z);
-	
 	m_override_matrix = false;
+
+	for(AGameObject* child : this->m_child_list)
+	{
+		Vector3D displacement = child->getLocalPosition() - prevPosition;
+		child->setPosition(Vector3D(x, y, z) + displacement);
+	}
+	
+
 }
 
 void AGameObject::setPosition(Vector3D pos)
 {
-	m_local_position = pos;
+	if(this->m_child_list.empty())
+	{
+		m_local_position = pos;
+		m_override_matrix = false;
+		return;
+	}
+	Vector3D prevPosition = this->m_local_position;
 	
+	m_local_position = pos;
 	m_override_matrix = false;
+
+	
+	for(AGameObject* child : this->m_child_list)
+	{
+		Vector3D displacement = child->getLocalPosition() - prevPosition;
+		child->setPosition(pos + displacement);
+	}
+
 }
 
 Vector3D AGameObject::getLocalPosition()
@@ -49,53 +80,230 @@ Vector3D AGameObject::getLocalPosition()
 
 void AGameObject::setRotation(float x, float y, float z)
 {
+	//for the camera orientation stuff
 	m_orientation = {};
-	m_orientation.x = x;
-	m_orientation.y = y;
-	m_orientation.z = z;
-
+	m_orientation.m_x = x;
+	m_orientation.m_y = y;
+	m_orientation.m_z = z;
+	m_orientation.m_w = 1;
 	m_override_matrix = false;
+
 }
 
 void AGameObject::setRotation(Vector3D rot)
 {
-	m_orientation = {};
-	m_orientation.x = rot.m_x;
-	m_orientation.y = rot.m_y;
-	m_orientation.z = rot.m_z;
+	//this is used when changing values from the inspector window
+	std::cout << "BRUH\n";
+	std::cout << "Name: "<<this->getName() <<std::endl;
+	if(this->m_child_list.empty())
+	{
+		std::cout << "Empty childlist\n";
+		m_orientation = {};
+		m_orientation.m_x = rot.m_x;
+		m_orientation.m_y = rot.m_y;
+		m_orientation.m_z = rot.m_z;
+		m_orientation.m_w = 1; //identity quaternion
+		
+		m_override_matrix = false;
+		return;
+	}
 
+	std::cout << "childlist has value\n";
+	Vector3D oldRot = this->getLocalRotation();
+	m_orientation = {};
+	m_orientation.m_x = rot.m_x;
+	m_orientation.m_y = rot.m_y;
+	m_orientation.m_z = rot.m_z;
+	m_orientation.m_w = 1;
 	m_override_matrix = false;
+	
+	Vector3D newRot = this->getLocalRotation();
+	Vector3D rotDiff = newRot - oldRot;
+
+	
+	
+	Vector3D savedPos = this->m_local_position;
+	setPosition(Vector3D(0, 0, 0));
+
+	for (AGameObject* child : this->m_child_list) {
+		
+
+		//Vector3D initialPosition;
+		Vector3D initialPosition = child->getLocalPosition();
+		Vector3D newPosition = Vector3D::one();
+		
+		if (rotDiff.m_x != 0) {
+			AQuaternion xRot = AQuaternion(Vector3D(1, 0,0), rotDiff.m_x);
+
+			//initialPosition = child->getLocalPosition();
+			newPosition = AQuaternion::Rotate(&initialPosition, xRot);
+		}
+	
+		else if (rotDiff.m_y != 0) {
+			AQuaternion yRot = AQuaternion(Vector3D(0, 1, 0), rotDiff.m_y);
+			//initialPosition = child->getLocalPosition();
+			newPosition = AQuaternion::Rotate(&initialPosition, yRot);
+		}
+		else if (rotDiff.m_z != 0) {
+			AQuaternion zRot = AQuaternion(Vector3D(0, 0, 1), rotDiff.m_z);
+			//initialPosition = child->getLocalPosition();
+			newPosition = AQuaternion::Rotate(&initialPosition, zRot);
+		}
+		
+		
+	
+		child->setRotation(rotDiff + child->getLocalRotation());
+		child->setPosition(newPosition);
+		
+	}
+
+	setPosition(savedPos);
+	
+	
 }
 
 void AGameObject::setRotation(float x, float y, float z, float w)
 {
-	m_orientation = {};
-	m_orientation.x = x;
-	m_orientation.y = y;
-	m_orientation.z = z;
-	m_orientation.w = w;
+	
+	if(this->m_child_list.empty())
+	{
+		m_orientation = {};
+		m_orientation.m_x = x;
+		m_orientation.m_y = y;
+		m_orientation.m_z = z;
+		m_orientation.m_w = w;
+		m_override_matrix = false;
+		return;
+	}
 
+	Vector3D oldRot = this->getLocalRotation();
+	m_orientation = {};
+	m_orientation.m_x = x;
+	m_orientation.m_y = y;
+	m_orientation.m_z = z;
+	m_orientation.m_w = w;
 	m_override_matrix = false;
+
+	Vector3D newRotation = this->getLocalRotation();
+	Vector3D rotDiff = newRotation - oldRot;
+	
+	
+
+	for (AGameObject* child : this->m_child_list) {
+		
+		Vector3D savedPos = this->m_local_position;
+		setPosition(Vector3D(0, 0, 0));
+		
+		Vector3D initialPosition;
+		Vector3D newPosition;
+		
+		if (rotDiff.m_x != 0) {
+			AQuaternion xRot = AQuaternion(Vector3D(1, m_local_position.m_y, m_local_position.m_z), rotDiff.m_x);
+			
+			initialPosition = child->getLocalPosition();
+			newPosition = AQuaternion::Rotate(&initialPosition, xRot);
+		}
+
+		else if (rotDiff.m_y != 0) {
+			AQuaternion yRot = AQuaternion(Vector3D(m_local_position.m_x, 1, m_local_position.m_z), rotDiff.m_y);
+			initialPosition = child->getLocalPosition();
+			newPosition = AQuaternion::Rotate(&initialPosition, yRot);
+		}
+
+		else if (rotDiff.m_z != 0) {
+			AQuaternion zRot = AQuaternion(Vector3D(m_local_position.m_x, m_local_position.m_y, 1), rotDiff.m_z);
+			initialPosition = child->getLocalPosition();
+			newPosition = AQuaternion::Rotate(&initialPosition, zRot);
+		}
+		
+		child->setRotation(rotDiff + child->getLocalRotation());
+		child->setPosition(newPosition);
+		
+	
+		setPosition(savedPos);
+	}
+	
+	
 }
 
 Vector3D AGameObject::getLocalRotation()
 {
 	//return m_local_rotation;
-	return Vector3D(m_orientation.x, m_orientation.y, m_orientation.z);
+	return Vector3D(m_orientation.m_x, m_orientation.m_y, m_orientation.m_z);
 }
 
 void AGameObject::setScale(float x, float y, float z)
 {
-	m_local_scale = Vector3D(x, y, z);
+	if(this->m_child_list.empty())
+	{
+		m_local_scale = Vector3D(x, y, z);
+		m_override_matrix = false;
+		return;
+	}
 
+	Vector3D oldScale = this->m_local_scale;
+	m_local_scale = Vector3D(x, y, z);
 	m_override_matrix = false;
+
+	if (oldScale.m_x != m_local_scale.m_x) {
+		//For all childs
+		for (AGameObject* child : m_child_list) {
+			Vector3D childScale = Vector3D((m_local_scale.m_x / oldScale.m_x) * child->getLocalScale().m_x, child->getLocalScale().m_y, child->getLocalScale().m_z);
+			child->setScale(childScale);
+		}
+	}
+
+	else if (oldScale.m_x != m_local_scale.m_x) {
+		for (AGameObject* child : m_child_list) {
+			Vector3D childScale = Vector3D(child->getLocalScale().m_x, child->getLocalScale().m_y * (m_local_scale.m_y / oldScale.m_y), child->getLocalScale().m_z);
+			child->setScale(childScale);
+		}
+	}
+
+	else if (oldScale.m_x != m_local_scale.m_x) {
+		for (AGameObject* child : m_child_list) {
+			Vector3D childScale = Vector3D(child->getLocalScale().m_x, child->getLocalScale().m_y, (m_local_scale.m_z / oldScale.m_z) * child->getLocalScale().m_z);
+			child->setScale(childScale);
+		}
+	}
+	
 }
 
 void AGameObject::setScale(Vector3D scale)
 {
+	if(this->m_child_list.empty())
+	{
+		m_local_scale = scale;
+		m_override_matrix = false;
+		return;
+	}
+	Vector3D oldScale = this->m_local_scale;
 	m_local_scale = scale;
-	
 	m_override_matrix = false;
+	if (oldScale.m_x != m_local_scale.m_x) {
+		//For all childs
+		for (AGameObject* child : m_child_list) {
+			Vector3D childScale = Vector3D((m_local_scale.m_x / oldScale.m_x) * child->getLocalScale().m_x, child->getLocalScale().m_y, child->getLocalScale().m_z);
+			child->setScale(childScale);
+		}
+	}
+
+	else if (oldScale.m_x != m_local_scale.m_x) {
+		for (AGameObject* child : m_child_list) {
+			Vector3D childScale = Vector3D(child->getLocalScale().m_x, child->getLocalScale().m_y * (m_local_scale.m_y / oldScale.m_y), child->getLocalScale().m_z);
+			child->setScale(childScale);
+		}
+	}
+
+	else if (oldScale.m_x != m_local_scale.m_x) {
+		for (AGameObject* child : m_child_list) {
+			Vector3D childScale = Vector3D(child->getLocalScale().m_x, child->getLocalScale().m_y, (m_local_scale.m_z / oldScale.m_z) * child->getLocalScale().m_z);
+			child->setScale(childScale);
+		}
+	}
+
+	
+	
 }
 
 Vector3D AGameObject::getLocalScale()
@@ -159,6 +367,7 @@ AComponent* AGameObject::findComponentOfType(AComponent::ComponentType type, Str
 			return m_component_list[i];
 
 	return NULL;
+
 }
 
 AGameObject::ComponentList AGameObject::getComponentsOfType(AComponent::ComponentType type)
@@ -290,6 +499,71 @@ void AGameObject::restoreEditState()
 	}
 	else std::cout << "Edit state is null. Cannot restore. \n";
 }
+
+void AGameObject::addChild(AGameObject* childObject)
+{
+	if(this->isInList(childObject))
+	{
+		return;
+	}
+	this->m_child_list.push_back(childObject);
+}
+
+void AGameObject::removeChild(AGameObject* childObject)
+{
+	if(this->isInList(childObject))
+	{
+		return;
+	}
+
+	this->m_child_list.erase(this->m_child_list.begin() + this->findChildIndexInList(childObject));
+	
+}
+
+bool AGameObject::isInList(AGameObject* object)
+{
+	int index = -1;
+	for(int i = 0; i < this->m_child_list.size() ; i++)
+	{
+		if(this->m_child_list[i] == object)
+		{
+			index = i;
+			break;
+		}
+	}
+
+	if(index == -1)
+	{
+		return false;
+	}
+	return true;
+}
+
+int AGameObject::findChildIndexInList(AGameObject* childObject)
+{
+	int index = -1;
+	for(int i = 0; i < this->m_child_list.size() ; i++)
+	{
+		if(this->m_child_list[i] == childObject)
+		{
+			index = i;
+			break;
+		}
+	}
+
+	return index;
+}
+
+void AGameObject::setSelected(bool isselected)
+{
+	this->m_selected = isselected;
+}
+
+bool AGameObject::isSelected()
+{
+	return this->m_selected;
+}
+
 
 void AGameObject::awake()
 {

@@ -40,6 +40,21 @@ public:
 		return sqrtf(x_sqrd + y_sqrd + z_sqrd);
 	}
 
+	float getX() const
+	{
+		return m_x;
+	}
+
+	float getY() const
+	{
+		return m_y;
+	}
+
+	float getZ() const
+	{
+		return m_z;
+	}
+	
 	Vector3D operator +(Vector3D vec)
 	{
 		return Vector3D(m_x + vec.m_x, m_y + vec.m_y, m_z + vec.m_z);

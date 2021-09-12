@@ -34,10 +34,42 @@ void HierarchyScreen::updateObjectList() const
 {
 	GameObjectManager::List objectList = GameObjectManager::getInstance()->getAllObjects();
 
-	for (int i = 0; i < objectList.size(); i++) {
+
+    if (ImGui::TreeNode("Scene Objects"))
+    {
+        //static bool selection[objectList.size()] = { false };
+        for (int n = 0; n < objectList.size(); n++)
+        {
+            String objectName = objectList[n]->getName();
+            if (ImGui::Selectable(objectName.c_str(), objectList[n]->m_selected))
+            {
+                if (!ImGui::GetIO().KeyCtrl){    // Clear selection when CTRL is not held
+                    for (AGameObject* object : objectList)
+                    {
+                        object->m_selected = false;
+                    }
+                    GameObjectManager::getInstance()->clearSelectedObject();
+                    //GameObjectManager::getInstance()->setSelectedObject(objectName);//1 onli
+                   
+				}
+            	if(objectList[n]->m_selected == false)
+            	{
+                    objectList[n]->m_selected ^= 1;
+                    GameObjectManager::getInstance()->addSelectedObjectToSelectedList(objectName);
+                    GameObjectManager::getInstance()->setSelectedObject(objectName);//1 onli
+            	}
+                
+            
+            }
+        }
+        ImGui::TreePop();
+    }
+	
+
+	/*for (int i = 0; i < objectList.size(); i++) {
 		String objectName = objectList[i]->getName();
 		if (ImGui::Button(objectName.c_str(), ImVec2(235, 0))) {
 			GameObjectManager::getInstance()->setSelectedObject(objectName);
 		}
-	}
+	}*/
 }

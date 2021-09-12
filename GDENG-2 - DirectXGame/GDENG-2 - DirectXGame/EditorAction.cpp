@@ -8,9 +8,9 @@ EditorAction::EditorAction(AGameObject* game_object)
 	
 	m_orientation = {};
 	Vector3D rotation = game_object->getLocalRotation();
-	m_orientation.x = rotation.m_x;
-	m_orientation.y = rotation.m_y;
-	m_orientation.z = rotation.m_z;
+	m_orientation.m_x = rotation.m_x;
+	m_orientation.m_y = rotation.m_y;
+	m_orientation.m_z = rotation.m_z;
 
 	m_local_scale = game_object->getLocalScale();
 
@@ -37,7 +37,7 @@ Vector3D EditorAction::getStoredScale()
 	return m_local_scale;
 }
 
-AGameObject::AQuaternion EditorAction::getStoredOrientation()
+AQuaternion EditorAction::getStoredOrientation()
 {
 	return m_orientation;
 }

@@ -162,9 +162,45 @@ void GameObjectManager::setSelectedObject(AGameObject* game_object)
     m_selected_object = game_object;
 }
 
+void GameObjectManager::addSelectedObjectToSelectedList(String name)
+{
+    if (m_game_object_map[name] != NULL)
+        this->m_selected_objects.push_back(m_game_object_map[name]);
+}
+
+void GameObjectManager::removeSelectedObjectToSelectedList(String name)
+{
+    int index = -1;
+    if (m_game_object_map[name] != NULL)
+    {
+        
+        AGameObject* store = m_game_object_map[name];
+    	for(int i = 0 ; i<this->m_selected_objects.size(); i++)
+    	{
+    		if(store == m_selected_objects[i])
+    		{
+                index = i;
+                break;
+    		}
+    	}
+    }
+    if(index != -1)
+	  m_selected_objects.erase(m_selected_objects.begin() + index);
+}
+
+void GameObjectManager::clearSelectedObject()
+{
+    m_selected_objects.clear();
+}
+
 AGameObject* GameObjectManager::getSelectedObject()
 {
     return m_selected_object;
+}
+
+GameObjectManager::SelectedObjectList GameObjectManager::getSelectedObjectList()
+{
+    return m_selected_objects;
 }
 
 void GameObjectManager::saveEditStates()
@@ -187,7 +223,7 @@ void GameObjectManager::applyEditorAction(EditorAction* action)
 
     object->setLocalMatrix(action->getStoredMatrix().getMatrix());
     object->setPosition(action->getStorePos());
-    object->setRotation(action->getStoredOrientation().x, action->getStoredOrientation().y, action->getStoredOrientation().z);
+    object->setRotation(action->getStoredOrientation().m_x, action->getStoredOrientation().m_y, action->getStoredOrientation().m_z);
     object->setScale(action->getStoredScale());
 }
 

@@ -154,6 +154,9 @@
     <Filter Include="GameEngine\UIManager\UIScreens\PlaybackScreen">
       <UniqueIdentifier>{f1aca0ad-0bda-4139-bb29-efa75ab8a6aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\GameObjectManager\GameObjects\TransformerObject">
+      <UniqueIdentifier>{4cc166c6-b5f8-4fe0-b7ac-4af31c2090fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -344,6 +347,9 @@
     </ClCompile>
     <ClCompile Include="PlaybackScreen.cpp">
       <Filter>GameEngine\UIManager\UIScreens\PlaybackScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformerObject.cpp">
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\TransformerObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -565,6 +571,12 @@
     </ClInclude>
     <ClInclude Include="PlaybackScreen.h">
       <Filter>GameEngine\UIManager\UIScreens\PlaybackScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="Quaternion.h">
+      <Filter>GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformerObject.h">
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\TransformerObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

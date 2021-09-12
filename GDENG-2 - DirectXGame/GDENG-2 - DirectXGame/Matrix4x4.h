@@ -228,6 +228,22 @@ public:
 		m_mat[3][2] = -(near_plane / (far_plane - near_plane));
 	}
 
+	//THIS FUNCTION CHANGES THE MATRIX IT IS USED BY
+	void SetRotationMatrixByQuaternion(Vector3D forward, Vector3D up, Vector3D right) {
+		//This is needed trust me
+		Vector3D f = forward;
+		Vector3D r = right;
+		Vector3D u = up;
+
+		m_mat[0][0] = r.getX();		m_mat[0][1] = r.getY();		m_mat[0][2] = r.getZ();		m_mat[0][3] = 0;
+		m_mat[1][0] = u.getX();		m_mat[1][1] = u.getY();		m_mat[1][2] = u.getZ();		m_mat[1][3] = 0;
+		m_mat[2][0] = f.getX();		m_mat[2][1] = f.getY();		m_mat[2][2] = f.getZ();		m_mat[2][3] = 0;
+		m_mat[3][0] = 0;				m_mat[3][1] = 0;				m_mat[3][2] = 0;				m_mat[0][3] = 1; //Never set that to 0
+	}
+
+
+
+
 private:
 	float m_mat[4][4] = {};
 };

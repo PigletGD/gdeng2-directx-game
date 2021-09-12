@@ -14,6 +14,7 @@ class GameObjectManager
 public:
 	typedef std::string String;
 	typedef std::vector<AGameObject*> List;
+	typedef std::vector<AGameObject*> SelectedObjectList;
 	typedef std::unordered_map<String, AGameObject*> HashTable;
 
 	enum PrimitiveType {
@@ -46,7 +47,11 @@ public:
 
 	void setSelectedObject(String name);
 	void setSelectedObject(AGameObject* game_object);
+	void addSelectedObjectToSelectedList(String name);
+	void removeSelectedObjectToSelectedList(String name);
+	void clearSelectedObject();
 	AGameObject* getSelectedObject();
+	SelectedObjectList getSelectedObjectList();
 
 	void saveEditStates();
 	void restoreEditStates();
@@ -61,6 +66,7 @@ private:
 
 	HashTable m_game_object_map;
 	List m_game_object_list;
-
+	SelectedObjectList m_selected_objects;
+	
 	AGameObject* m_selected_object = NULL;
 };

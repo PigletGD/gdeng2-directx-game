@@ -9,23 +9,27 @@
 #include "ConstantData.h"
 #include "Prerequisites.h"
 #include "AComponent.h"
+#include "Quaternion.h"
 
 class VertexShader;
 class PixelShader;
 class EditorAction;
+class HierarchyScreen;
 
 class AGameObject
 {
 public:
+	/*
 	struct AQuaternion {
 		float w = 0.0f;
 		float x = 0.0f;
 		float y = 0.0f;
 		float z = 0.0f;
-	};
+	};*/
 
 	typedef std::string String;
 	typedef std::vector<AComponent*> ComponentList;
+	typedef std::vector<AGameObject*> ChildList;
 
 	AGameObject(String name);
 	~AGameObject();
@@ -69,23 +73,35 @@ public:
 	virtual void saveEditState();
 	virtual void restoreEditState();
 
+	void addChild(AGameObject* childObject);
+	//void addParent(AGameObject* parentObject);
+	void removeChild(AGameObject* childObject);
+	bool isInList(AGameObject* object);
+	int findChildIndexInList(AGameObject* childObject);
+	void setSelected(bool isselected);
+	bool isSelected();
+
 protected:
 	String m_name;
 	Vector3D m_local_position;
-	Vector3D m_local_rotation;
+	//Vector3D m_local_rotation;
+	//AQuaternion m_orientation;
 	AQuaternion m_orientation;
 	Vector3D m_local_scale;
 	
 	Matrix4x4 m_local_matrix;
 
 	ComponentList m_component_list;
+	ChildList m_child_list;
 
 	bool m_override_matrix = false;
 
 	virtual void awake();
+	bool m_selected = false;
 
 private:
 	bool m_enabled = true;
 
 	EditorAction* m_last_edit_state = NULL;
+	friend class HierarchyScreen;
 };

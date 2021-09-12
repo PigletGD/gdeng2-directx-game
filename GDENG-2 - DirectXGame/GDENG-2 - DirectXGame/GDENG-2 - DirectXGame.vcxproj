@@ -201,6 +201,7 @@
     <ClCompile Include="TexturedCube.cpp" />
     <ClCompile Include="TexturedVertexBuffer.cpp" />
     <ClCompile Include="TextureManager.cpp" />
+    <ClCompile Include="TransformerObject.cpp" />
     <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="LerpVertexBuffer.cpp" />
@@ -260,6 +261,7 @@
     <ClInclude Include="Prerequisites.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="QuadTransitionColor.h" />
+    <ClInclude Include="Quaternion.h" />
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="RenderTexture.h" />
     <ClInclude Include="Resource.h" />
@@ -271,6 +273,7 @@
     <ClInclude Include="TexturedCube.h" />
     <ClInclude Include="TexturedVertexBuffer.h" />
     <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="TransformerObject.h" />
     <ClInclude Include="UIManager.h" />
     <ClInclude Include="Vector2D.h" />
     <ClInclude Include="Vector3D.h" />
