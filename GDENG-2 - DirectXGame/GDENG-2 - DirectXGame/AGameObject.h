@@ -32,7 +32,7 @@ public:
 	typedef std::vector<AGameObject*> ChildList;
 
 	AGameObject(String name);
-	~AGameObject();
+	virtual ~AGameObject();
 
 	virtual void update(float deltaTime);
 	virtual void draw(int width, int height);

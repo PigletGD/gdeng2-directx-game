@@ -196,6 +196,7 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SamplerState.cpp" />
     <ClCompile Include="ShaderLibrary.cpp" />
+    <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="SwapChain.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TexturedCube.cpp" />
@@ -268,6 +269,7 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="ShaderLibrary.h" />
+    <ClInclude Include="Sphere.h" />
     <ClInclude Include="SwapChain.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TexturedCube.h" />

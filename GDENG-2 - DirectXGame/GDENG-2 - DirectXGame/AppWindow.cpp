@@ -16,6 +16,7 @@
 #include "PhysicsSystem.h"
 #include "EngineBackend.h"
 #include "ActionHistory.h"
+#include "Sphere.h"
 
 AppWindow* AppWindow::sharedInstance = nullptr;
 
@@ -84,6 +85,9 @@ void AppWindow::initializeEngine()
 	GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\teapot.obj");
 	GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\bunny.obj");
 	//GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\armadillo.obj");
+
+	Sphere* sphere = new Sphere("Sphere");
+	GameObjectManager::getInstance()->addObject(sphere);
 }
 
 void AppWindow::createInterface()
