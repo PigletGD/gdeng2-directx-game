@@ -13,7 +13,6 @@ Sphere::Sphere(std::string name)
 	ShaderNames shader_names;
 	void* shader_byte_code = NULL;
 	size_t size_shader = 0;
-
 	ShaderLibrary::getInstance()->requestVertexShaderData(shader_names.BASE_VERTEX_SHADER_NAME, &shader_byte_code, &size_shader);
 
 	const float PI = 3.141592654f;

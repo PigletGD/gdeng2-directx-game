@@ -352,6 +352,7 @@
       <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\TransformerObject</Filter>
     </ClCompile>
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="Cylinder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -580,6 +581,7 @@
       <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\TransformerObject</Filter>
     </ClInclude>
     <ClInclude Include="Sphere.h" />
+    <ClInclude Include="Cylinder.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelGizmoShader.hlsl">
