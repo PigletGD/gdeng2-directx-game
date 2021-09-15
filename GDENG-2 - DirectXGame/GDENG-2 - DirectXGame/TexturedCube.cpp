@@ -8,8 +8,8 @@
 #include "MathUtils.h"
 #include "ShaderLibrary.h"
 
-TexturedCube::TexturedCube(String name, std::wstring path)
-	: Cube(name, true)
+TexturedCube::TexturedCube(String name, AGameObject::PrimitiveType type, std::wstring path)
+	: Cube(name, type, true)
 {
 	ShaderNames shaderNames;
 	void* shader_byte_code = NULL;

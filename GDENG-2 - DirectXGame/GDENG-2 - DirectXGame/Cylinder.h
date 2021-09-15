@@ -4,7 +4,7 @@
 class Cylinder : public AGameObject
 {
 public:
-	Cylinder(std::string name);
+	Cylinder(std::string name, AGameObject::PrimitiveType type);
 	~Cylinder();
 
 	void update(float delta_time) override;

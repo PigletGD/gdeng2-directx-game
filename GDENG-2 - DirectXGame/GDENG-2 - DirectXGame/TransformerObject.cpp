@@ -9,7 +9,7 @@
 #include "ShaderLibrary.h"
 
 TransformerObject::TransformerObject(std::string name, bool skip_init) :
-	AGameObject(name)
+	AGameObject(name, AGameObject::PrimitiveType::NONE)
 {
 	if (skip_init) return;
 }

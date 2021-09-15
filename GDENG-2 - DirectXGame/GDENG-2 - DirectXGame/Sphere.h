@@ -4,7 +4,7 @@
 class Sphere : public AGameObject
 {
 public:
-	Sphere(std::string name);
+	Sphere(std::string name, AGameObject::PrimitiveType type);
 	~Sphere();
 
 	void update(float delta_time) override;

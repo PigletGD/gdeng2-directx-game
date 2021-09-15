@@ -7,7 +7,7 @@
 #include "MathUtils.h"
 #include "ShaderLibrary.h"
 
-Plane::Plane(std::string name, bool skip_init) : AGameObject(name)
+Plane::Plane(std::string name, AGameObject::PrimitiveType type, bool skip_init) : AGameObject(name, type)
 {
 	if (skip_init) return;
 

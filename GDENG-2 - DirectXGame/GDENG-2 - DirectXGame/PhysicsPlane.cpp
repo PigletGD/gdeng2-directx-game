@@ -6,7 +6,7 @@
 #include "PhysicsSystem.h"
 #include "MathUtils.h"
 
-PhysicsPlane::PhysicsPlane(String name, bool skipInit) : Plane(name, skipInit)
+PhysicsPlane::PhysicsPlane(String name, AGameObject::PrimitiveType type, bool skipInit) : Plane(name, type, skipInit)
 {
 	setPosition(0.0f, -10.0f, 0.0f);
 	setScale(32.0f, 0.05f, 32.0f);

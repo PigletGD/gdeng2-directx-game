@@ -157,6 +157,30 @@
     <Filter Include="GameEngine\GraphicsEngine\GameObjectManager\GameObjects\TransformerObject">
       <UniqueIdentifier>{4cc166c6-b5f8-4fe0-b7ac-4af31c2090fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Sphere">
+      <UniqueIdentifier>{33698940-9f56-4be9-898b-bc62dee43dd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Cylinder">
+      <UniqueIdentifier>{54fc2406-5d36-43f1-8a7a-c08d274c5fc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\SavingSystem">
+      <UniqueIdentifier>{add9301f-15cc-41f2-9f48-77f480174478}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Utils\StringUtils">
+      <UniqueIdentifier>{2f1bcd9e-9ab1-46fc-a639-c0f6b6e9b61e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Utils\LogUtils">
+      <UniqueIdentifier>{e301c935-74ce-4a15-96cd-b87fe277a4d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens\ProfilerScreen">
+      <UniqueIdentifier>{52fd6fc6-dbce-4bfd-a056-cb9abd7d446e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\UIManager\UIScreens\ConsoleScreen">
+      <UniqueIdentifier>{bf8647be-244e-40d2-a9a3-bdbffe549223}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Debugger">
+      <UniqueIdentifier>{a718fffc-ab39-4d51-8491-20c46ed6bc4b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -351,8 +375,31 @@
     <ClCompile Include="TransformerObject.cpp">
       <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\TransformerObject</Filter>
     </ClCompile>
-    <ClCompile Include="Sphere.cpp" />
-    <ClCompile Include="Cylinder.cpp" />
+    <ClCompile Include="Sphere.cpp">
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Cylinder.cpp">
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Cylinder</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneReader.cpp">
+      <Filter>GameEngine\SavingSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="StringUtils.cpp">
+      <Filter>GameEngine\Utils\StringUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneWriter.cpp">
+      <Filter>GameEngine\SavingSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="LogUtils.cpp">
+      <Filter>GameEngine\Utils\LogUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleScreen.cpp">
+      <Filter>GameEngine\UIManager\UIScreens\ConsoleScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="ProfilerScreen.cpp">
+      <Filter>GameEngine\UIManager\UIScreens\ProfilerScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -580,8 +627,34 @@
     <ClInclude Include="TransformerObject.h">
       <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\TransformerObject</Filter>
     </ClInclude>
-    <ClInclude Include="Sphere.h" />
-    <ClInclude Include="Cylinder.h" />
+    <ClInclude Include="Sphere.h">
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Cylinder.h">
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Cylinder</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneReader.h">
+      <Filter>GameEngine\SavingSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="StringUtils.h">
+      <Filter>GameEngine\Utils\StringUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneWriter.h">
+      <Filter>GameEngine\SavingSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Libs\ImGui\imfilebrowser.h">
+      <Filter>GameEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="LogUtils.h">
+      <Filter>GameEngine\Utils\LogUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens\ConsoleScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="ProfilerScreen.h">
+      <Filter>GameEngine\UIManager\UIScreens\ProfilerScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelGizmoShader.hlsl">

@@ -8,8 +8,8 @@
 #include "AppWindow.h"
 #include "Mesh.h"
 
-MeshObject::MeshObject(std::string name, std::wstring mesh_path, std::wstring texture_path, bool skip_init) :
-	AGameObject(name)
+MeshObject::MeshObject(std::string name, AGameObject::PrimitiveType type, std::wstring mesh_path, std::wstring texture_path, bool skip_init) :
+	AGameObject(name, type)
 {
 	GraphicsEngine* graphics_engine = GraphicsEngine::get();
 

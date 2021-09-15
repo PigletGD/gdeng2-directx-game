@@ -10,7 +10,7 @@
 #include <string>
 
 Camera::Camera(float width, float height)
-	: AGameObject("Camera")
+	: AGameObject("Camera", AGameObject::PrimitiveType::CAMERA)
 {
 	setPosition(Vector3D(0, 1, -4));
 

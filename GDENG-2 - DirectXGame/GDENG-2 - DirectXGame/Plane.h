@@ -6,7 +6,7 @@
 class Plane : public AGameObject
 {
 public:
-	Plane(std::string name, bool skip_init = false);
+	Plane(std::string name, AGameObject::PrimitiveType type, bool skip_init = false);
 	~Plane();
 
 	void update(float deltaTime) override;

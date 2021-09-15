@@ -11,6 +11,8 @@
 #include "PhysicsCube.h"
 #include "PhysicsPlane.h"
 #include "EditorAction.h"
+#include "Sphere.h"
+#include "Cylinder.h"
 
 GameObjectManager* GameObjectManager::m_shared_instance = NULL;
 
@@ -80,51 +82,118 @@ void GameObjectManager::addObject(AGameObject* game_object)
     m_game_object_list.push_back(game_object);
 }
 
-void GameObjectManager::createObject(PrimitiveType type)
+void GameObjectManager::createObject(AGameObject::PrimitiveType type)
 {
-    if (type == PrimitiveType::CUBE) {
-        Cube* cube = new Cube("Cube");
+    if (type == AGameObject::PrimitiveType::CUBE) {
+        Cube* cube = new Cube("Cube", type);
         cube->updateLocalMatrix();
         addObject(cube);
     }
 
-    else if (type == PrimitiveType::PHYSICS_CUBE) {
-        PhysicsCube* cube = new PhysicsCube("Physics Cube");
+    else if (type == AGameObject::PrimitiveType::PHYSICS_CUBE) {
+        PhysicsCube* cube = new PhysicsCube("Physics Cube", type);
         addObject(cube);
     }
 
-    else if (type == PrimitiveType::TEXTURED_CUBE) {
-        TexturedCube* cube = new TexturedCube("Cube Textured", L"Assets\\Textures\\wood.jpg");
+    else if (type == AGameObject::PrimitiveType::TEXTURED_CUBE) {
+        TexturedCube* cube = new TexturedCube("Cube Textured", type, L"Assets\\Textures\\wood.jpg");
         cube->updateLocalMatrix();
         addObject(cube);
     }
 
-    else if (type == PrimitiveType::PHYSICS_CUBE_BATCH) {
+    else if (type == AGameObject::PrimitiveType::PHYSICS_CUBE_BATCH) {
         for (int i = 0; i < 20; i++) {
-            PhysicsCube* cube = new PhysicsCube("Physics Cube");
+            PhysicsCube* cube = new PhysicsCube("Physics Cube", type);
             addObject(cube);
         }
     }
 
-    else if (type == PrimitiveType::PLANE) {
-        Plane* plane = new Plane("Plane");
-        //plane->setRotation(MathUtils::DegToRad(90), 0.0f, 0.0f);
+    else if (type == AGameObject::PrimitiveType::PLANE) {
+        Plane* plane = new Plane("Plane", type);
         plane->setScale(7.0f, 0.2f, 7.0f);
         plane->updateLocalMatrix();
         addObject(plane);
     }
-
-    else if (type == PrimitiveType::PHYSICS_PLANE) {
-        PhysicsPlane* plane = new PhysicsPlane("Plane");
+    else if (type == AGameObject::PrimitiveType::PHYSICS_PLANE) {
+        PhysicsPlane* plane = new PhysicsPlane("Plane", type);
         addObject(plane);
+    }
+
+    else if (type == AGameObject::PrimitiveType::SPHERE) {
+        Sphere* sphere = new Sphere("Sphere", type);
+        addObject(sphere);
+    }
+
+    else if (type == AGameObject::PrimitiveType::CYLINDER) {
+        Cylinder* cylinder = new Cylinder("Cylinder", type);
+        addObject(cylinder);
     }
 }
 
 void GameObjectManager::createObject(std::wstring mesh_path, std::wstring texture_path)
 {
-    MeshObject* mesh = new MeshObject("Mesh", mesh_path, texture_path);
+    MeshObject* mesh = new MeshObject("Mesh", AGameObject::PrimitiveType::MESH, mesh_path, texture_path);
     mesh->updateLocalMatrix();
     addObject(mesh);
+}
+
+void GameObjectManager::createObjectFromFile(String name, AGameObject::PrimitiveType type, Vector3D position, Vector3D rotation, Vector3D scale)
+{
+    if (type == AGameObject::PrimitiveType::CUBE) {
+        Cube* cube = new Cube(name, type);
+        cube->setPosition(position);
+        cube->setRotation(rotation);
+        cube->setScale(scale);
+        addObject(cube);
+    }
+
+    else if (type == AGameObject::PrimitiveType::PLANE) {
+        Plane* plane = new Plane(name, type);
+        plane->setPosition(position);
+        plane->setRotation(rotation);
+        plane->setScale(scale);
+        addObject(plane);
+    }
+
+    else if (type == AGameObject::PrimitiveType::TEXTURED_CUBE) {
+        TexturedCube* cube = new TexturedCube(name, type, L"Assets\\Textures\\wood.jpg");
+        cube->setPosition(position);
+        cube->setRotation(rotation);
+        cube->setScale(scale);
+        addObject(cube);
+    }
+
+    else if (type == AGameObject::PrimitiveType::PHYSICS_CUBE) {
+        PhysicsCube* cube = new PhysicsCube(name, type);
+        cube->setPosition(position);
+        cube->setRotation(rotation);
+        cube->setScale(scale);
+        addObject(cube);
+    }
+
+    else if (type == AGameObject::PrimitiveType::PHYSICS_PLANE) {
+        PhysicsPlane* plane = new PhysicsPlane(name, type);
+        plane->setPosition(position);
+        plane->setRotation(rotation);
+        plane->setScale(scale);
+        addObject(plane);
+    }
+
+    else if (type == AGameObject::PrimitiveType::SPHERE) {
+        Sphere* sphere = new Sphere(name, type);
+        sphere->setPosition(position);
+        sphere->setRotation(rotation);
+        sphere->setScale(scale);
+        addObject(sphere);
+    }
+
+    else if (type == AGameObject::PrimitiveType::CYLINDER) {
+        Cylinder* cylinder = new Cylinder(name, type);
+        cylinder->setPosition(position);
+        cylinder->setRotation(rotation);
+        cylinder->setScale(scale);
+        addObject(cylinder);
+    }
 }
 
 void GameObjectManager::deleteObject(AGameObject* game_object)

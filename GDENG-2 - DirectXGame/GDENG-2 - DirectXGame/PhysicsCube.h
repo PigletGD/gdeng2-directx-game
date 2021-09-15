@@ -5,7 +5,7 @@
 class PhysicsCube : public Cube
 {
 public:
-	PhysicsCube(String name, bool skipInit = false);
+	PhysicsCube(String name, AGameObject::PrimitiveType type, bool skipInit = false);
 	~PhysicsCube();
 
 	void update(float deltaTime) override;

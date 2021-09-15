@@ -155,10 +155,12 @@
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="ColorPickerScreen.cpp" />
     <ClCompile Include="ComponentSystem.cpp" />
+    <ClCompile Include="ConsoleScreen.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="CreditsScreen.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Cylinder.cpp" />
+    <ClCompile Include="Debug.cpp" />
     <ClCompile Include="DeviceContext.cpp" />
     <ClCompile Include="EditorAction.cpp" />
     <ClCompile Include="EngineBackend.cpp" />
@@ -176,6 +178,7 @@
     <ClCompile Include="Libs\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="Libs\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Libs\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="LogUtils.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MathUtils.cpp" />
     <ClCompile Include="MenuBarScreen.cpp" />
@@ -189,6 +192,7 @@
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="PlaybackScreen.cpp" />
+    <ClCompile Include="ProfilerScreen.cpp" />
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="QuadTransitionColor.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
@@ -196,8 +200,11 @@
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SamplerState.cpp" />
+    <ClCompile Include="SceneReader.cpp" />
+    <ClCompile Include="SceneWriter.cpp" />
     <ClCompile Include="ShaderLibrary.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="StringUtils.cpp" />
     <ClCompile Include="SwapChain.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TexturedCube.cpp" />
@@ -223,11 +230,13 @@
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="ColorPickerScreen.h" />
     <ClInclude Include="ComponentSystem.h" />
+    <ClInclude Include="ConsoleScreen.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="ConstantData.h" />
     <ClInclude Include="CreditsScreen.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Cylinder.h" />
+    <ClInclude Include="Debug.h" />
     <ClInclude Include="DeviceContext.h" />
     <ClInclude Include="EditorAction.h" />
     <ClInclude Include="EngineBackend.h" />
@@ -240,6 +249,7 @@
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="InspectorScreen.h" />
     <ClInclude Include="Libs\ImGui\imconfig.h" />
+    <ClInclude Include="Libs\ImGui\imfilebrowser.h" />
     <ClInclude Include="Libs\ImGui\imgui.h" />
     <ClInclude Include="Libs\ImGui\imgui_impl_dx11.h" />
     <ClInclude Include="Libs\ImGui\imgui_impl_win32.h" />
@@ -247,6 +257,7 @@
     <ClInclude Include="Libs\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Libs\ImGui\imstb_textedit.h" />
     <ClInclude Include="Libs\ImGui\imstb_truetype.h" />
+    <ClInclude Include="LogUtils.h" />
     <ClInclude Include="MathUtils.h" />
     <ClInclude Include="Matrix4x4.h" />
     <ClInclude Include="MenuBarScreen.h" />
@@ -262,6 +273,7 @@
     <ClInclude Include="PlaybackScreen.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Prerequisites.h" />
+    <ClInclude Include="ProfilerScreen.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="QuadTransitionColor.h" />
     <ClInclude Include="Quaternion.h" />
@@ -270,8 +282,11 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SamplerState.h" />
+    <ClInclude Include="SceneReader.h" />
+    <ClInclude Include="SceneWriter.h" />
     <ClInclude Include="ShaderLibrary.h" />
     <ClInclude Include="Sphere.h" />
+    <ClInclude Include="StringUtils.h" />
     <ClInclude Include="SwapChain.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TexturedCube.h" />

@@ -4,7 +4,7 @@
 class Cube : public AGameObject
 {
 public:
-	Cube(std::string name, bool skip_init = false);
+	Cube(std::string name, AGameObject::PrimitiveType type, bool skip_init = false);
 	~Cube();
 
 	void update(float delta_time) override;

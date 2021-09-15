@@ -18,6 +18,7 @@
 #include "ActionHistory.h"
 #include "Sphere.h"
 #include "Cylinder.h"
+#include "Debug.h"
 
 AppWindow* AppWindow::sharedInstance = nullptr;
 
@@ -46,6 +47,7 @@ void AppWindow::destroy()
 
 void AppWindow::initializeEngine()
 {
+	Debug::initialize();
 	EngineBackend::initialize();
 	EngineTime::initialize();
 
@@ -86,13 +88,6 @@ void AppWindow::initializeEngine()
 	GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\teapot.obj");
 	GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\bunny.obj");
 	//GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\armadillo.obj");
-
-	//Sphere* sphere = new Sphere("Sphere");
-	//GameObjectManager::getInstance()->addObject(sphere);
-
-	Cylinder* cylinder = new Cylinder("Cylinder");
-	GameObjectManager::getInstance()->addObject(cylinder);
-
 }
 
 void AppWindow::createInterface()
@@ -203,6 +198,8 @@ void AppWindow::onDestroy()
 	ComponentSystem::destroy();
 	GameObjectManager::destroy();
 	ShaderLibrary::destroy();
+
+	Debug::destroy();
 
 	Window::onDestroy();
 }

@@ -8,8 +8,8 @@
 #include "MathUtils.h"
 #include "ShaderLibrary.h"
 
-Cube::Cube(std::string name, bool skip_init) :
-	AGameObject(name)
+Cube::Cube(std::string name, AGameObject::PrimitiveType type, bool skip_init) :
+	AGameObject(name, type)
 {
 	if (skip_init) return;
 

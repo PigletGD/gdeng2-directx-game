@@ -4,7 +4,7 @@
 class MeshObject : public AGameObject
 {
 public:
-	MeshObject(std::string name, std::wstring mesh_path, std::wstring texture_path = L"", bool skip_init = false);
+	MeshObject(std::string name, AGameObject::PrimitiveType type, std::wstring mesh_path, std::wstring texture_path = L"", bool skip_init = false);
 	~MeshObject();
 
 	void update(float delta_time) override;

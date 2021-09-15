@@ -16,13 +16,26 @@
 #include "DeviceContext.h"
 #include "AppWindow.h"
 #include "GameObjectManager.h"
+#include "SceneReader.h"
+#include "SceneWriter.h"
+#include "ConsoleScreen.h"
+#include "ProfilerScreen.h"
 
 MenuBarScreen::MenuBarScreen() : AUIScreen("Menu Bar")
 {
+	m_open_scene_dialog = new ImGui::FileBrowser();
+	m_open_scene_dialog->SetTitle("Open Scene");
+	m_open_scene_dialog->SetTypeFilters({ ".level" });
+
+	m_save_scene_dialog = new ImGui::FileBrowser(ImGuiFileBrowserFlags_EnterNewFilename);
+	m_save_scene_dialog->SetTitle("Save Scene");
+	m_save_scene_dialog->SetTypeFilters({ ".level" });
 }
 
 MenuBarScreen::~MenuBarScreen()
 {
+	delete m_open_scene_dialog;
+	delete m_save_scene_dialog;
 }
 
 void MenuBarScreen::drawUI()
@@ -69,6 +82,13 @@ void MenuBarScreen::drawUI()
 
 	if (ImGui::BeginMainMenuBar())
 	{
+		if (ImGui::BeginMenu("File")) {
+			if (ImGui::MenuItem("Open..", "Ctrl+O")) { m_open_scene_dialog->Open(); }
+			if (ImGui::MenuItem("Save", "Ctrl+S")) { m_save_scene_dialog->Open(); }
+			if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S")) { m_save_scene_dialog->Open(); }
+			if (ImGui::MenuItem("Exit Editor", "Ctrl+W")) {/*Do something */ }
+			ImGui::EndMenu();
+		}
 		if (ImGui::BeginMenu("About"))
 		{
 			if (ImGui::MenuItem("Credits")) { onCreateCreditsScreen(); ImGui::SetWindowFocus(nullptr); }
@@ -78,24 +98,28 @@ void MenuBarScreen::drawUI()
 		{
 			if (ImGui::MenuItem("Action")) { onCreateActionScreen(); ImGui::SetWindowFocus(nullptr); }
 			if (ImGui::MenuItem("Color Picker")) { onCreateColorPickerScreen(); ImGui::SetWindowFocus(nullptr); }
+			if (ImGui::MenuItem("Console")) { onCreateConsoleScreen(); ImGui::SetWindowFocus(nullptr); }
 			if (ImGui::MenuItem("Playback")) { onCreatePlaybackScreen(); ImGui::SetWindowFocus(nullptr); }
+			if (ImGui::MenuItem("Profiler")) { onCreateProfilerScreen(); ImGui::SetWindowFocus(nullptr); }
 			if (ImGui::MenuItem("Viewport")) { onCreateViewportScreen(); }
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Game Objects"))
 		{
 			if (ImGui::BeginMenu("Cubes")) {
-				if (ImGui::MenuItem("Cube")) { GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::CUBE); ImGui::SetWindowFocus(nullptr); }
-				if (ImGui::MenuItem("Physics Cube")) { GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::PHYSICS_CUBE); ImGui::SetWindowFocus(nullptr); }
-				if (ImGui::MenuItem("Textured Cube")) { GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::TEXTURED_CUBE); ImGui::SetWindowFocus(nullptr); }
-				if (ImGui::MenuItem("Physics Cube Batch")) { GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::PHYSICS_CUBE_BATCH); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Cube")) { GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::CUBE); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Physics Cube")) { GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::PHYSICS_CUBE); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Textured Cube")) { GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::TEXTURED_CUBE); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Physics Cube Batch")) { GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::PHYSICS_CUBE_BATCH); ImGui::SetWindowFocus(nullptr); }
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Planes")) {
-				if (ImGui::MenuItem("Plane")) { GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::PLANE); ImGui::SetWindowFocus(nullptr); }
-				if (ImGui::MenuItem("Physics Plane")) { GameObjectManager::getInstance()->createObject(GameObjectManager::PrimitiveType::PHYSICS_PLANE); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Plane")) { GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::PLANE); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Physics Plane")) { GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::PHYSICS_PLANE); ImGui::SetWindowFocus(nullptr); }
 				ImGui::EndMenu();
 			}
+			if (ImGui::MenuItem("Sphere")) { GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::SPHERE); ImGui::SetWindowFocus(nullptr); }
+			if (ImGui::MenuItem("Cylinder")) { GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::CYLINDER); ImGui::SetWindowFocus(nullptr); }
 			if (ImGui::BeginMenu("Meshes")) {
 				if (ImGui::MenuItem("Teapot")) { GameObjectManager::getInstance()->createObject(L"Assets\\Meshes\\teapot.obj", L"Assets\\Textures\\brick.png"); ImGui::SetWindowFocus(nullptr); }
 				if (ImGui::MenuItem("Bunny")) { GameObjectManager::getInstance()->createObject(L"Assets\\Meshes\\bunny.obj", L"Assets\\Textures\\brick.png"); ImGui::SetWindowFocus(nullptr); }
@@ -135,6 +159,26 @@ void MenuBarScreen::drawUI()
 		}
 
 		ImGui::EndMainMenuBar();
+	}
+
+	m_open_scene_dialog->Display();
+	m_save_scene_dialog->Display();
+
+	if (m_save_scene_dialog->HasSelected())
+	{
+		SceneWriter writer = SceneWriter(m_save_scene_dialog->GetSelected().string());
+		writer.writeToFile();
+
+		m_save_scene_dialog->ClearSelected();
+		m_save_scene_dialog->Close();
+	}
+
+	else if (m_open_scene_dialog->HasSelected()) {
+		SceneReader reader = SceneReader(m_open_scene_dialog->GetSelected().string());
+		reader.readFromFile();
+
+		m_open_scene_dialog->ClearSelected();
+		m_open_scene_dialog->Close();
 	}
 
 	ImGui::End();
@@ -185,6 +229,21 @@ void MenuBarScreen::onCreateColorPickerScreen()
 	else std::cout << "Color Picker Screen Already Created" << std::endl;
 }
 
+void MenuBarScreen::onCreateConsoleScreen()
+{
+	UIManager* uiManager = UIManager::getInstance();
+	UINames uiNames;
+
+	if (uiManager->uiTable[uiNames.CONSOLE_SCREEN] == nullptr) {
+		ConsoleScreen* consoleScreen = new ConsoleScreen();
+		uiManager->uiTable[uiNames.CONSOLE_SCREEN] = consoleScreen;
+		uiManager->uiList.push_back(consoleScreen);
+
+		std::cout << "Created Console Screen" << std::endl;
+	}
+	else std::cout << "Console Screen Already Created" << std::endl;
+}
+
 void MenuBarScreen::onCreatePlaybackScreen()
 {
 	UIManager* uiManager = UIManager::getInstance();
@@ -198,6 +257,21 @@ void MenuBarScreen::onCreatePlaybackScreen()
 		std::cout << "Created Playback Screen" << std::endl;
 	}
 	else std::cout << "Playback Screen Already Created" << std::endl;
+}
+
+void MenuBarScreen::onCreateProfilerScreen()
+{
+	UIManager* uiManager = UIManager::getInstance();
+	UINames uiNames;
+
+	if (uiManager->uiTable[uiNames.PROFILER_SCREEN] == nullptr) {
+		ProfilerScreen* profilerScreen = new ProfilerScreen();
+		uiManager->uiTable[uiNames.PROFILER_SCREEN] = profilerScreen;
+		uiManager->uiList.push_back(profilerScreen);
+
+		std::cout << "Created Profiler Screen" << std::endl;
+	}
+	else std::cout << "Profiler Screen Already Created" << std::endl;
 }
 
 void MenuBarScreen::onCreateViewportScreen()

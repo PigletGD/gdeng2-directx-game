@@ -3,9 +3,11 @@
 #include <vector>
 #include "EditorAction.h"
 
-AGameObject::AGameObject(String name)
+AGameObject::AGameObject(String name, PrimitiveType type)
 {
 	m_name = name;
+	m_object_type = type;
+
 	m_local_position = Vector3D::zero();
 	//m_local_rotation = Vector3D::zero();
 	m_local_scale = Vector3D::one();
@@ -19,6 +21,11 @@ AGameObject::~AGameObject()
 		m_component_list[i]->detachOwner();
 	}
 	m_component_list.clear();
+}
+
+AGameObject::PrimitiveType AGameObject::getObjectType()
+{
+	return m_object_type;
 }
 
 void AGameObject::update(float deltaTime)
@@ -222,8 +229,6 @@ void AGameObject::setRotation(float x, float y, float z, float w)
 	
 		setPosition(savedPos);
 	}
-	
-	
 }
 
 Vector3D AGameObject::getLocalRotation()

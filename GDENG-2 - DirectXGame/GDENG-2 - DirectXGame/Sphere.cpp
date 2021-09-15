@@ -7,8 +7,8 @@
 #include "ConstantBuffer.h"
 #include "DeviceContext.h"
 
-Sphere::Sphere(std::string name)
-	: AGameObject(name)
+Sphere::Sphere(std::string name, AGameObject::PrimitiveType type)
+	: AGameObject(name, type)
 {
 	ShaderNames shader_names;
 	void* shader_byte_code = NULL;

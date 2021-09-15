@@ -19,6 +19,20 @@ class HierarchyScreen;
 class AGameObject
 {
 public:
+	enum PrimitiveType {
+		NONE,
+		CAMERA,
+		TEXTURED_CUBE,
+		CUBE,
+		PLANE,
+		SPHERE,
+		CYLINDER,
+		PHYSICS_CUBE,
+		PHYSICS_CUBE_BATCH,
+		PHYSICS_PLANE,
+		MESH
+	};
+
 	/*
 	struct AQuaternion {
 		float w = 0.0f;
@@ -31,8 +45,10 @@ public:
 	typedef std::vector<AComponent*> ComponentList;
 	typedef std::vector<AGameObject*> ChildList;
 
-	AGameObject(String name);
+	AGameObject(String name, PrimitiveType type);
 	virtual ~AGameObject();
+
+	PrimitiveType getObjectType();
 
 	virtual void update(float deltaTime);
 	virtual void draw(int width, int height);
@@ -90,6 +106,8 @@ protected:
 	Vector3D m_local_scale;
 	
 	Matrix4x4 m_local_matrix;
+
+	PrimitiveType m_object_type;
 
 	ComponentList m_component_list;
 	ChildList m_child_list;
