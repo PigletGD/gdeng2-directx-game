@@ -113,12 +113,15 @@ void Sphere::draw(int width, int height)
 
 	constant cc = {};
 
-	if (m_override_matrix)
+	/*if (m_override_matrix)
 		cc.m_world = m_local_matrix;
 	else {
 		updateLocalMatrix();
 		cc.m_world = m_local_matrix;
-	}
+	}*/
+
+	updateLocalMatrix();
+	cc.m_world = m_local_matrix;
 
 	// have to adjust for multiple viewports later
 	cc.m_view = camera_system->getCurrentCameraViewMatrix();
@@ -142,10 +145,5 @@ void Sphere::saveEditState()
 void Sphere::restoreEditState()
 {
 	AGameObject::restoreEditState();
-	detachComponent(m_component_attached);
-	delete m_component_attached;
 
-	//also restore physics by redeclaring component
-	m_component_attached = new PhysicsComponent("PhysicsComponent_" + m_name, this);
-	attachComponent(m_component_attached);
 }

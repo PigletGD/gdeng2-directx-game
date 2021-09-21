@@ -2,8 +2,7 @@
 #include <algorithm>
 #include <vector>
 #include "EditorAction.h"
-
-#include "PhysicsComponent.h"
+#include <reactphysics3d/mathematics/Quaternion.h>
 AGameObject::AGameObject(String name, PrimitiveType type)
 {
 	m_name = name;
@@ -39,68 +38,45 @@ void AGameObject::draw(int width, int height)
 
 void AGameObject::setPosition(float x, float y, float z)
 {
-	if(this->m_child_list.empty())
+	if (this->m_child_list.empty())
 	{
 		m_local_position = Vector3D(x, y, z);
-		m_override_matrix = false;
+		//m_override_matrix = false;
 		return;
 	}
 
 	Vector3D prevPosition = this->m_local_position;
 	m_local_position = Vector3D(x, y, z);
-	m_override_matrix = false;
+	//m_override_matrix = false;
 
-	for(AGameObject* child : this->m_child_list)
+	for (AGameObject* child : this->m_child_list)
 	{
 		Vector3D displacement = child->getLocalPosition() - prevPosition;
 		child->setPosition(Vector3D(x, y, z) + displacement);
 	}
-	
+
 
 }
 
 void AGameObject::setPosition(Vector3D pos)
 {
-	if(this->m_child_list.empty())
+	if (this->m_child_list.empty())
 	{
 		m_local_position = pos;
-		m_override_matrix = false;
+		//m_override_matrix = false;
 		return;
 	}
 	Vector3D prevPosition = this->m_local_position;
-	
-	m_local_position = pos;
-	m_override_matrix = false;
 
-	
-	for(AGameObject* child : this->m_child_list)
+	m_local_position = pos;
+	//m_override_matrix = false;
+
+
+	for (AGameObject* child : this->m_child_list)
 	{
 		Vector3D displacement = child->getLocalPosition() - prevPosition;
 		child->setPosition(pos + displacement);
 	}
-
-	/*ComponentList compList = this->getComponentsOfType(AComponent::Physics);
-	PhysicsComponent* pcomp = nullptr;
-	if (!compList.empty())
-	{
-		for (int i = 0; i < compList.size(); i++)
-		{
-			if (compList[i]->getType() == AComponent::Physics)
-			{
-				pcomp = dynamic_cast<PhysicsComponent*>(compList[i]);
-				break;
-			}
-		}
-		if (pcomp != nullptr)
-		{
-			//update the rigidbody transforms
-			Transform t;
-			t.setPosition(Vector3(m_local_position.m_x, m_local_position.m_y, m_local_position.m_z));
-			//t.setOrientation(Quaternion(m_orientation.m_x, m_orientation.m_y, m_orientation.m_z, m_orientation.m_w));
-			pcomp->getRigidBody()->setTransform(t);
-			//pcomp->perform(0);
-		}
-	}*/
 
 }
 
@@ -117,59 +93,53 @@ void AGameObject::setRotation(float x, float y, float z)
 	m_orientation.m_y = y;
 	m_orientation.m_z = z;
 	m_orientation.m_w = 1;
-	m_override_matrix = false;
+	//m_override_matrix = false;
 
 }
 
 void AGameObject::setRotation(Vector3D rot)
 {
 	//this is used when changing values from the inspector window
-	std::cout << "BRUH\n";
-	std::cout << "Name: "<<this->getName() <<std::endl;
-	if(this->m_child_list.empty())
+	if (this->m_child_list.empty())
 	{
-		std::cout << "Empty childlist\n";
 		m_orientation = {};
 		m_orientation.m_x = rot.m_x;
 		m_orientation.m_y = rot.m_y;
 		m_orientation.m_z = rot.m_z;
 		m_orientation.m_w = 1; //identity quaternion
-		
-		m_override_matrix = false;
+
+		//m_override_matrix = false;
 		return;
 	}
 
-	std::cout << "childlist has value\n";
 	Vector3D oldRot = this->getLocalRotation();
 	m_orientation = {};
 	m_orientation.m_x = rot.m_x;
 	m_orientation.m_y = rot.m_y;
 	m_orientation.m_z = rot.m_z;
 	m_orientation.m_w = 1;
-	m_override_matrix = false;
-	
+	//m_override_matrix = false;
+
 	Vector3D newRot = this->getLocalRotation();
 	Vector3D rotDiff = newRot - oldRot;
 
-	
-	
+
+
 	Vector3D savedPos = this->m_local_position;
 	setPosition(Vector3D(0, 0, 0));
 
 	for (AGameObject* child : this->m_child_list) {
-		
-
 		//Vector3D initialPosition;
 		Vector3D initialPosition = child->getLocalPosition();
 		Vector3D newPosition = Vector3D::one();
-		
+
 		if (rotDiff.m_x != 0) {
-			AQuaternion xRot = AQuaternion(Vector3D(1, 0,0), rotDiff.m_x);
+			AQuaternion xRot = AQuaternion(Vector3D(1, 0, 0), rotDiff.m_x);
 
 			//initialPosition = child->getLocalPosition();
 			newPosition = AQuaternion::Rotate(&initialPosition, xRot);
 		}
-	
+
 		else if (rotDiff.m_y != 0) {
 			AQuaternion yRot = AQuaternion(Vector3D(0, 1, 0), rotDiff.m_y);
 			//initialPosition = child->getLocalPosition();
@@ -180,30 +150,28 @@ void AGameObject::setRotation(Vector3D rot)
 			//initialPosition = child->getLocalPosition();
 			newPosition = AQuaternion::Rotate(&initialPosition, zRot);
 		}
-		
-		
-	
+
 		child->setRotation(rotDiff + child->getLocalRotation());
 		child->setPosition(newPosition);
-		
+
 	}
 
 	setPosition(savedPos);
-	
-	
+
+
 }
 
 void AGameObject::setRotation(float x, float y, float z, float w)
 {
-	
-	if(this->m_child_list.empty())
+
+	if (this->m_child_list.empty())
 	{
 		m_orientation = {};
 		m_orientation.m_x = x;
 		m_orientation.m_y = y;
 		m_orientation.m_z = z;
 		m_orientation.m_w = w;
-		m_override_matrix = false;
+		//m_override_matrix = false;
 		return;
 	}
 
@@ -213,24 +181,24 @@ void AGameObject::setRotation(float x, float y, float z, float w)
 	m_orientation.m_y = y;
 	m_orientation.m_z = z;
 	m_orientation.m_w = w;
-	m_override_matrix = false;
+	//m_override_matrix = false;
 
 	Vector3D newRotation = this->getLocalRotation();
 	Vector3D rotDiff = newRotation - oldRot;
-	
-	
+
+
 
 	for (AGameObject* child : this->m_child_list) {
-		
+
 		Vector3D savedPos = this->m_local_position;
 		setPosition(Vector3D(0, 0, 0));
-		
+
 		Vector3D initialPosition;
 		Vector3D newPosition;
-		
+
 		if (rotDiff.m_x != 0) {
 			AQuaternion xRot = AQuaternion(Vector3D(1, m_local_position.m_y, m_local_position.m_z), rotDiff.m_x);
-			
+
 			initialPosition = child->getLocalPosition();
 			newPosition = AQuaternion::Rotate(&initialPosition, xRot);
 		}
@@ -246,15 +214,13 @@ void AGameObject::setRotation(float x, float y, float z, float w)
 			initialPosition = child->getLocalPosition();
 			newPosition = AQuaternion::Rotate(&initialPosition, zRot);
 		}
-		
+
 		child->setRotation(rotDiff + child->getLocalRotation());
 		child->setPosition(newPosition);
-		
-	
+
+
 		setPosition(savedPos);
 	}
-
-	
 }
 
 Vector3D AGameObject::getLocalRotation()
@@ -265,16 +231,16 @@ Vector3D AGameObject::getLocalRotation()
 
 void AGameObject::setScale(float x, float y, float z)
 {
-	if(this->m_child_list.empty())
+	if (this->m_child_list.empty())
 	{
 		m_local_scale = Vector3D(x, y, z);
-		m_override_matrix = false;
+		//m_override_matrix = false;
 		return;
 	}
 
 	Vector3D oldScale = this->m_local_scale;
 	m_local_scale = Vector3D(x, y, z);
-	m_override_matrix = false;
+	//m_override_matrix = false;
 
 	if (oldScale.m_x != m_local_scale.m_x) {
 		//For all childs
@@ -297,20 +263,20 @@ void AGameObject::setScale(float x, float y, float z)
 			child->setScale(childScale);
 		}
 	}
-	
+
 }
 
 void AGameObject::setScale(Vector3D scale)
 {
-	if(this->m_child_list.empty())
+	if (this->m_child_list.empty())
 	{
 		m_local_scale = scale;
-		m_override_matrix = false;
+		//m_override_matrix = false;
 		return;
 	}
 	Vector3D oldScale = this->m_local_scale;
 	m_local_scale = scale;
-	m_override_matrix = false;
+	//m_override_matrix = false;
 	if (oldScale.m_x != m_local_scale.m_x) {
 		//For all childs
 		for (AGameObject* child : m_child_list) {
@@ -333,8 +299,8 @@ void AGameObject::setScale(Vector3D scale)
 		}
 	}
 
-	
-	
+
+
 }
 
 Vector3D AGameObject::getLocalScale()
@@ -479,7 +445,7 @@ void AGameObject::setLocalMatrix(float matrix[16])
 
 	m_local_matrix = scaleMatrix.multiplyTo(transMatrix.multiplyTo(newMatrix));
 
-	m_override_matrix = true;
+	//m_override_matrix = true;
 }
 
 Matrix4x4 AGameObject::getLocalMatrix()
@@ -536,37 +502,13 @@ void AGameObject::restoreEditState()
 		m_local_matrix = m_last_edit_state->getStoredMatrix();
 
 		m_last_edit_state = NULL;
-
-		/*
-		ComponentList compList = this->getComponentsOfType(AComponent::Physics);
-		PhysicsComponent* pcomp = nullptr;
-		if(!compList.empty())
-		{
-			for(int i = 0 ; i < compList.size(); i++)
-			{
-				if(compList[i]->getType() == AComponent::Physics)
-				{
-					pcomp = dynamic_cast<PhysicsComponent*>(compList[i]);
-					break;
-				}
-			}
-			if(pcomp != nullptr)
-			{
-				//update the rigidbody transforms
-				Transform t;
-				t.setPosition(Vector3(m_local_position.m_x, m_local_position.m_y, m_local_position.m_z));
-				t.setOrientation(Quaternion(m_orientation.m_x, m_orientation.m_y, m_orientation.m_z, m_orientation.m_w));
-				pcomp->getRigidBody()->setTransform(t);
-			}
-		}
-		*/
 	}
 	else std::cout << "Edit state is null. Cannot restore. \n";
 }
 
 void AGameObject::addChild(AGameObject* childObject)
 {
-	if(this->isInList(childObject))
+	if (this->isInList(childObject))
 	{
 		return;
 	}
@@ -575,28 +517,28 @@ void AGameObject::addChild(AGameObject* childObject)
 
 void AGameObject::removeChild(AGameObject* childObject)
 {
-	if(this->isInList(childObject))
+	if (this->isInList(childObject))
 	{
 		return;
 	}
 
 	this->m_child_list.erase(this->m_child_list.begin() + this->findChildIndexInList(childObject));
-	
+
 }
 
 bool AGameObject::isInList(AGameObject* object)
 {
 	int index = -1;
-	for(int i = 0; i < this->m_child_list.size() ; i++)
+	for (int i = 0; i < this->m_child_list.size(); i++)
 	{
-		if(this->m_child_list[i] == object)
+		if (this->m_child_list[i] == object)
 		{
 			index = i;
 			break;
 		}
 	}
 
-	if(index == -1)
+	if (index == -1)
 	{
 		return false;
 	}
@@ -606,9 +548,9 @@ bool AGameObject::isInList(AGameObject* object)
 int AGameObject::findChildIndexInList(AGameObject* childObject)
 {
 	int index = -1;
-	for(int i = 0; i < this->m_child_list.size() ; i++)
+	for (int i = 0; i < this->m_child_list.size(); i++)
 	{
-		if(this->m_child_list[i] == childObject)
+		if (this->m_child_list[i] == childObject)
 		{
 			index = i;
 			break;

@@ -193,12 +193,15 @@ void Cylinder::draw(int width, int height)
 
 	constant cc = {};
 
-	if (m_override_matrix)
+	/*if (m_override_matrix)
 		cc.m_world = m_local_matrix;
 	else {
 		updateLocalMatrix();
 		cc.m_world = m_local_matrix;
-	}
+	}*/
+
+	updateLocalMatrix();
+	cc.m_world = m_local_matrix;
 
 	// have to adjust for multiple viewports later
 	cc.m_view = camera_system->getCurrentCameraViewMatrix();

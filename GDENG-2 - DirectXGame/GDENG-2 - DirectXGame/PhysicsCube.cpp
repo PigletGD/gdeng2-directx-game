@@ -45,10 +45,8 @@ void PhysicsCube::saveEditState()
 void PhysicsCube::restoreEditState()
 {
 	AGameObject::restoreEditState();
-	detachComponent(m_component_attached);
-	delete m_component_attached;
+	
+	m_component_attached->getRigidBody()->setAngularVelocity(reactphysics3d::Vector3(0, 0, 0));
+	m_component_attached->getRigidBody()->setLinearVelocity(reactphysics3d::Vector3(0, 0, 0));
 
-	//also restore physics by redeclaring component
-	m_component_attached = new PhysicsComponent("PhysicsComponent_" + m_name, this);
-	attachComponent(m_component_attached);
 }
