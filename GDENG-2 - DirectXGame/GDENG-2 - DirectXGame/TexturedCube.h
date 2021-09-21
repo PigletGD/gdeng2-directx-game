@@ -8,6 +8,8 @@ public:
 	~TexturedCube();
 
 	void draw(int width, int height) override;
+	void updateTexture(TexturePtr newTex) override;
+	TexturePtr getObjectTexture();
 
 private:
 	TexturePtr m_texture;

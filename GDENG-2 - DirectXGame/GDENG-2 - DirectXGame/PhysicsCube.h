@@ -17,7 +17,7 @@ public:
 protected:
 	float m_mass = 3.0f;
 
-	PhysicsComponent* m_component_attached;
+	//PhysicsComponent* m_component_attached;
 
 	void awake() override;
 };

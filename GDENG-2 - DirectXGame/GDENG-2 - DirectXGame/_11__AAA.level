@@ -1,0 +1,24 @@
+Name: Cylinder
+Type: 6
+Position: 0.0036599 -0.0106545 0.110485
+Rotation: 0.041888 0.247837 0.0174533
+Scale: 1 1 1
+CompType: -1
+Name: Capsule
+Type: 11
+Position: -2.22572 -0.0731612 0.672569
+Rotation: 0.041888 0.247837 0.0174533
+Scale: 1 1 1
+CompType: -1
+Name: Cube
+Type: 3
+Position: 3.10541 0.0763113 -0.671545
+Rotation: 0.041888 0.247837 0.0174533
+Scale: 1 1 1
+CompType: -1
+Name: Plane
+Type: 4
+Position: 0.616652 -1.79249 -0.11151
+Rotation: 0.041888 0.247837 0.0174533
+Scale: 7 0.2 7
+CompType: -1

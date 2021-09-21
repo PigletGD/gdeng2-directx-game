@@ -8,6 +8,7 @@
 #include "MathUtils.h"
 #include "ShaderLibrary.h"
 
+
 Cube::Cube(std::string name, AGameObject::PrimitiveType type, bool skip_init) :
 	AGameObject(name, type)
 {
@@ -115,4 +116,20 @@ void Cube::draw(int width, int height)
 	device_context->setVertexBuffer(m_vb);
 
 	device_context->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
+}
+
+void Cube::saveEditState()
+{
+	AGameObject::saveEditState();
+}
+
+void Cube::restoreEditState()
+{
+	AGameObject::restoreEditState();
+	detachComponent(m_component_attached);
+	delete m_component_attached;
+
+	//also restore physics by redeclaring component
+	m_component_attached = new PhysicsComponent("PhysicsComponent_" + m_name, this);
+	attachComponent(m_component_attached);
 }

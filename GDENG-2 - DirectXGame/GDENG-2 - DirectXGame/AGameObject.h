@@ -22,15 +22,16 @@ public:
 	enum PrimitiveType {
 		NONE,
 		CAMERA,
-		TEXTURED_CUBE,
+		TEXTUREDCUBE,
 		CUBE,
 		PLANE,
 		SPHERE,
 		CYLINDER,
-		PHYSICS_CUBE,
-		PHYSICS_CUBE_BATCH,
-		PHYSICS_PLANE,
-		MESH
+		PHYSICSCUBE,
+		PHYSICSCUBEBATCH,
+		PHYSICSPLANE,
+		MESH,
+		CAPSULE,
 	};
 
 	/*
@@ -79,12 +80,16 @@ public:
 	AComponent* findComponentOfType(AComponent::ComponentType type, String name);
 	ComponentList getComponentsOfType(AComponent::ComponentType type);
 	ComponentList getComponentsOfTypeRecursive(AComponent::ComponentType type);
-
+	ComponentList getAllObjectComponents();
+	
 	void updateLocalMatrix(); //updates local matrix based from latest position, rotation, and scale.
 	void setLocalMatrix(float matrix[16]);
 	Matrix4x4 getLocalMatrix();
 	float* getRawMatrix();
 	float* getPhysicsLocalMatrix(); //scale is set to 1.0
+
+	//texture update
+	virtual void updateTexture(TexturePtr newTex);
 
 	virtual void saveEditState();
 	virtual void restoreEditState();

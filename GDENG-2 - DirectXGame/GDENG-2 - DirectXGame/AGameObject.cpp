@@ -3,6 +3,7 @@
 #include <vector>
 #include "EditorAction.h"
 
+#include "PhysicsComponent.h"
 AGameObject::AGameObject(String name, PrimitiveType type)
 {
 	m_name = name;
@@ -77,6 +78,29 @@ void AGameObject::setPosition(Vector3D pos)
 		Vector3D displacement = child->getLocalPosition() - prevPosition;
 		child->setPosition(pos + displacement);
 	}
+
+	/*ComponentList compList = this->getComponentsOfType(AComponent::Physics);
+	PhysicsComponent* pcomp = nullptr;
+	if (!compList.empty())
+	{
+		for (int i = 0; i < compList.size(); i++)
+		{
+			if (compList[i]->getType() == AComponent::Physics)
+			{
+				pcomp = dynamic_cast<PhysicsComponent*>(compList[i]);
+				break;
+			}
+		}
+		if (pcomp != nullptr)
+		{
+			//update the rigidbody transforms
+			Transform t;
+			t.setPosition(Vector3(m_local_position.m_x, m_local_position.m_y, m_local_position.m_z));
+			//t.setOrientation(Quaternion(m_orientation.m_x, m_orientation.m_y, m_orientation.m_z, m_orientation.m_w));
+			pcomp->getRigidBody()->setTransform(t);
+			//pcomp->perform(0);
+		}
+	}*/
 
 }
 
@@ -229,6 +253,8 @@ void AGameObject::setRotation(float x, float y, float z, float w)
 	
 		setPosition(savedPos);
 	}
+
+	
 }
 
 Vector3D AGameObject::getLocalRotation()
@@ -395,6 +421,11 @@ AGameObject::ComponentList AGameObject::getComponentsOfTypeRecursive(AComponent:
 	return foundList;
 }
 
+AGameObject::ComponentList AGameObject::getAllObjectComponents()
+{
+	return this->m_component_list;
+}
+
 void AGameObject::updateLocalMatrix()
 {
 	// prepare matrices
@@ -486,6 +517,10 @@ float* AGameObject::getPhysicsLocalMatrix()
 	return allMatrix.getMatrix();
 }
 
+void AGameObject::updateTexture(TexturePtr newTex)
+{
+}
+
 void AGameObject::saveEditState()
 {
 	if (m_last_edit_state == NULL)
@@ -501,6 +536,30 @@ void AGameObject::restoreEditState()
 		m_local_matrix = m_last_edit_state->getStoredMatrix();
 
 		m_last_edit_state = NULL;
+
+		/*
+		ComponentList compList = this->getComponentsOfType(AComponent::Physics);
+		PhysicsComponent* pcomp = nullptr;
+		if(!compList.empty())
+		{
+			for(int i = 0 ; i < compList.size(); i++)
+			{
+				if(compList[i]->getType() == AComponent::Physics)
+				{
+					pcomp = dynamic_cast<PhysicsComponent*>(compList[i]);
+					break;
+				}
+			}
+			if(pcomp != nullptr)
+			{
+				//update the rigidbody transforms
+				Transform t;
+				t.setPosition(Vector3(m_local_position.m_x, m_local_position.m_y, m_local_position.m_z));
+				t.setOrientation(Quaternion(m_orientation.m_x, m_orientation.m_y, m_orientation.m_z, m_orientation.m_w));
+				pcomp->getRigidBody()->setTransform(t);
+			}
+		}
+		*/
 	}
 	else std::cout << "Edit state is null. Cannot restore. \n";
 }

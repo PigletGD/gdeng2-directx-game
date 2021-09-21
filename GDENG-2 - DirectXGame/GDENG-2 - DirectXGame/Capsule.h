@@ -3,11 +3,12 @@
 #include "PhysicsComponent.h"
 
 
-class Sphere : public AGameObject
+class Capsule :
+    public AGameObject
 {
 public:
-	Sphere(std::string name, AGameObject::PrimitiveType type);
-	~Sphere();
+	Capsule(std::string name, AGameObject::PrimitiveType type);
+	~Capsule();
 
 	void update(float delta_time) override;
 	void draw(int width, int height) override;
@@ -15,15 +16,17 @@ public:
 	void saveEditState() override;
 	void restoreEditState() override;
 
-	float getRadius();
-
-	float radius = 1;
+	
+	float m_radius = 0.5f;
+	float capsuleHeight = 0.5f;//0.5f
 protected:
 	VertexBufferPtr m_vb;
 	IndexBufferPtr m_ib;
 	ConstantBufferPtr m_cb;
-	
-	PhysicsComponent* m_component_attached;
 
+	PhysicsComponent* m_component_attached;
+	
+	
 	float m_ticks = 0.0f;
 };
+

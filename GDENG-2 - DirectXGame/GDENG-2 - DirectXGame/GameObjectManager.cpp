@@ -13,6 +13,7 @@
 #include "EditorAction.h"
 #include "Sphere.h"
 #include "Cylinder.h"
+#include "Capsule.h"
 
 GameObjectManager* GameObjectManager::m_shared_instance = NULL;
 
@@ -69,10 +70,10 @@ void GameObjectManager::addObject(AGameObject* game_object)
 {
     if (m_game_object_map[game_object->getName()] != NULL) {
         int count = 1;
-        String revisedString = game_object->getName() + " " + "(" + std::to_string(count) + ")";
+        String revisedString = game_object->getName() + "(" + std::to_string(count) + ")";
         while (m_game_object_map[revisedString] != NULL) {
             count++;
-            revisedString = game_object->getName() + " " + "(" + std::to_string(count) + ")";
+            revisedString = game_object->getName() + "(" + std::to_string(count) + ")";
         }
         game_object->setName(revisedString);
         m_game_object_map[revisedString] = game_object;
@@ -90,20 +91,20 @@ void GameObjectManager::createObject(AGameObject::PrimitiveType type)
         addObject(cube);
     }
 
-    else if (type == AGameObject::PrimitiveType::PHYSICS_CUBE) {
-        PhysicsCube* cube = new PhysicsCube("Physics Cube", type);
+    else if (type == AGameObject::PrimitiveType::PHYSICSCUBE) {
+        PhysicsCube* cube = new PhysicsCube("PhysicsCube", type);
         addObject(cube);
     }
 
-    else if (type == AGameObject::PrimitiveType::TEXTURED_CUBE) {
-        TexturedCube* cube = new TexturedCube("Cube Textured", type, L"Assets\\Textures\\wood.jpg");
+    else if (type == AGameObject::PrimitiveType::TEXTUREDCUBE) {
+        TexturedCube* cube = new TexturedCube("CubeTextured", type, L"Assets\\Textures\\White.png");
         cube->updateLocalMatrix();
         addObject(cube);
     }
 
-    else if (type == AGameObject::PrimitiveType::PHYSICS_CUBE_BATCH) {
+    else if (type == AGameObject::PrimitiveType::PHYSICSCUBEBATCH) {
         for (int i = 0; i < 20; i++) {
-            PhysicsCube* cube = new PhysicsCube("Physics Cube", type);
+            PhysicsCube* cube = new PhysicsCube("PhysicsCube", type);
             addObject(cube);
         }
     }
@@ -114,7 +115,7 @@ void GameObjectManager::createObject(AGameObject::PrimitiveType type)
         plane->updateLocalMatrix();
         addObject(plane);
     }
-    else if (type == AGameObject::PrimitiveType::PHYSICS_PLANE) {
+    else if (type == AGameObject::PrimitiveType::PHYSICSPLANE) {
         PhysicsPlane* plane = new PhysicsPlane("Plane", type);
         addObject(plane);
     }
@@ -128,6 +129,11 @@ void GameObjectManager::createObject(AGameObject::PrimitiveType type)
         Cylinder* cylinder = new Cylinder("Cylinder", type);
         addObject(cylinder);
     }
+    else if (type == AGameObject::PrimitiveType::CAPSULE) {
+        Capsule* capsule = new Capsule("Capsule", type);
+        addObject(capsule);
+    }
+	
 }
 
 void GameObjectManager::createObject(std::wstring mesh_path, std::wstring texture_path)
@@ -155,7 +161,7 @@ void GameObjectManager::createObjectFromFile(String name, AGameObject::Primitive
         addObject(plane);
     }
 
-    else if (type == AGameObject::PrimitiveType::TEXTURED_CUBE) {
+    else if (type == AGameObject::PrimitiveType::TEXTUREDCUBE) {
         TexturedCube* cube = new TexturedCube(name, type, L"Assets\\Textures\\wood.jpg");
         cube->setPosition(position);
         cube->setRotation(rotation);
@@ -163,7 +169,7 @@ void GameObjectManager::createObjectFromFile(String name, AGameObject::Primitive
         addObject(cube);
     }
 
-    else if (type == AGameObject::PrimitiveType::PHYSICS_CUBE) {
+    else if (type == AGameObject::PrimitiveType::PHYSICSCUBE) {
         PhysicsCube* cube = new PhysicsCube(name, type);
         cube->setPosition(position);
         cube->setRotation(rotation);
@@ -171,7 +177,7 @@ void GameObjectManager::createObjectFromFile(String name, AGameObject::Primitive
         addObject(cube);
     }
 
-    else if (type == AGameObject::PrimitiveType::PHYSICS_PLANE) {
+    else if (type == AGameObject::PrimitiveType::PHYSICSPLANE) {
         PhysicsPlane* plane = new PhysicsPlane(name, type);
         plane->setPosition(position);
         plane->setRotation(rotation);

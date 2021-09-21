@@ -6,6 +6,7 @@
 
 #include "ConstantBuffer.h"
 #include "DeviceContext.h"
+#include "PhysicsComponent.h"
 
 Sphere::Sphere(std::string name, AGameObject::PrimitiveType type)
 	: AGameObject(name, type)
@@ -31,8 +32,8 @@ Sphere::Sphere(std::string name, AGameObject::PrimitiveType type)
 	for (int i = 0; i <= stackCount; ++i)
 	{
 		stackAngle = PI_HALF - i * stackStep;
-		float xz = cosf(stackAngle);
-		float y = sinf(stackAngle);
+		float xz = cosf(stackAngle) * radius;
+		float y = sinf(stackAngle) * radius;
 		
 		for (int j = 0; j <= sectorCount; ++j)
 		{
@@ -131,4 +132,20 @@ void Sphere::draw(int width, int height)
 	device_context->setVertexBuffer(m_vb);
 
 	device_context->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
+}
+
+void Sphere::saveEditState()
+{
+	AGameObject::saveEditState();
+}
+
+void Sphere::restoreEditState()
+{
+	AGameObject::restoreEditState();
+	detachComponent(m_component_attached);
+	delete m_component_attached;
+
+	//also restore physics by redeclaring component
+	m_component_attached = new PhysicsComponent("PhysicsComponent_" + m_name, this);
+	attachComponent(m_component_attached);
 }

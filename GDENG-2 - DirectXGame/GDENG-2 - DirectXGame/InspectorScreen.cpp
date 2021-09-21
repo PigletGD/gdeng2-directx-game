@@ -11,13 +11,29 @@
 #include "MathUtils.h"
 #include "ActionHistory.h"
 
+
+#include "TexturedCube.h"
+#include "Texture.h"
+#include "TextureComponent.h"
+#include "PhysicsComponent.h"
+#include "GraphicsEngine.h"
+#include <locale>
+#include <codecvt>
+#include <string>
+#include <algorithm>
+
+
 InspectorScreen::InspectorScreen() : AUIScreen("InspectorScreen")
 {
 	this->m_transformer_object = new TransformerObject("TransformerObject", true);
+	m_file_browser = new ImGui::FileBrowser();
+	m_file_browser->SetTitle("Change Texture");
+	m_file_browser->SetTypeFilters({ ".png", ".jpg", ".jpeg" });
 }
 
 InspectorScreen::~InspectorScreen()
 {
+	delete m_file_browser;
 }
 
 void InspectorScreen::drawUI()
@@ -129,6 +145,103 @@ void InspectorScreen::drawUI()
 			//onTransformUpdate();
 		}
 
+
+		//components
+		if (ImGui::TreeNode("Components"))
+		{
+			AGameObject::ComponentList compList = m_selected_object->getAllObjectComponents();
+			for (int i = 0; i < compList.size(); i++)
+			{
+				// Use SetNextItemOpen() so set the default state of a node to be open. We could
+				// also use TreeNodeEx() with the ImGuiTreeNodeFlags_DefaultOpen flag to achieve the same thing!
+
+				//texture component
+				if(compList[i]->getType() == AComponent::Tex)
+				{
+					if(ImGui::TreeNode("Texture Component"))
+					{
+						//display component
+						AGameObject::PrimitiveType t = m_selected_object->getObjectType();
+
+						ID3D11ShaderResourceView* tptr = nullptr;
+						TextureComponent* texComp = nullptr;
+						//find the texture component
+						for(int i = 0; i < compList.size(); i++)
+						{
+							if(compList[i]->getType() == AComponent::Tex)
+							{
+								texComp = dynamic_cast<TextureComponent*>(compList[i]);
+							}
+						}
+
+						
+						if(t == AGameObject::PrimitiveType::TEXTUREDCUBE)
+						{
+							TexturedCube* texCube = dynamic_cast<TexturedCube*>(m_selected_object);
+							TexturePtr m_texture_to_display = texCube->getObjectTexture();
+							tptr = m_texture_to_display->getTexture();
+							
+						}
+
+						//display stuff
+						ImGui::Image((void*)tptr, ImVec2(100, 100));
+						
+						if(ImGui::Button("Change Texture"))
+						{
+							this->m_file_browser->Open();
+							//texComp->updateTexture() 
+						}
+						this->m_file_browser->Display();
+						if(m_file_browser->HasSelected())
+						{
+							String path = m_file_browser->GetSelected().string();
+							//open file
+							String directory = path;
+							std::cout << directory << std::endl;
+							FileReader image_file;
+							image_file.open(directory, std::ios::in);
+
+		
+							std::wstring path2(path.length(), L' ');//idk what the fuck
+							std::copy(path.begin(), path.end(), path2.begin());
+
+							
+							//std::wstring wastring = (wastring)path;
+
+							if (t == AGameObject::PrimitiveType::TEXTUREDCUBE)
+							{
+								texComp->updateTexture(GraphicsEngine::get()->getTextureManager()->createTextureFromFile(path2.c_str()));
+								
+							}
+							
+							//close
+							image_file.close();
+							m_file_browser->Close();
+						}
+						ImGui::TreePop();
+					}
+				}
+
+				if(compList[i]->getType() == AComponent::Physics)
+				{
+					ImGui::Text("Physics Component Active");
+				}
+				/*
+				if (i == 0)
+					ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+
+				if (ImGui::TreeNode((void*)(intptr_t)i, "Child %d", i))
+				{
+					ImGui::Text("blah blah");
+					ImGui::SameLine();
+					if (ImGui::SmallButton("button")) {}
+					ImGui::TreePop();
+				}
+				*/
+			}
+			ImGui::TreePop();
+		}
+
 		
 
 		//for testing only!!! DELETE ME LATER BRUH
@@ -139,6 +252,17 @@ void InspectorScreen::drawUI()
 			//this->objectString = stringBuffer.data();
 			this->onAddObject(objectString);
 		}
+
+		if(ImGui::Button("Add Texture Component"))
+		{
+			this->onAddComponent(AComponent::Tex);
+		}
+		if (ImGui::Button("Add Physics Component"))
+		{
+			this->onAddComponent(AComponent::Physics);
+		}
+
+		
 		
 	}
 	else {
@@ -202,6 +326,46 @@ void InspectorScreen::onScaleUpdate()
 		m_selected_object->setScale(Vector3D(m_scale_display[0], m_scale_display[1], m_scale_display[2]));
 		this->updateTransformText();
 	}
+}
+
+void InspectorScreen::onAddComponent(AComponent::ComponentType componentType)
+{
+	AGameObject::ComponentList compList = {};
+	if (m_selected_object == nullptr) return;
+	if(m_selected_object != nullptr)
+	{
+		compList = m_selected_object->getComponentsOfType(componentType);
+	}
+
+	PhysicsComponent* physics_component = nullptr;
+	TextureComponent* texture_component = nullptr;
+
+	
+	for(int i = 0 ; i < compList.size(); i++)
+	{
+		if(compList[i]->getType() == AComponent::Physics)
+		{
+			physics_component = dynamic_cast<PhysicsComponent*>(compList[i]);
+		}
+		if(compList[i]->getType() == AComponent::Tex)
+		{
+			texture_component = dynamic_cast<TextureComponent*>(compList[i]);
+		}
+	}
+	
+
+	if(componentType == AComponent::Tex && texture_component == nullptr)
+	{
+		TextureComponent* texture_component = new TextureComponent("TextureComponent", m_selected_object);
+		m_selected_object->attachComponent(texture_component);
+	}
+	else if(componentType == AComponent::Physics && physics_component == nullptr)
+	{
+		//add physics component here brah
+		PhysicsComponent* physics_component = new PhysicsComponent("PhysicsComponent", m_selected_object);
+		m_selected_object->attachComponent(physics_component);
+	}
+	
 }
 
 void InspectorScreen::onAddObject(String objectName)

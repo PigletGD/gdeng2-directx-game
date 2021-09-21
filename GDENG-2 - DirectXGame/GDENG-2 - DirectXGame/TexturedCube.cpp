@@ -160,3 +160,13 @@ void TexturedCube::draw(int width, int height)
 
 	device_context->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
 }
+
+void TexturedCube::updateTexture(TexturePtr newTex)
+{
+	this->m_texture = newTex;
+}
+
+TexturePtr TexturedCube::getObjectTexture()
+{
+	return this->m_texture;
+}

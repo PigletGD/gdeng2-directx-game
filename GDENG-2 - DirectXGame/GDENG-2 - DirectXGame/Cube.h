@@ -1,5 +1,6 @@
 #pragma once
 #include "AGameObject.h"
+#include "PhysicsComponent.h"
 
 class Cube : public AGameObject
 {
@@ -8,6 +9,8 @@ public:
 	~Cube();
 
 	void update(float delta_time) override;
+	void saveEditState() override;
+	void restoreEditState() override;
 	virtual void draw(int width, int height) override;
 
 protected:
@@ -15,6 +18,8 @@ protected:
 	IndexBufferPtr m_ib;
 	ConstantBufferPtr m_cb;
 
+	PhysicsComponent* m_component_attached;
+	
 	float m_ticks = 0.0f;
 };
 

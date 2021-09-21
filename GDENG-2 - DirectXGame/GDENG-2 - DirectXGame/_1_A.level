@@ -1,0 +1,30 @@
+Name: Cube
+Type: 3
+Position: -2.2 0 0
+Rotation: 0 0 0
+Scale: 1 1 1
+CompType: -1
+Name: Cube(1)
+Type: 3
+Position: 3 0 0
+Rotation: 0 0 0
+Scale: 1 1 1
+CompType: -1
+Name: Sphere
+Type: 5
+Position: -0.3 2.1 1.2
+Rotation: 0 0 0
+Scale: 1 1 1
+CompType: -1
+Name: Sphere(1)
+Type: 5
+Position: 1.8 0 -2.7
+Rotation: 0 0 0
+Scale: 1 1 1
+CompType: -1
+Name: Plane
+Type: 4
+Position: 0 0 0
+Rotation: 0 0 0
+Scale: 7 0.2 7
+CompType: -1

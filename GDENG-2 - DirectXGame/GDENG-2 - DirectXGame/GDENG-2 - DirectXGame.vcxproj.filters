@@ -181,6 +181,9 @@
     <Filter Include="GameEngine\Debugger">
       <UniqueIdentifier>{a718fffc-ab39-4d51-8491-20c46ed6bc4b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Capsule">
+      <UniqueIdentifier>{9935bba8-517e-46a0-a496-29575855c15c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -400,6 +403,10 @@
       <Filter>GameEngine\UIManager\UIScreens\ProfilerScreen</Filter>
     </ClCompile>
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="TextureComponent.cpp" />
+    <ClCompile Include="Capsule.cpp">
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Capsule</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h">
@@ -655,6 +662,11 @@
       <Filter>GameEngine\UIManager\UIScreens\ProfilerScreen</Filter>
     </ClInclude>
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="json.hpp" />
+    <ClInclude Include="TextureComponent.h" />
+    <ClInclude Include="Capsule.h">
+      <Filter>GameEngine\GraphicsEngine\GameObjectManager\GameObjects\Capsule</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelGizmoShader.hlsl">

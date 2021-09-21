@@ -15,7 +15,8 @@ public:
 
 	RigidBody* getRigidBody();
 
+	RigidBody* m_rigid_body;
 private:
 	float m_mass = 1000.0f; //in kilograms
-	RigidBody* m_rigid_body;
+	
 };

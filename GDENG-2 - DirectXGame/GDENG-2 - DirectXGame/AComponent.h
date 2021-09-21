@@ -9,7 +9,7 @@ class AComponent
 public:
 	typedef std::string String;
 
-	enum ComponentType { NotSet = -1, Script = 0, Renderer = 1, Input = 2, Physics = 3};
+	enum ComponentType { NotSet = -1, Script = 0, Renderer = 1, Input = 2, Physics = 3, Tex = 4 };
 
 	AComponent(String name, ComponentType type, AGameObject* owner);
 	~AComponent();
