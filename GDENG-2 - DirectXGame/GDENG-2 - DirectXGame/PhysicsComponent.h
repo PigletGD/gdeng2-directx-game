@@ -11,6 +11,7 @@ public:
 	PhysicsComponent(String name, AGameObject* owner);
 	~PhysicsComponent();
 
+	void beforePhysicsUpdate();
 	void perform(float delta_time) override;
 
 	RigidBody* getRigidBody();

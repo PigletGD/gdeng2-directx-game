@@ -122,8 +122,9 @@ void MenuBarScreen::drawUI()
 			if (ImGui::MenuItem("Cylinder")) { GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::CYLINDER); ImGui::SetWindowFocus(nullptr); }
 			if (ImGui::BeginMenu("Meshes")) {
 				if (ImGui::MenuItem("Teapot")) { GameObjectManager::getInstance()->createObject(L"Assets\\Meshes\\teapot.obj", L"Assets\\Textures\\brick.png"); ImGui::SetWindowFocus(nullptr); }
-				if (ImGui::MenuItem("Bunny")) { GameObjectManager::getInstance()->createObject(L"Assets\\Meshes\\bunny.obj", L"Assets\\Textures\\brick.png"); ImGui::SetWindowFocus(nullptr); }
-				if (ImGui::MenuItem("Armadillo")) { GameObjectManager::getInstance()->createObject(L"Assets\\Meshes\\armadillo.obj", L"Assets\\Textures\\brick.png"); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Bunny")) { GameObjectManager::getInstance()->createObject(L"Assets\\Meshes\\bunny.obj", L""); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Armadillo")) { GameObjectManager::getInstance()->createObject(L"Assets\\Meshes\\armadillo.obj", L""); ImGui::SetWindowFocus(nullptr); }
+				if (ImGui::MenuItem("Lucy")) { GameObjectManager::getInstance()->createObject(L"Assets\\Meshes\\statue.obj", L""); ImGui::SetWindowFocus(nullptr); }
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenu();

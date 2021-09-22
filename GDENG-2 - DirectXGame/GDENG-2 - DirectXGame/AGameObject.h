@@ -61,6 +61,7 @@ public:
 	void setRotation(Vector3D rot);
 	void setRotation(float x, float y, float z, float w);
 	Vector3D getLocalRotation();
+	AQuaternion getLocalRotationQuaternion() const;
 
 	void setScale(float x, float y, float z);
 	void setScale(Vector3D scale);

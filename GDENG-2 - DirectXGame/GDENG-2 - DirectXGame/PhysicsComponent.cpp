@@ -38,18 +38,30 @@ PhysicsComponent::~PhysicsComponent()
 	ComponentSystem::getInstance()->getPhysicsSystem()->unregisterComponent(this);
 }
 
+void PhysicsComponent::beforePhysicsUpdate()
+{
+	// Copy transform to React Physics 3D
+	Vector3D nativePos = getOwner()->getLocalPosition();
+	AQuaternion nativeRot = getOwner()->getLocalRotationQuaternion();
+
+	Vector3 pos(nativePos.getX(), nativePos.getY(), nativePos.getZ());
+	Quaternion rot(nativeRot.m_x, nativeRot.m_y, nativeRot.m_z, nativeRot.m_w);
+	
+	m_rigid_body->setTransform(reactphysics3d::Transform(pos, rot));
+}
+
 void PhysicsComponent::perform(float delta_time)
 {
 	float matrix[16];
-    const Transform transform = m_rigid_body->getTransform();
+	const Transform transform = m_rigid_body->getTransform();
 
 	float x = transform.getPosition().x;
 	float y = transform.getPosition().y;
 	float z = transform.getPosition().z;
 
-    transform.getOpenGLMatrix(matrix);
+	transform.getOpenGLMatrix(matrix);
 
-    m_owner->setLocalMatrix(matrix);
+	m_owner->setLocalMatrix(matrix);
 }
 
 RigidBody* PhysicsComponent::getRigidBody()

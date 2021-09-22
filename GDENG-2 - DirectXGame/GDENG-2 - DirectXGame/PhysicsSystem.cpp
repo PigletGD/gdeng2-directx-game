@@ -71,7 +71,12 @@ void PhysicsSystem::updateAllComponents()
 	// skip first frame
 	if (EngineTime::getDeltaTime() > 0.0f) {
 		//update physics world
+		//for (int i = 0; i < m_component_list.size(); i++) {
+		//	m_component_list[i]->beforePhysicsUpdate();
+		//}
+
 		m_physics_world->update(EngineTime::getDeltaTime());
+		
 		for (int i = 0; i < m_component_list.size(); i++) {
 			m_component_list[i]->perform(EngineTime::getDeltaTime());
 		}

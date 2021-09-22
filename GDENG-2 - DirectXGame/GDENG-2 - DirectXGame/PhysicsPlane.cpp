@@ -5,6 +5,7 @@
 #include "ComponentSystem.h"
 #include "PhysicsSystem.h"
 #include "MathUtils.h"
+#include <stdlib.h>
 
 PhysicsPlane::PhysicsPlane(String name, AGameObject::PrimitiveType type, bool skipInit) : Plane(name, type, skipInit)
 {

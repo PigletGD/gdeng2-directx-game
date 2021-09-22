@@ -1,9 +1,10 @@
 #include "PhysicsCube.h"
 #include "PhysicsComponent.h"
+#include <stdlib.h>
 
 PhysicsCube::PhysicsCube(String name, AGameObject::PrimitiveType type, bool skipInit) : Cube(name, type, skipInit)
 {
-	setPosition(0.0f, 10.0f, 0.0f);
+	setPosition((float)rand() / (float)RAND_MAX * 4.0f - 2.0f, 10.0f, (float)rand() / (float)RAND_MAX * 4.0f - 2.0f);
 	setScale(1.0f, 1.0f, 1.0f);
 	updateLocalMatrix();
 

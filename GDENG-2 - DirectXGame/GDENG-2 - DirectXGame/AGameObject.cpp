@@ -237,6 +237,11 @@ Vector3D AGameObject::getLocalRotation()
 	return Vector3D(m_orientation.m_x, m_orientation.m_y, m_orientation.m_z);
 }
 
+AQuaternion AGameObject::getLocalRotationQuaternion() const
+{
+	return m_orientation;
+}
+
 void AGameObject::setScale(float x, float y, float z)
 {
 	if(this->m_child_list.empty())

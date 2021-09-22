@@ -23,16 +23,16 @@ Cube::Cube(std::string name, AGameObject::PrimitiveType type, bool skip_init) :
 	vertex quad_list[] = {
 		//X, Y, Z
 		//FRONT FACE
-		{ Vector3D(-0.5f,-0.5f,-0.5f), Vector3D(1,0,0) },
-		{ Vector3D(-0.5f,0.5f,-0.5f), Vector3D(1,1,0) },
-		{ Vector3D(0.5f,0.5f,-0.5f), Vector3D(1,1,0) },
-		{ Vector3D(0.5f,-0.5f,-0.5f), Vector3D(1,0,0) },
+		{ Vector3D(-0.5f,-0.5f,-0.5f), Vector3D(-0.5f,-0.5f,-0.5f) * 2.0f },
+		{ Vector3D(-0.5f,0.5f,-0.5f), Vector3D(-0.5f,0.5f,-0.5f) * 2.0f},
+		{ Vector3D(0.5f,0.5f,-0.5f), Vector3D(0.5f,0.5f,-0.5f) * 2.0f},
+		{ Vector3D(0.5f,-0.5f,-0.5f), Vector3D(0.5f,-0.5f,-0.5f) * 2.0f},
 
 		//BACK FACE
-		{ Vector3D(0.5f,-0.5f,0.5f), Vector3D(0,1,0) },
-		{ Vector3D(0.5f,0.5f,0.5f), Vector3D(0,1,1) },
-		{ Vector3D(-0.5f,0.5f,0.5f), Vector3D(0,1,1) },
-		{ Vector3D(-0.5f,-0.5f,0.5f), Vector3D(0,1,0) },
+		{ Vector3D(0.5f,-0.5f,0.5f), Vector3D(0.5f,-0.5f,0.5f) * 2.0f },
+		{ Vector3D(0.5f,0.5f,0.5f), Vector3D(0.5f,0.5f,0.5f) * 2.0f},
+		{ Vector3D(-0.5f,0.5f,0.5f), Vector3D(-0.5f,0.5f,0.5f) * 2.0f },
+		{ Vector3D(-0.5f,-0.5f,0.5f), Vector3D(-0.5f,-0.5f,0.5f) * 2.0f },
 	};
 
 	m_vb = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer();

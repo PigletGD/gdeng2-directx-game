@@ -1,4 +1,6 @@
 #include "AppWindow.h"
+
+#include <random>
 #include <Windows.h>
 #include "Matrix4x4.h"
 #include "InputSystem.h"
@@ -19,6 +21,8 @@
 #include "Sphere.h"
 #include "Cylinder.h"
 #include "Debug.h"
+#include "PhysicsCube.h"
+#include "PhysicsPlane.h"
 
 AppWindow* AppWindow::sharedInstance = nullptr;
 
@@ -85,9 +89,12 @@ void AppWindow::initializeEngine()
 	ActionHistory::initialize();
 
 	// Load initial object
-	GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\teapot.obj");
-	GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\bunny.obj");
+	//GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\bunny.obj");
 	//GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\armadillo.obj");
+	//GraphicsEngine::get()->getMeshManager()->createMeshFromFile(L"Assets\\Meshes\\statue.obj");
+	
+	Plane* plane = new Plane("Plane", AGameObject::PLANE);
+	GameObjectManager::getInstance()->addObject(plane);
 }
 
 void AppWindow::createInterface()
