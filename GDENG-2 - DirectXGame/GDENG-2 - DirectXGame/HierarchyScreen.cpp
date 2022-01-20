@@ -24,6 +24,14 @@ void HierarchyScreen::drawUI()
 	//ImGui::SetWindowPos(ImVec2(UIManager::WINDOW_WIDTH - 525, 20));
 	//ImGui::SetWindowSize(ImVec2(250, UIManager::WINDOW_HEIGHT));
 
+    ImGui::InputText("Search", str, IM_ARRAYSIZE(str));
+    if (ImGui::IsItemEdited())
+    {
+        this->objectString = this->str;
+        //this->objectString = stringBuffer.data();
+        //this->onAddObject(objectString);
+    }
+
 	updateObjectList();
 
 	ImGui::End();
@@ -41,6 +49,10 @@ void HierarchyScreen::updateObjectList() const
         for (int n = 0; n < objectList.size(); n++)
         {
             String objectName = objectList[n]->getName();
+            std::size_t found = objectName.find(objectString);
+
+            if (objectString != "" && found == std::string::npos) continue;
+
             if (ImGui::Selectable(objectName.c_str(), objectList[n]->m_selected))
             {
                 if (!ImGui::GetIO().KeyCtrl){    // Clear selection when CTRL is not held
@@ -64,12 +76,4 @@ void HierarchyScreen::updateObjectList() const
         }
         ImGui::TreePop();
     }
-	
-
-	/*for (int i = 0; i < objectList.size(); i++) {
-		String objectName = objectList[i]->getName();
-		if (ImGui::Button(objectName.c_str(), ImVec2(235, 0))) {
-			GameObjectManager::getInstance()->setSelectedObject(objectName);
-		}
-	}*/
 }

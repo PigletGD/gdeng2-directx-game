@@ -10,5 +10,8 @@ private:
 	virtual void drawUI() override;
 	void updateObjectList() const;
 
+	char str[128] = {};
+	std::string objectString;
+
 	friend class UIManager;
 };

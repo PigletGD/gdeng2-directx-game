@@ -64,7 +64,7 @@ void ViewportScreen::drawUI()
 		}
 
 		//Ask Render Texture to Update//
-		m_rt->clearRenderTarget(device_context, 0.4f, 0.4f, 1.0f, 1.0f);
+		m_rt->clearRenderTarget(device_context, 1.0f, 0.4f, 0.4f, 1.0f);
 		m_rt->setViewportSize(device_context, new_size.x, new_size.y);
 		AppWindow::get()->drawToRenderTarget(m_camera, new_size.x, new_size.y);
 
